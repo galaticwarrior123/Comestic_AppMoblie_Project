@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/border_manage_admin"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="317dp"
+        android:layout_height="44dp"
+        android:layout_marginStart="45dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="45dp"
+        android:gravity="center"
+        android:text="Thêm sản phẩm"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/nestedScrollView"
+        android:layout_width="423dp"
+        android:layout_height="511dp"
+        android:layout_marginTop="16dp"
+        android:fillViewport="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="325dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="230dp"
+                    android:layout_height="30dp"
+                    android:paddingLeft="10dp"
+                    android:text="Tên sản phẩm"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/editTextNameProduct"
+                    android:layout_width="325dp"
+                    android:layout_height="45dp"
+                    android:background="@drawable/border"
+                    android:ems="10"
+                    android:hint="Nhập tên sản phẩm"
+                    android:inputType="text"
+                    android:paddingLeft="10dp" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="325dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="230dp"
+                    android:layout_height="30dp"
+                    android:paddingLeft="10dp"
+                    android:text="Mô tả sản phẩm"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/editTextDescriptionProduct"
+                    android:layout_width="325dp"
+                    android:layout_height="100dp"
+                    android:background="@drawable/border"
+                    android:ems="10"
+                    android:gravity="top|left"
+                    android:hint="Nhập mô tả sản phẩm"
+                    android:inputType="text"
+                    android:paddingLeft="10dp"
+                    android:paddingTop="10dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="325dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="230dp"
+                    android:layout_height="30dp"
+                    android:paddingLeft="10dp"
+                    android:text="Giá sản phẩm"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/editTextPriceProduct"
+                    android:layout_width="325dp"
+                    android:layout_height="45dp"
+                    android:background="@drawable/border"
+                    android:ems="10"
+                    android:hint="Nhập giá sản phẩm"
+                    android:inputType="number"
+                    android:paddingLeft="10dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="325dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="230dp"
+                    android:layout_height="30dp"
+                    android:paddingLeft="10dp"
+                    android:text="Số lượng sản phẩm"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/editTextQuantityProduct"
+                    android:layout_width="325dp"
+                    android:layout_height="45dp"
+                    android:background="@drawable/border"
+                    android:ems="10"
+                    android:hint="Nhập số lượng sản phẩm"
+                    android:inputType="number"
+                    android:paddingLeft="10dp" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="325dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="230dp"
+                    android:layout_height="30dp"
+                    android:paddingLeft="10dp"
+                    android:text="Danh mục sản phẩm"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <Spinner
+                    android:id="@+id/spinnerCategoryProduct"
+                    android:layout_width="325dp"
+                    android:layout_height="45dp"
+                    android:background="@drawable/border"
+                    android:paddingLeft="10dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="325dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="230dp"
+                    android:layout_height="30dp"
+                    android:paddingLeft="10dp"
+                    android:text="Hình ảnh sản phẩm"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/buttonChooseImage"
+                    android:layout_width="150dp"
+                    android:layout_height="45dp"
+                    android:background="@drawable/border_button"
+                    android:gravity="center"
+                    android:drawableLeft="@drawable/add"
+                    android:text="Thêm ảnh" />
+
+                <LinearLayout
+                    android:id="@+id/linearLayoutBoxImage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <Button
+        android:id="@+id/buttonCancelAddProduct"
+        android:layout_width="135dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="48dp"
+        android:layout_marginEnd="81dp"
+        android:layout_marginBottom="52dp"
+        android:backgroundTint="#FF0000"
+        android:fontFamily="sans-serif-medium"
+        android:text="Hủy"
+        android:textColor="#FFFFFF"
+        android:textSize="18dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/buttonAddProduct"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/nestedScrollView"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <Button
+        android:id="@+id/buttonAddProduct"
+        android:layout_width="125dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="48dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="52dp"
+        android:backgroundTint="#00FF00"
+        android:fontFamily="sans-serif-medium"
+        android:text="Thêm"
+        android:textColor="#FFFFFF"
+        android:textSize="18dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/nestedScrollView" />
+</androidx.constraintlayout.widget.ConstraintLayout>
