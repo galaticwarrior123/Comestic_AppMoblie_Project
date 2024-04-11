@@ -4,9 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@drawable/border_manage_admin"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-
-    tools:context=".Admin.ManageCategory.AddCategory">
+    android:layout_height="wrap_content">
 
 
     <TextView
