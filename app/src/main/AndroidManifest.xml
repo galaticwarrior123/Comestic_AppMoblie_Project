@@ -2,16 +2,29 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@drawable/logo"
-        android:label="ComesticShop"
+        android:label="CosmeticShop"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Comestic_AppMobile_Project"
+        android:theme="@style/Base.Theme.Cosmetic_AppMobile_Project"
+        android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <activity
+            android:name=".Controller.User.UserMainActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Controller.LoginRegister.LoginRegisterActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Controller.Admin.AdminMainActivity"
+            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="true">

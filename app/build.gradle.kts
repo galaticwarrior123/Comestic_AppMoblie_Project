@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace = "vn.appComestic"
+    namespace = "vn.appCosmetic"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "vn.appComestic"
+        applicationId = "vn.appCosmetic"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
@@ -29,6 +29,12 @@ android {
 }
 
 dependencies {
+    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation ("com.squareup.okhttp3:logging-interceptor:3.12.0")
+    implementation ("com.github.bumptech.glide:glide:4.14.2")
+    annotationProcessor("com.github.bumptech.glide:compiler:4.14.2")
+    implementation ("com.google.code.gson:gson:2.10.1")
     implementation("de.hdodenhof:circleimageview:3.1.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.11.0")
