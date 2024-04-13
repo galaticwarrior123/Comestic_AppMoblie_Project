@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@drawable/border"
-    android:backgroundTint="#EBF3ADEB"
+    android:backgroundTint="#EBECD5E9"
     android:layout_marginBottom="10dp"
     android:layout_width="340dp"
     android:layout_height="wrap_content">

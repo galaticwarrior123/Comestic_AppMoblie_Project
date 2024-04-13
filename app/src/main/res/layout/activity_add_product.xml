@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@drawable/border_manage_admin"
+    android:background="@drawable/img_item"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -204,7 +204,7 @@
         android:layout_marginTop="48dp"
         android:layout_marginEnd="81dp"
         android:layout_marginBottom="52dp"
-        android:backgroundTint="#FF0000"
+        android:backgroundTint="#F64141"
         android:fontFamily="sans-serif-medium"
         android:text="Hủy"
         android:textColor="#FFFFFF"
@@ -222,7 +222,7 @@
         android:layout_marginTop="48dp"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="52dp"
-        android:backgroundTint="#00FF00"
+        android:backgroundTint="#4AF84A"
         android:fontFamily="sans-serif-medium"
         android:text="Thêm"
         android:textColor="#FFFFFF"

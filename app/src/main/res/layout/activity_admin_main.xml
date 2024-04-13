@@ -4,13 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/anhnenmypham"
+    android:background="@drawable/anhnenbackgroundadmin"
     tools:context=".Controller.Admin.AdminMainActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar2"
         android:layout_width="409dp"
-        android:backgroundTint="@color/blue"
+        android:backgroundTint="#EFD1B0"
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize"
@@ -24,7 +24,7 @@
             android:id="@+id/buttonSlide"
             android:layout_width="35dp"
             android:layout_height="35dp"
-            android:backgroundTint="@color/lightblue"
+            android:backgroundTint="#EFD1B0"
             android:src="@drawable/menu"
 
             tools:layout_editor_absoluteX="14dp"
@@ -35,9 +35,9 @@
             android:id="@+id/linearLayout"
             android:layout_width="250dp"
             android:layout_height="match_parent"
-            android:background="@color/lightblue"
+            android:background="#EBD6CFC9"
             android:orientation="vertical"
-            android:visibility="gone"
+            android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -47,7 +47,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:padding="10dp"
-                android:background="@drawable/border_left_admin"
+                android:background="#EAE6D8"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -82,7 +82,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="500dp"
+                android:layout_height="570dp"
                 android:layout_marginTop="40dp"
                 android:orientation="vertical"
                 android:padding="10dp">
@@ -94,6 +94,7 @@
                     android:layout_marginTop="5dp"
                     android:layout_marginBottom="5dp"
                     android:drawableLeft="@drawable/user"
+
                     android:background="@drawable/border_button"
                     android:text="Quản lý khách hàng" />
 
@@ -136,6 +137,14 @@
                     android:background="@drawable/border_button"
                     android:text="Button" />
             </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/icon_c"
+                android:text="2024 P2T Team"
+                android:layout_marginLeft="75dp"
+                android:textStyle="bold" />
         </LinearLayout>
 
     <FrameLayout

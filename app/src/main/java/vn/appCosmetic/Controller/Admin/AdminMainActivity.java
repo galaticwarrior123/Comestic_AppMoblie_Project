@@ -6,6 +6,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -24,6 +25,8 @@ public class AdminMainActivity extends AppCompatActivity {
     Toolbar toolbar;
     LinearLayout linearLayout;
     FrameLayout frameLayout;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,12 +37,24 @@ public class AdminMainActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar2);
 
 
+
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.frameLayoutManage, new ManageProductActivity()).commit();
+        linearLayout.bringToFront();
+        linearLayout.startAnimation(AnimationUtils.loadAnimation(AdminMainActivity.this, R.anim.slide_out));
+        linearLayout.setVisibility(View.GONE);
+
+
+
+
         findViewById(R.id.buttonManageProduct).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 getSupportFragmentManager().beginTransaction().replace(R.id.frameLayoutManage, new ManageProductActivity()).commit();
                 linearLayout.bringToFront();
+                linearLayout.startAnimation(AnimationUtils.loadAnimation(AdminMainActivity.this, R.anim.slide_out));
+                linearLayout.setVisibility(View.GONE);
 
             }
         });
@@ -49,6 +64,8 @@ public class AdminMainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 getSupportFragmentManager().beginTransaction().replace(R.id.frameLayoutManage, new ManageCategoryActivity()).commit();
                 linearLayout.bringToFront();
+                linearLayout.startAnimation(AnimationUtils.loadAnimation(AdminMainActivity.this, R.anim.slide_out));
+                linearLayout.setVisibility(View.GONE);
             }
         });
 
@@ -57,6 +74,9 @@ public class AdminMainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 getSupportFragmentManager().beginTransaction().replace(R.id.frameLayoutManage, new ManageBrandActivity()).commit();
                 linearLayout.bringToFront();
+                linearLayout.startAnimation(AnimationUtils.loadAnimation(AdminMainActivity.this, R.anim.slide_out));
+                linearLayout.setVisibility(View.GONE);
+
             }
         });
 

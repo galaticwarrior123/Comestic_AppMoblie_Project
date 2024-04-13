@@ -20,45 +20,89 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
+import vn.appCosmetic.Model.Category;
 import vn.appCosmetic.Model.Product;
 import vn.appCosmetic.R;
+import vn.appCosmetic.ServiceAPI.Category.APICategoryService;
+import vn.appCosmetic.ServiceAPI.Product.APIProductService;
+import vn.appCosmetic.ServiceAPI.Product.RetrofitProductClient;
 
 public class ManageProductActivity extends Fragment{
+    private APIProductService apiProductService;
+    private APICategoryService apiCategoryService;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view =inflater.inflate(R.layout.activity_manage_product, container, false);
         RecyclerView recyclerView = view.findViewById(R.id.rcViewManageProduct);
         List<Product> productModelList =new ArrayList<>();
-        productModelList.add(new Product("1","Iphone 12","abcd"));
-        productModelList.add(new Product("2","Iphone 11","abcd"));
-        productModelList.add(new Product("3","Iphone 10","abcd"));
-        productModelList.add(new Product("4","Iphone 9","abcd"));
-        productModelList.add(new Product("5","Iphone 8","abcd"));
-        productModelList.add(new Product("6","Iphone 7","abcd"));
-        productModelList.add(new Product("7","Iphone 6","abcd"));
-        productModelList.add(new Product("8","Iphone 5","abcd"));
-        productModelList.add(new Product("9","Iphone 4","abcd"));
-        productModelList.add(new Product("10","Iphone 3","abcd"));
+        apiProductService= RetrofitProductClient.getRetrofit().create(APIProductService.class);
+        apiProductService.getAllProduct().enqueue(new retrofit2.Callback<List<Product>>() {
+            @Override
+            public void onResponse(retrofit2.Call<List<Product>> call, retrofit2.Response<List<Product>> response) {
+                if(response.isSuccessful()){
+                    productModelList.addAll(response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(retrofit2.Call<List<Product>> call, Throwable t) {
+                Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
+            }
+        });
         ProductAdapter productAdapter = new ProductAdapter(getContext(), productModelList);
         recyclerView.setAdapter(productAdapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
 
-        String[] data = {"Iphone 12","Iphone 11","Iphone 10","Iphone 9","Iphone 8","Iphone 7","Iphone 6","Iphone 5","Iphone 4","Iphone 3"};
+
         Spinner spinner = view.findViewById(R.id.spinnerManageProduct);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, data);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        apiCategoryService = RetrofitProductClient.getRetrofit().create(APICategoryService.class);
+        apiCategoryService.getCategory().enqueue(new retrofit2.Callback<List<Category>>() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getContext(), data[position], Toast.LENGTH_SHORT).show();
+            public void onResponse(retrofit2.Call<List<Category>> call, retrofit2.Response<List<Category>> response) {
+                if(response.isSuccessful()){
+                    List<Category> categoryList = response.body();
+                    List<String> listNameCategory = new ArrayList<>();
+                    for (Category category : categoryList){
+                        listNameCategory.add(category.getNameCategory());
+                    }
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, listNameCategory);
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spinner.setAdapter(adapter);
+                    spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                            apiProductService.getProductByCategory(position).enqueue(new retrofit2.Callback<List<Product>>() {
+                                @Override
+                                public void onResponse(retrofit2.Call<List<Product>> call, retrofit2.Response<List<Product>> response) {
+                                    if(response.isSuccessful()){
+                                        productModelList.clear();
+                                        productModelList.addAll(response.body());
+                                        productAdapter.notifyDataSetChanged();
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(retrofit2.Call<List<Product>> call, Throwable t) {
+                                    Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onNothingSelected(AdapterView<?> parent) {
+
+                        }
+                    });
+                }
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
+            public void onFailure(retrofit2.Call<List<Category>> call, Throwable t) {
+                Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
             }
         });
 
