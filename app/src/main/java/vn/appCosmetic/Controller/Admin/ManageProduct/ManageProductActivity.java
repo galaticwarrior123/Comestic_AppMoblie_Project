@@ -24,6 +24,7 @@ import vn.appCosmetic.Model.Category;
 import vn.appCosmetic.Model.Product;
 import vn.appCosmetic.R;
 import vn.appCosmetic.ServiceAPI.Category.APICategoryService;
+import vn.appCosmetic.ServiceAPI.Category.RetrofitCategoryClient;
 import vn.appCosmetic.ServiceAPI.Product.APIProductService;
 import vn.appCosmetic.ServiceAPI.Product.RetrofitProductClient;
 
@@ -58,45 +59,23 @@ public class ManageProductActivity extends Fragment{
 
 
         Spinner spinner = view.findViewById(R.id.spinnerManageProduct);
-        apiCategoryService = RetrofitProductClient.getRetrofit().create(APICategoryService.class);
+        apiCategoryService = RetrofitCategoryClient.getRetrofit().create(APICategoryService.class);
         apiCategoryService.getCategory().enqueue(new retrofit2.Callback<List<Category>>() {
             @Override
             public void onResponse(retrofit2.Call<List<Category>> call, retrofit2.Response<List<Category>> response) {
                 if(response.isSuccessful()){
-                    List<Category> categoryList = response.body();
-                    List<String> listNameCategory = new ArrayList<>();
+                    System.out.println("spinner");
+                    List<Category> categoryList = new ArrayList<>();
+                    categoryList.addAll(response.body());
+                    List<String> list = new ArrayList<>();
                     for (Category category : categoryList){
-                        listNameCategory.add(category.getNameCategory());
+                        list.add(category.getNameCategory());
                     }
-                    ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, listNameCategory);
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, list);
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     spinner.setAdapter(adapter);
-                    spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                        @Override
-                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-                            apiProductService.getProductByCategory(position).enqueue(new retrofit2.Callback<List<Product>>() {
-                                @Override
-                                public void onResponse(retrofit2.Call<List<Product>> call, retrofit2.Response<List<Product>> response) {
-                                    if(response.isSuccessful()){
-                                        productModelList.clear();
-                                        productModelList.addAll(response.body());
-                                        productAdapter.notifyDataSetChanged();
-                                    }
-                                }
 
-                                @Override
-                                public void onFailure(retrofit2.Call<List<Product>> call, Throwable t) {
-                                    Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                        }
-
-                        @Override
-                        public void onNothingSelected(AdapterView<?> parent) {
-
-                        }
-                    });
                 }
             }
 

@@ -18,10 +18,10 @@ public interface APIBrandService {
     @POST(" ")
     Call<Brand> postBrand(@Body Brand brand);
 
-    @PUT("/{id}")
+    @PUT("{id}")
     Call<Brand> putBrand(@Path("id") int id, @Body Brand brand);
 
-    @DELETE("/{id}")
-    Call<Brand> deleteBrand(@Path("id") int id);
+    @DELETE("{id}")
+    Call<Void> deleteBrand(@Path("id") int id);
 
 }

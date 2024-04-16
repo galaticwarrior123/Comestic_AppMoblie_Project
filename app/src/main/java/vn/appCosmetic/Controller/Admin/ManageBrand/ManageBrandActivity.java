@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -79,6 +80,7 @@ public class ManageBrandActivity extends Fragment {
                         String nameBrand = edtNameBrand.getText().toString().trim();
                         Brand newBrand = new Brand();
                         newBrand.setNameBrand(nameBrand);
+
                         apiBrandService.postBrand(newBrand).enqueue(new Callback<Brand>() {
                             @Override
                             public void onResponse(Call<Brand> call, Response<Brand> response) {
@@ -87,6 +89,7 @@ public class ManageBrandActivity extends Fragment {
                                     brandList.add(brand);
                                     brandAdapter.notifyDataSetChanged();
                                     dialog.dismiss();
+                                    Toast.makeText(getContext(), "Add success", Toast.LENGTH_SHORT).show();
                                 }
                                 else{
                                     int statusCode = response.code();

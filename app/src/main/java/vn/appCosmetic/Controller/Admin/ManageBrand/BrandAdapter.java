@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -88,7 +89,9 @@ public class BrandAdapter extends RecyclerView.Adapter<BrandAdapter.ViewHolder> 
             @Override
             public void onClick(View v) {
                 String nameUpdateBrand = edtNameBrand.getText().toString().trim();
+                System.out.println(nameUpdateBrand);
                 Brand updateBrand = new Brand();
+                updateBrand.setId(position);
                 updateBrand.setNameBrand(nameUpdateBrand);
                 apiBrandService= RetrofitBrandClient.getRetrofit().create(APIBrandService.class);
                 apiBrandService.putBrand(position,updateBrand).enqueue(new Callback<Brand>() {
@@ -96,8 +99,14 @@ public class BrandAdapter extends RecyclerView.Adapter<BrandAdapter.ViewHolder> 
                     public void onResponse(Call<Brand> call, Response<Brand> response) {
                         if(response.isSuccessful()){
                             Brand brand = response.body();
-                            brandList.set(position, brand);
+                            for(int i=0; i<brandList.size(); i++){
+                                if(brandList.get(i).getId() == position){
+                                    brandList.get(i).setNameBrand(brand.getNameBrand());
+                                }
+                            }
                             dialog.dismiss();
+                            notifyDataSetChanged();
+                            Toast.makeText(context, "Update success", Toast.LENGTH_SHORT).show();
 
                         }
                         else{
@@ -123,7 +132,7 @@ public class BrandAdapter extends RecyclerView.Adapter<BrandAdapter.ViewHolder> 
     }
 
     private void DialogDelete(int position){
-Dialog dialog = new Dialog(context);
+        Dialog dialog = new Dialog(context);
         dialog.setContentView(R.layout.activity_delete_brand);
         Button btnDelete, btnCancel;
         btnDelete = dialog.findViewById(R.id.buttonDeleteBrand);
@@ -132,13 +141,18 @@ Dialog dialog = new Dialog(context);
             @Override
             public void onClick(View v) {
                 apiBrandService = RetrofitBrandClient.getRetrofit().create(APIBrandService.class);
-                apiBrandService.deleteBrand(position).enqueue(new Callback<Brand>() {
+                apiBrandService.deleteBrand(position).enqueue(new Callback<Void>() {
                     @Override
-                    public void onResponse(Call<Brand> call, Response<Brand> response) {
+                    public void onResponse(Call<Void> call, Response<Void> response) {
                         if(response.isSuccessful()){
-                            brandList.remove(position);
-                            notifyDataSetChanged();
-                            dialog.dismiss();
+                            for(int i=0; i<brandList.size(); i++){
+                                if(brandList.get(i).getId() == position){
+                                    brandList.remove(i);
+                                    notifyDataSetChanged();
+                                    dialog.dismiss();
+                                    Toast.makeText(context, "Delete success", Toast.LENGTH_SHORT).show();
+                                }
+                            }
                         }
                         else{
                             int statusCode = response.code();
@@ -147,10 +161,11 @@ Dialog dialog = new Dialog(context);
                     }
 
                     @Override
-                    public void onFailure(Call<Brand> call, Throwable t) {
+                    public void onFailure(Call<Void> call, Throwable t) {
                         Log.e("Error", t.getMessage());
                     }
                 });
+
             }
         });
         btnCancel.setOnClickListener(new View.OnClickListener() {
