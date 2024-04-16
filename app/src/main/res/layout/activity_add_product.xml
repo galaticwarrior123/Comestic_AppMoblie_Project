@@ -187,11 +187,14 @@
                     android:drawableLeft="@drawable/add"
                     android:text="Thêm ảnh" />
 
-                <LinearLayout
-                    android:id="@+id/linearLayoutBoxImage"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical" />
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:id="@+id/recyclerViewImageProduct"
+                    android:layout_marginTop="10dp">
+
+                </androidx.recyclerview.widget.RecyclerView>
+
             </LinearLayout>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
