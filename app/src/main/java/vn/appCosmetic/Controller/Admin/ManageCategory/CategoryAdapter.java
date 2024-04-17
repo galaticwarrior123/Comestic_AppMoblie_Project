@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -98,21 +99,25 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
                     edtNameCategory.setError("Vui lòng nhập tên danh mục");
                 }else{
                     //Call API update category
+
                     apiCategoryService= RetrofitCategoryClient.getRetrofit().create(APICategoryService.class);
                     Category category = new Category();
                     category.setId(position);
                     category.setNameCategory(nameUpdateCategory);
-
-                    apiCategoryService = RetrofitCategoryClient.getRetrofit().create(APICategoryService.class);
                     apiCategoryService.putCategory(position,category).enqueue(new Callback<Category>() {
                         @Override
                         public void onResponse(Call<Category> call, Response<Category> response) {
                             if(response.isSuccessful()){
                                 Category category = response.body();
-                                categoryList.set(position, category);
+                                for(int i=0; i<categoryList.size(); i++){
+                                    if(categoryList.get(i).getId() == category.getId()){
+                                        categoryList.get(i).setNameCategory(category.getNameCategory());
+                                    }
+                                }
                                 dialog.dismiss();
-//                                Intent intent = new Intent(context, ManageCategoryActivity.class);
-//                                context.startActivity(intent);
+                                notifyDataSetChanged();
+                                Toast.makeText(context, "Update success", Toast.LENGTH_SHORT).show();
+
                             }
                             else{
                                 int statusCode = response.code();
@@ -152,25 +157,29 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Call API delete category
                 apiCategoryService= RetrofitCategoryClient.getRetrofit().create(APICategoryService.class);
-                apiCategoryService.deleteCategory(position).enqueue(new Callback<Category>() {
+                System.out.println(apiCategoryService.toString().trim());
+                apiCategoryService.deleteCategory(position).enqueue(new Callback<Void>() {
                     @Override
-                    public void onResponse(Call<Category> call, Response<Category> response) {
+                    public void onResponse(Call<Void> call, Response<Void> response) {
                         if(response.isSuccessful()){
-                            categoryList.remove(position);
+                            for(int i=0; i<categoryList.size(); i++){
+                                if(categoryList.get(i).getId() == position){
+                                    categoryList.remove(i);
+                                }
+                            }
                             dialog.dismiss();
-//                            Intent intent = new Intent(context, ManageCategoryActivity.class);
-//                            context.startActivity(intent);
+                            notifyDataSetChanged();
+                            Toast.makeText(context, "Delete success", Toast.LENGTH_SHORT).show();
                         }
                         else{
                             int statusCode = response.code();
-                            Log.e("Error", String.valueOf(statusCode));
+                            Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show();
                         }
                     }
 
                     @Override
-                    public void onFailure(Call<Category> call, Throwable t) {
+                    public void onFailure(Call<Void> call, Throwable t) {
                         Log.e("Error", t.getMessage());
                     }
                 });

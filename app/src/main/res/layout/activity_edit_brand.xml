@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/border_manage_admin"
+    android:background="@drawable/img_item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
     <TextView
@@ -87,14 +87,14 @@
 
     <Button
         android:id="@+id/buttonUpdateBrand"
-        android:layout_width="130dp"
+        android:layout_width="150dp"
         android:layout_height="50dp"
         android:layout_marginTop="12dp"
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="16dp"
         android:backgroundTint="#00FF00"
         android:fontFamily="sans-serif-medium"
-        android:text="Thêm"
+        android:text="Cập nhật"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

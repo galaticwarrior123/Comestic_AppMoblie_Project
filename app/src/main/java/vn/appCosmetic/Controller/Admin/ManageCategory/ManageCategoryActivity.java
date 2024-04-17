@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -100,6 +101,7 @@ public class ManageCategoryActivity extends Fragment {
                             categoryList.add(category);
                             categoryAdapter.notifyDataSetChanged();
                             dialog.dismiss();
+                            Toast.makeText(getContext(), "Add success", Toast.LENGTH_SHORT).show();
                         }
                         else{
                             int statusCode = response.code();

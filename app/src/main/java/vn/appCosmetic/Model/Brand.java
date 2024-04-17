@@ -1,9 +1,13 @@
 package vn.appCosmetic.Model;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 public class Brand implements Serializable {
+    @SerializedName("id")
     private int id;
+    @SerializedName("name")
     private String nameBrand;
 
     public Brand(int id, String nameBrand) {
