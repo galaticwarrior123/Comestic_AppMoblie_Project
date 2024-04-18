@@ -47,7 +47,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Product productModel = productModelList.get(position);
         holder.txtNameProduct.setText(productModel.getName());
-        holder.imgProduct.setImageResource(R.drawable.user);
+
         holder.btnEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

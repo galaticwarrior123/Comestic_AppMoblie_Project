@@ -38,10 +38,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import vn.appCosmetic.Model.Brand;
 import vn.appCosmetic.Model.Category;
 import vn.appCosmetic.Model.Image;
 import vn.appCosmetic.Model.Product;
 import vn.appCosmetic.R;
+import vn.appCosmetic.ServiceAPI.Brand.APIBrandService;
+import vn.appCosmetic.ServiceAPI.Brand.RetrofitBrandClient;
 import vn.appCosmetic.ServiceAPI.Category.APICategoryService;
 import vn.appCosmetic.ServiceAPI.Category.RetrofitCategoryClient;
 import vn.appCosmetic.ServiceAPI.Product.APIProductService;
@@ -50,23 +56,37 @@ import vn.appCosmetic.ServiceAPI.Product.RetrofitProductClient;
 public class ManageProductActivity extends Fragment{
     private APIProductService apiProductService;
     private APICategoryService apiCategoryService;
-private List<Uri> imageList = new ArrayList<>();
-
-
+    private APIBrandService apiBrandService;
+    private List<Uri> imageList = new ArrayList<>();
     private ImageAdapter imageAdapter;
+
+    private ProductAdapter productAdapter;
+
+    private List<Product> productModelList;
+    private RecyclerView recyclerViewProduct;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view =inflater.inflate(R.layout.activity_manage_product, container, false);
-        RecyclerView recyclerView = view.findViewById(R.id.rcViewManageProduct);
-        List<Product> productModelList =new ArrayList<>();
         apiProductService= RetrofitProductClient.getRetrofit().create(APIProductService.class);
+        productModelList = new ArrayList<>();
+        RecyclerView recyclerView = view.findViewById(R.id.rcViewManageProduct);
         apiProductService.getAllProduct().enqueue(new retrofit2.Callback<List<Product>>() {
             @Override
             public void onResponse(retrofit2.Call<List<Product>> call, retrofit2.Response<List<Product>> response) {
                 if(response.isSuccessful()){
-                    productModelList.addAll(response.body());
+                    productModelList= response.body();
+                    productAdapter = new ProductAdapter(getContext(), productModelList);
+                    recyclerView.setHasFixedSize(true);
+                    RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+                    recyclerView.setLayoutManager(layoutManager);
+                    recyclerView.setAdapter(productAdapter);
+                    productAdapter.notifyDataSetChanged();
+
+                }
+                else{
+                    Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -75,10 +95,7 @@ private List<Uri> imageList = new ArrayList<>();
                 Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
             }
         });
-        ProductAdapter productAdapter = new ProductAdapter(getContext(), productModelList);
-        recyclerView.setAdapter(productAdapter);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-        recyclerView.setLayoutManager(linearLayoutManager);
+
 
 
         Spinner spinner = view.findViewById(R.id.spinnerManageProduct);
@@ -87,7 +104,6 @@ private List<Uri> imageList = new ArrayList<>();
             @Override
             public void onResponse(retrofit2.Call<List<Category>> call, retrofit2.Response<List<Category>> response) {
                 if(response.isSuccessful()){
-                    System.out.println("spinner");
                     List<Category> categoryList = new ArrayList<>();
                     categoryList.addAll(response.body());
                     List<String> list = new ArrayList<>();
@@ -115,7 +131,7 @@ private List<Uri> imageList = new ArrayList<>();
             public void onClick(View v) {
                 Dialog dialog = new Dialog(getContext());
                 dialog.setContentView(R.layout.activity_add_product);
-
+                Product product = new Product();
                 Button btnChooseImage = dialog.findViewById(R.id.buttonChooseImage);
                 RecyclerView rcImage = dialog.findViewById(R.id.recyclerViewImageProduct);
                 btnChooseImage.setOnClickListener(new View.OnClickListener() {
@@ -130,12 +146,12 @@ private List<Uri> imageList = new ArrayList<>();
                 rcImage.setLayoutManager(linearLayoutManager);
 
 
-                Spinner spinner = dialog.findViewById(R.id.spinnerCategoryProduct);
+                Spinner spinnerCategory = dialog.findViewById(R.id.spinnerCategoryProduct);
+                List<Category> categoryList = new ArrayList<>();
                 apiCategoryService.getCategory().enqueue(new retrofit2.Callback<List<Category>>() {
                     @Override
                     public void onResponse(retrofit2.Call<List<Category>> call, retrofit2.Response<List<Category>> response) {
                         if(response.isSuccessful()){
-                            List<Category> categoryList = new ArrayList<>();
                             categoryList.addAll(response.body());
                             List<String> list = new ArrayList<>();
                             for (Category category : categoryList){
@@ -143,7 +159,7 @@ private List<Uri> imageList = new ArrayList<>();
                             }
                             ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, list);
                             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            spinner.setAdapter(adapter);
+                            spinnerCategory.setAdapter(adapter);
                         }
                     }
 
@@ -153,6 +169,29 @@ private List<Uri> imageList = new ArrayList<>();
                     }
                 });
 
+                Spinner spinnerBrand = dialog.findViewById(R.id.spinnerBrandProduct);
+                List<Brand> brandList = new ArrayList<>();
+                apiBrandService = RetrofitBrandClient.getRetrofit().create(APIBrandService.class);
+                apiBrandService.getAllBrand().enqueue(new Callback<List<Brand>>() {
+                    @Override
+                    public void onResponse(Call<List<Brand>> call, Response<List<Brand>> response) {
+                        if(response.isSuccessful()){
+                            brandList.addAll(response.body());
+                            List<String> list = new ArrayList<>();
+                            for (Brand brand : brandList){
+                                list.add(brand.getNameBrand());
+                            }
+                            ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, list);
+                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                            spinnerBrand.setAdapter(adapter);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<Brand>> call, Throwable t) {
+
+                    }
+                });
 
                 Button btnAddProduct = dialog.findViewById(R.id.buttonAddProduct);
 
@@ -161,6 +200,36 @@ private List<Uri> imageList = new ArrayList<>();
                 EditText edtPriceProduct = dialog.findViewById(R.id.editTextPriceProduct);
                 EditText edtStockProduct = dialog.findViewById(R.id.editTextQuantityProduct);
 
+                spinnerCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        int categoryID = categoryList.get(position).getId();
+                        System.out.println("categoryID"+categoryID);
+                        product.setIdCategory(categoryID);
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+
+                    }
+                });
+
+                spinnerBrand.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        int brandID = brandList.get(position).getId();
+                        product.setIdBrand(brandID);
+
+                        System.out.println("brandID"+brandID);
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+
+                    }
+
+
+                });
 
                 btnAddProduct.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -169,32 +238,19 @@ private List<Uri> imageList = new ArrayList<>();
                         String description = edtDescriptionProduct.getText().toString().trim();
                         int price = Integer.parseInt(edtPriceProduct.getText().toString().trim());
                         int stock = Integer.parseInt(edtStockProduct.getText().toString().trim());
-                        List<Image> images = new ArrayList<>();
-                        for (Uri uri : imageList){
-                            Image image = new Image();
-                            image.setUrl(uri.toString());
-                            images.add(image);
-                        }
-                        Product product = new Product();
+
                         product.setName(name);
                         product.setDescription(description);
                         product.setPrice(price);
                         product.setStock(stock);
-                        product.setImages(images);
 
-                        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                            @Override
-                            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                Category category = new Category();
-                                category.setId(position);
-                                product.setCategory(category);
-                            }
+                        List<String> listImage = new ArrayList<>();
+                        for (Uri uri : imageList){
+                            listImage.add(uri.toString());
+                        }
+                        product.setImages(listImage);
 
-                            @Override
-                            public void onNothingSelected(AdapterView<?> parent) {
 
-                            }
-                        });
 
                         apiProductService.postProduct(product).enqueue(new retrofit2.Callback<Product>() {
                             @Override

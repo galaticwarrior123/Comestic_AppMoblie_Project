@@ -80,6 +80,8 @@ public class LoadImageActivity extends AppCompatActivity {
         if(checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)== PackageManager.PERMISSION_GRANTED){
             openGallery();
         }
+
+
         else{
             String [] permission = {Manifest.permission.READ_EXTERNAL_STORAGE};
             requestPermissions(permission, 1);

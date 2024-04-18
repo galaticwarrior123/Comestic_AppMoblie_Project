@@ -17,23 +17,27 @@ public class Product implements Serializable {
     @SerializedName("stock")
     private int stock;
     @SerializedName("images")
-    private List<Image> images;
-    @SerializedName("category")
-    private Category category;
+    private List<String> images;
+    @SerializedName("categoryId")
+    private int idCategory;
 
+
+    @SerializedName("brandId")
+    private int idBrand;
 
 
     public Product() {
     }
 
-    public Product(int id, String name, String description, int price, int stock, List<Image> images, Category category) {
+    public Product(int id, String name, String description, int price, int stock, List<String> images, int idCategory, int idBrand) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.price = price;
         this.stock = stock;
         this.images = images;
-        this.category = category;
+        this.idCategory = idCategory;
+        this.idBrand = idBrand;
     }
 
     public int getId() {
@@ -76,19 +80,28 @@ public class Product implements Serializable {
         this.stock = stock;
     }
 
-    public List<Image> getImages() {
+    public List<String> getImages() {
         return images;
     }
 
-    public void setImages(List<Image> images) {
+    public void setImages(List<String> images) {
         this.images = images;
     }
 
-    public Category getCategory() {
-        return category;
+    public int getIdCategory() {
+        return idCategory;
     }
 
-    public void setCategory(Category category) {
-        this.category = category;
+    public void setIdCategory(int idCategory) {
+        this.idCategory = idCategory;
     }
+
+    public int getIdBrand() {
+        return idBrand;
+    }
+
+    public void setIdBrand(int idBrand) {
+        this.idBrand = idBrand;
+    }
+
 }

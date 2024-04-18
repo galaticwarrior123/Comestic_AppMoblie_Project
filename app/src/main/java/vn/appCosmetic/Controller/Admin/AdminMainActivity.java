@@ -2,6 +2,7 @@ package vn.appCosmetic.Controller.Admin;
 
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
@@ -13,18 +14,31 @@ import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.RecyclerView;
 
 
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import vn.appCosmetic.Controller.Admin.ManageBrand.ManageBrandActivity;
 import vn.appCosmetic.Controller.Admin.ManageCategory.ManageCategoryActivity;
 import vn.appCosmetic.Controller.Admin.ManageProduct.ManageProductActivity;
+import vn.appCosmetic.Controller.Admin.ManageProduct.ProductAdapter;
+import vn.appCosmetic.Model.Product;
 import vn.appCosmetic.R;
+import vn.appCosmetic.ServiceAPI.Product.APIProductService;
+import vn.appCosmetic.ServiceAPI.Product.RetrofitProductClient;
 
 public class AdminMainActivity extends AppCompatActivity {
     ImageButton btnSlide;
     Toolbar toolbar;
     LinearLayout linearLayout;
     FrameLayout frameLayout;
+    ProductAdapter productAdapter;
+    RecyclerView rcViewProduct;
+    APIProductService apiProductService;
 
 
     @Override
@@ -43,6 +57,25 @@ public class AdminMainActivity extends AppCompatActivity {
         linearLayout.bringToFront();
         linearLayout.startAnimation(AnimationUtils.loadAnimation(AdminMainActivity.this, R.anim.slide_out));
         linearLayout.setVisibility(View.GONE);
+
+//        apiProductService= RetrofitProductClient.getRetrofit().create(APIProductService.class);
+//        apiProductService.getAllProduct().enqueue(new Callback<List<Product>>() {
+//            @Override
+//            public void onResponse(Call<List<Product>> call, Response<List<Product>> response) {
+//                if(response.isSuccessful()){
+//                    List<Product> productList = response.body();
+//                    productAdapter = new ProductAdapter(AdminMainActivity.this, productList);
+//                    rcViewProduct.setHasFixedSize(true);
+//
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<List<Product>> call, Throwable t) {
+//                Log.d("Error", t.getMessage());
+//            }
+//        });
+
 
 
 
