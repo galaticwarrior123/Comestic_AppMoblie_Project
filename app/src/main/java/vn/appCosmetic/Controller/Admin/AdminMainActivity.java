@@ -57,25 +57,7 @@ public class AdminMainActivity extends AppCompatActivity {
         linearLayout.bringToFront();
         linearLayout.startAnimation(AnimationUtils.loadAnimation(AdminMainActivity.this, R.anim.slide_out));
         linearLayout.setVisibility(View.GONE);
-
-//        apiProductService= RetrofitProductClient.getRetrofit().create(APIProductService.class);
-//        apiProductService.getAllProduct().enqueue(new Callback<List<Product>>() {
-//            @Override
-//            public void onResponse(Call<List<Product>> call, Response<List<Product>> response) {
-//                if(response.isSuccessful()){
-//                    List<Product> productList = response.body();
-//                    productAdapter = new ProductAdapter(AdminMainActivity.this, productList);
-//                    rcViewProduct.setHasFixedSize(true);
-//
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<List<Product>> call, Throwable t) {
-//                Log.d("Error", t.getMessage());
-//            }
-//        });
-
+        
 
 
 

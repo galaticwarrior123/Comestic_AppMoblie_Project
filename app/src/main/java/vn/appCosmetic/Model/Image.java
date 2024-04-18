@@ -7,16 +7,15 @@ public class Image implements Serializable {
     private int id;
     private String url;
 
+    private int product_id;
+
     public Image() {
     }
 
-    public Image(int id, String url) {
+    public Image(int id, String url, int product_id) {
         this.id = id;
         this.url = url;
-    }
-
-    public Image(String string) {
-        this.url = string;
+        this.product_id = product_id;
     }
 
 
@@ -35,4 +34,14 @@ public class Image implements Serializable {
     public void setUrl(String url) {
         this.url = url;
     }
+
+    public int getProduct_id() {
+        return product_id;
+    }
+
+    public void setProduct_id(int product_id) {
+        this.product_id = product_id;
+    }
+
+
 }

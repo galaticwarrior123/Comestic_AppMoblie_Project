@@ -15,58 +15,55 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:layout_marginLeft="24dp"
-            android:layout_marginRight="24dp"
             android:layout_marginTop="24dp"
+            android:layout_marginRight="24dp"
             android:orientation="vertical">
 
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Sign up with your Email Address"
-                android:textAlignment="center"
-                android:textSize="18sp"
-                android:textStyle="bold"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
+                android:text="Sign up with your Email Address"
+                android:textAlignment="center"
                 android:textColor="#A7A4A4"
-                />
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
 
+            <EditText
+                android:id="@+id/fullname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawablePadding="16dp"
+                android:hint="Fullname"
+                android:inputType="text"
+                android:text="Admin"
+                android:textSize="16sp" />
 
 
-                <EditText
-                    android:id="@+id/fullname"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:drawablePadding="16dp"
-                    android:hint="Fullname"
-                    android:text="Admin"
-                    android:inputType="text"
-                    android:textSize="16sp" />
+            <EditText
+                android:id="@+id/email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawablePadding="16dp"
+                android:hint="Email"
+                android:inputType="textEmailAddress"
+                android:text="admin@gmail.com"
+                android:textSize="16sp" />
 
 
-                <EditText
-                    android:id="@+id/email"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:drawablePadding="16dp"
-                    android:hint="Email"
-                    android:text="admin@gmail.com"
-                    android:inputType="textEmailAddress"
-                    android:textSize="16sp" />
-
-
-                <EditText
-                    android:id="@+id/password"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:drawablePadding="16dp"
-                    android:hint="Password"
-                    android:text="shashank"
-                    android:inputType="textPassword"
-                    android:maxLines="1"
-                    android:textSize="16sp" />
+            <EditText
+                android:id="@+id/password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawablePadding="16dp"
+                android:hint="Password"
+                android:inputType="textPassword"
+                android:maxLines="1"
+                android:text="shashank"
+                android:textSize="16sp" />
 
             <Button
                 android:id="@+id/sign_up"
@@ -126,7 +123,6 @@
 
 
                 </LinearLayout>
-
 
 
             </LinearLayout>

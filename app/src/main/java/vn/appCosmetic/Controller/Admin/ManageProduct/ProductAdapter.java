@@ -2,6 +2,9 @@ package vn.appCosmetic.Controller.Admin.ManageProduct;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,10 +16,16 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.io.IOException;
 import java.util.List;
 
 import vn.appCosmetic.Model.Product;
 import vn.appCosmetic.R;
+import vn.appCosmetic.Utils.ImageUtils;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHolder>{
 
@@ -47,11 +56,30 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Product productModel = productModelList.get(position);
         holder.txtNameProduct.setText(productModel.getName());
+        // lay ảnh từ dũ liệu firebase về và hiển thị
+        if(productModel.getImages() != null && productModel.getImages().size() > 0){
+            String url = productModel.getImages().get(0);
+            System.out.println("URL: " + url);
+            Uri uri = Uri.parse(url);
+            System.out.println("URI: " + uri);
+            holder.imgProduct.setImageURI(uri);
+        }
+        else{
+            holder.imgProduct.setImageResource(R.drawable.ic_launcher_background);
+        }
+
 
         holder.btnEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DialogUpdateProduct();
+            }
+        });
+
+        holder.btnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // xóa sản phẩm
             }
         });
 

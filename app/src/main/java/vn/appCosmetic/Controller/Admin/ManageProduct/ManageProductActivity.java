@@ -2,6 +2,9 @@ package vn.appCosmetic.Controller.Admin.ManageProduct;
 
 import static androidx.core.content.ContextCompat.checkSelfPermission;
 
+
+
+
 import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
@@ -32,6 +35,11 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -71,17 +79,17 @@ public class ManageProductActivity extends Fragment{
         View view =inflater.inflate(R.layout.activity_manage_product, container, false);
         apiProductService= RetrofitProductClient.getRetrofit().create(APIProductService.class);
         productModelList = new ArrayList<>();
-        RecyclerView recyclerView = view.findViewById(R.id.rcViewManageProduct);
+        recyclerViewProduct = view.findViewById(R.id.rcViewManageProduct);
         apiProductService.getAllProduct().enqueue(new retrofit2.Callback<List<Product>>() {
             @Override
             public void onResponse(retrofit2.Call<List<Product>> call, retrofit2.Response<List<Product>> response) {
                 if(response.isSuccessful()){
                     productModelList= response.body();
                     productAdapter = new ProductAdapter(getContext(), productModelList);
-                    recyclerView.setHasFixedSize(true);
+                    recyclerViewProduct.setHasFixedSize(true);
                     RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-                    recyclerView.setLayoutManager(layoutManager);
-                    recyclerView.setAdapter(productAdapter);
+                    recyclerViewProduct.setLayoutManager(layoutManager);
+                    recyclerViewProduct.setAdapter(productAdapter);
                     productAdapter.notifyDataSetChanged();
 
                 }
@@ -102,7 +110,7 @@ public class ManageProductActivity extends Fragment{
         apiCategoryService = RetrofitCategoryClient.getRetrofit().create(APICategoryService.class);
         apiCategoryService.getCategory().enqueue(new retrofit2.Callback<List<Category>>() {
             @Override
-            public void onResponse(retrofit2.Call<List<Category>> call, retrofit2.Response<List<Category>> response) {
+            public void onResponse(Call<List<Category>> call, Response<List<Category>> response) {
                 if(response.isSuccessful()){
                     List<Category> categoryList = new ArrayList<>();
                     categoryList.addAll(response.body());
@@ -117,9 +125,8 @@ public class ManageProductActivity extends Fragment{
 
                 }
             }
-
             @Override
-            public void onFailure(retrofit2.Call<List<Category>> call, Throwable t) {
+            public void onFailure(Call<List<Category>> call, Throwable t) {
                 Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
             }
         });
@@ -194,7 +201,6 @@ public class ManageProductActivity extends Fragment{
                 });
 
                 Button btnAddProduct = dialog.findViewById(R.id.buttonAddProduct);
-
                 EditText edtNameProduct = dialog.findViewById(R.id.editTextNameProduct);
                 EditText edtDescriptionProduct = dialog.findViewById(R.id.editTextDescriptionProduct);
                 EditText edtPriceProduct = dialog.findViewById(R.id.editTextPriceProduct);
@@ -204,7 +210,6 @@ public class ManageProductActivity extends Fragment{
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                         int categoryID = categoryList.get(position).getId();
-                        System.out.println("categoryID"+categoryID);
                         product.setIdCategory(categoryID);
                     }
 
@@ -219,8 +224,6 @@ public class ManageProductActivity extends Fragment{
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                         int brandID = brandList.get(position).getId();
                         product.setIdBrand(brandID);
-
-                        System.out.println("brandID"+brandID);
                     }
 
                     @Override
@@ -260,6 +263,7 @@ public class ManageProductActivity extends Fragment{
                                     productModelList.add(product);
                                     productAdapter.notifyDataSetChanged();
                                     dialog.dismiss();
+
                                     Toast.makeText(getContext(), "Add product success", Toast.LENGTH_SHORT).show();
                                 }
                                 else{
@@ -272,6 +276,14 @@ public class ManageProductActivity extends Fragment{
                                 Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
                             }
                         });
+                    }
+                });
+
+                Button btnCancelAdd = dialog.findViewById(R.id.buttonCancelAddProduct);
+                btnCancelAdd.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
                     }
                 });
                 dialog.show();
@@ -307,15 +319,8 @@ public class ManageProductActivity extends Fragment{
                 public void onActivityResult(ActivityResult result) {
                     if(result.getResultCode() == Activity.RESULT_OK){
                         Uri uri = result.getData().getData();
-                        try {
-                            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), uri);
-                            imageList.add(uri);
-                            imageAdapter.notifyDataSetChanged();
-                        } catch (FileNotFoundException e) {
-                            throw new RuntimeException(e);
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
+                        imageList.add(uri);
+                        imageAdapter.notifyDataSetChanged();
                     }
                 }
             }
