@@ -192,6 +192,28 @@
                     android:layout_width="230dp"
                     android:layout_height="30dp"
                     android:paddingLeft="10dp"
+                    android:text="Nhãn hiệu sản phẩm"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <Spinner
+                    android:id="@+id/spinnerUpdateBrandProduct"
+                    android:layout_width="325dp"
+                    android:layout_height="45dp"
+                    android:background="@drawable/border"
+                    android:paddingLeft="10dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="325dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="230dp"
+                    android:layout_height="30dp"
+                    android:paddingLeft="10dp"
                     android:text="Hình ảnh sản phẩm"
                     android:textSize="20sp"
                     android:textStyle="bold" />
