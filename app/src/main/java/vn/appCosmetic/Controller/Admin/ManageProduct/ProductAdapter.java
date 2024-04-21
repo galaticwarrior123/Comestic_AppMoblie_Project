@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -36,7 +37,9 @@ import vn.appCosmetic.Model.Category;
 import vn.appCosmetic.Model.Product;
 import vn.appCosmetic.R;
 import vn.appCosmetic.ServiceAPI.Brand.APIBrandService;
+import vn.appCosmetic.ServiceAPI.Brand.RetrofitBrandClient;
 import vn.appCosmetic.ServiceAPI.Category.APICategoryService;
+import vn.appCosmetic.ServiceAPI.Category.RetrofitCategoryClient;
 import vn.appCosmetic.ServiceAPI.Product.APIProductService;
 import vn.appCosmetic.Utils.ImageUtils;
 
@@ -124,8 +127,11 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
         dialog.setContentView(R.layout.activity_edit_product);
         EditText edtNameUpdateProduct, edtPriceUpdateProduct, edtDescriptionUpdateProduct, edtQuantityUpdateProduct;
         Spinner spnCategoryUpdateProduct, spnBrandUpdateProduct;
-        Button btnUpdate, btnCancel;
+        Button btnUpdateChooseImage, btnUpdate, btnCancel;
+        RecyclerView rcViewImageUpdateProduct;
 
+
+        rcViewImageUpdateProduct = dialog.findViewById(R.id.rcViewImageUpdateProduct);
         edtNameUpdateProduct = dialog.findViewById(R.id.editTextNameUpdateProduct);
         edtPriceUpdateProduct = dialog.findViewById(R.id.editTextUpdatePriceProduct);
         edtDescriptionUpdateProduct = dialog.findViewById(R.id.editTextUpdateDescriptionProduct);
@@ -134,8 +140,10 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
         spnCategoryUpdateProduct = dialog.findViewById(R.id.spinnerUpdateCategoryProduct);
         spnBrandUpdateProduct = dialog.findViewById(R.id.spinnerUpdateBrandProduct);
 
+        btnUpdateChooseImage = dialog.findViewById(R.id.buttonUpdateChooseImage);
         btnUpdate = dialog.findViewById(R.id.buttonUpdateProduct);
         btnCancel = dialog.findViewById(R.id.buttonCancelUpdate);
+
 
 
 
@@ -166,6 +174,20 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
         edtPriceUpdateProduct.setText(String.valueOf(productModel.getPrice()));
         edtDescriptionUpdateProduct.setText(productModel.getDescription());
         edtQuantityUpdateProduct.setText(String.valueOf(productModel.getStock()));
+
+        List<Uri> imageList = new ArrayList<>();
+        if(productModel.getImages() != null){
+            for(String url: productModel.getImages()){
+                Uri uri = Uri.parse(url);
+                imageList.add(uri);
+            }
+        }
+        ImageProductUpdateAdapter imageProductUpdateAdapter = new ImageProductUpdateAdapter(imageList, context);
+        rcViewImageUpdateProduct.setAdapter(imageProductUpdateAdapter);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
+        rcViewImageUpdateProduct.setLayoutManager(layoutManager);
+
+        apiCategoryService= RetrofitCategoryClient.getRetrofit().create(APICategoryService.class);
         apiCategoryService.getCategory().enqueue(new Callback<List<Category>>() {
             @Override
             public void onResponse(Call<List<Category>> call, Response<List<Category>> response) {
@@ -187,6 +209,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
 
             }
         });
+        apiBrandService= RetrofitBrandClient.getRetrofit().create(APIBrandService.class);
         apiBrandService.getAllBrand().enqueue(new Callback<List<Brand>>() {
             @Override
             public void onResponse(Call<List<Brand>> call, Response<List<Brand>> response) {
@@ -214,9 +237,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
                 dialog.dismiss();
             }
         });
-
-
-
 
         dialog.show();
     }
