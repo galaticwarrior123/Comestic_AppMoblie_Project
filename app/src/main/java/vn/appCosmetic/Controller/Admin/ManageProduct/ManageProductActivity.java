@@ -36,6 +36,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -308,6 +309,9 @@ public class ManageProductActivity extends Fragment{
                         List<String> listURLImage = new ArrayList<>();
                         count=0;
 
+                        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+
+                        
 
                         StorageReference storageReference = FirebaseStorage.getInstance().getReference();
                         StorageReference imageRef = storageReference.child("images/");

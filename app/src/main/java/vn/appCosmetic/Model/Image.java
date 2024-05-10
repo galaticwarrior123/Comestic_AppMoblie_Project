@@ -1,12 +1,16 @@
 package vn.appCosmetic.Model;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 public class Image implements Serializable {
 
+    @SerializedName("id")
     private int id;
+    @SerializedName("url")
     private String url;
-
+    @SerializedName("product")
     private int product_id;
 
     public Image() {
