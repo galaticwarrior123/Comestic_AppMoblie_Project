@@ -1,9 +1,11 @@
 package vn.appCosmetic.Controller.LoginRegister;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -42,7 +44,7 @@ public class RegisterActivity extends AppCompatActivity {
         passWord = findViewById(R.id.password);
         btnSignUp= findViewById(R.id.btn_sign_up);
 
-        apiUsersService = RetrofitUsersClient.getRetrofit().create(APIUsersService.class);
+
 
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,24 +52,32 @@ public class RegisterActivity extends AppCompatActivity {
                 String Username = userName.getText().toString().trim();
                 String Email = eMail.getText().toString().trim();
                 String Password = passWord.getText().toString().trim();
-                Users users = new Users();
-                users.setUsername(Username);
-                users.setEmail(Email);
-                users.setPassword(Password);
-                System.out.println(Username+ Email+ Password);
-                apiUsersService.postUsers(users).enqueue(new Callback<Users>() {
-                    @Override
-                    public void onResponse(Call<Users> call, Response<Users> response) {
-                        if(response.isSuccessful()){
-                            Toast.makeText(RegisterActivity.this, "Register successful", Toast.LENGTH_SHORT).show();
-                        }
-                    }
 
-                    @Override
-                    public void onFailure(Call<Users> call, Throwable t) {
-                        Toast.makeText(RegisterActivity.this, "Register fail", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                if( !TextUtils.isEmpty(Username) && !TextUtils.isEmpty(Email) && !TextUtils.isEmpty(Password)){
+                    Users users = new Users();
+                    users.setUsername(Username);
+                    users.setEmail(Email);
+                    users.setPassword(Password);
+                    apiUsersService = RetrofitUsersClient.getRetrofit().create(APIUsersService.class);
+                    apiUsersService.postUsers(users).enqueue(new Callback<Users>() {
+                        @Override
+                        public void onResponse(@NonNull Call<Users> call, @NonNull Response<Users> response) {
+                            if(response.isSuccessful()){
+                                Toast.makeText(RegisterActivity.this, "Register successful", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(RegisterActivity.this,LoginActivity.class);
+                                startActivity(intent);
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<Users> call, Throwable t) {
+                            Toast.makeText(RegisterActivity.this, "Register fail", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+                else {
+                    Toast.makeText(RegisterActivity.this, "Register fail, Element is null", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 

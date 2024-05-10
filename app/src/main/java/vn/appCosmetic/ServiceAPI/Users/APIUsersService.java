@@ -7,6 +7,6 @@ import vn.appCosmetic.Model.Category;
 import vn.appCosmetic.Model.Users;
 
 public interface APIUsersService {
-    @POST("")
+    @POST(" ")
     Call<Users> postUsers(@Body Users users);
 }
