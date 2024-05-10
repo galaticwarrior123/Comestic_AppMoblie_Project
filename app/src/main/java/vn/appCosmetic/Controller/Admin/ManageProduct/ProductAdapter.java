@@ -1,9 +1,19 @@
 package vn.appCosmetic.Controller.Admin.ManageProduct;
 
+
+
+import static androidx.core.app.ActivityCompat.requestPermissions;
+import static androidx.core.content.PermissionChecker.checkSelfPermission;
+
+import android.Manifest;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +28,12 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.core.content.PermissionChecker;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -41,6 +56,7 @@ import vn.appCosmetic.ServiceAPI.Brand.RetrofitBrandClient;
 import vn.appCosmetic.ServiceAPI.Category.APICategoryService;
 import vn.appCosmetic.ServiceAPI.Category.RetrofitCategoryClient;
 import vn.appCosmetic.ServiceAPI.Product.APIProductService;
+import vn.appCosmetic.ServiceAPI.Product.RetrofitProductClient;
 import vn.appCosmetic.Utils.ImageUtils;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHolder>{
@@ -55,6 +71,12 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
     private APIProductService apiProductService;
     private APICategoryService apiCategoryService;
     private APIBrandService apiBrandService;
+
+    private List<Uri> imageList = new ArrayList<>();
+
+//    private ImageProductUpdateAdapter imageAdapter = new ImageProductUpdateAdapter(imageList, context);
+
+
 
 
 
@@ -75,11 +97,12 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Product productModel = productModelList.get(position);
+        System.out.println("id"+productModel.getId());
         holder.txtNameProduct.setText(productModel.getName());
         if(productModel.getImages() != null && productModel.getImages().size() > 0){
             String url = productModel.getImages().get(0);
             Uri uri = Uri.parse(url);
-            holder.imgProduct.setImageURI(uri);
+            Glide.with(holder.itemView.getContext()).load(uri).into(holder.imgProduct);
         }
         else{
             holder.imgProduct.setImageResource(R.drawable.ic_launcher_background);
@@ -144,7 +167,12 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
         btnUpdate = dialog.findViewById(R.id.buttonUpdateProduct);
         btnCancel = dialog.findViewById(R.id.buttonCancelUpdate);
 
-
+//        btnUpdateChooseImage.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                onClickRequestPermission();
+//            }
+//        });
 
 
         btnUpdate.setOnClickListener(new View.OnClickListener() {
@@ -248,6 +276,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
         Button btnDelete = dialog.findViewById(R.id.buttonDeleteProduct);
         Button btnCancel = dialog.findViewById(R.id.buttonCancelDeleteProduct);
 
+
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -258,6 +287,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                apiProductService = RetrofitProductClient.getRetrofit().create(APIProductService.class);
                 apiProductService.deleteProduct(position).enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
@@ -267,14 +297,19 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
                                     productModelList.remove(i);
                                 }
                             }
-                            Toast.makeText(context, "Delete product success", Toast.LENGTH_SHORT).show();
+                            notifyDataSetChanged();
                             dialog.dismiss();
+                            Toast.makeText(context, "Delete success", Toast.LENGTH_SHORT).show();
+                        }
+                        else{
+                            int statusCode = response.code();
+                            System.out.println("Error"+statusCode);
                         }
                     }
 
                     @Override
                     public void onFailure(Call<Void> call, Throwable t) {
-                        Toast.makeText(context, "Delete product fail", Toast.LENGTH_SHORT).show();
+                        System.out.println("Error"+t.getMessage());
                     }
                 });
             }
@@ -282,6 +317,44 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
         dialog.show();
     }
 
+
+//    private void onClickRequestPermission() {
+//        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+//            openGallery();
+//            return;
+//        }
+//        if (checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) == PermissionChecker.PERMISSION_GRANTED) {
+//            openGallery();
+//        } else {
+//            String[] permission = {Manifest.permission.READ_EXTERNAL_STORAGE};
+//            requestPermissions((Activity) context, permission, 1);
+//        }
+//    }
+//
+//    private void openGallery() {
+//        Intent intent = new Intent();
+//        intent.setType("image/*");
+//        intent.setAction(Intent.ACTION_GET_CONTENT);
+//        mActivityResultLauncher.launch(Intent.createChooser(intent, "Select Picture"));
+//    }
+//
+//    private final ActivityResultLauncher<Intent> mActivityResultLauncher = registerForActivityResult(
+//            new ActivityResultContracts.StartActivityForResult(),
+//            new ActivityResultCallback<ActivityResult>() {
+//                @Override
+//                public void onActivityResult(ActivityResult result) {
+//                    if(result.getResultCode() == Activity.RESULT_OK){
+//                        Uri uri = result.getData().getData();
+//                        imageList.add(uri);
+//                        imageAdapter.notifyDataSetChanged();
+//                    }
+//                }
+//            }
+//    );
+//
+//    private ActivityResultLauncher<Intent> registerForActivityResult(ActivityResultContracts.StartActivityForResult startActivityForResult, ActivityResultCallback<ActivityResult> activityResultCallback) {
+//        return registerForActivityResult(startActivityForResult, activityResultCallback);
+//    }
 
 
 }

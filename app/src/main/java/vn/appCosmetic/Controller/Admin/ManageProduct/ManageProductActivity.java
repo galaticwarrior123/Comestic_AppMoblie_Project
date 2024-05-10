@@ -36,8 +36,14 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -59,12 +65,16 @@ public class ManageProductActivity extends Fragment{
     private APICategoryService apiCategoryService;
     private APIBrandService apiBrandService;
     private List<Uri> imageList = new ArrayList<>();
+    private List<String> imageKeys = new ArrayList<>();
+
     private ImageAdapter imageAdapter;
 
     private ProductAdapter productAdapter;
 
     private List<Product> productModelList;
     private RecyclerView recyclerViewProduct;
+
+    private int count = 0;
 
     @Nullable
     @Override
@@ -295,35 +305,51 @@ public class ManageProductActivity extends Fragment{
                         product.setPrice(price);
                         product.setStock(stock);
 
-                        List<String> listImage = new ArrayList<>();
+                        List<String> listURLImage = new ArrayList<>();
+                        count=0;
+
+
+                        StorageReference storageReference = FirebaseStorage.getInstance().getReference();
+                        StorageReference imageRef = storageReference.child("images/");
+
                         for (Uri uri : imageList){
-                            listImage.add(uri.toString());
+                            String imageName = UUID.randomUUID().toString();
+                            imageRef.child(imageName).putFile(uri).addOnSuccessListener(taskSnapshot -> {
+                                imageRef.child(imageName).getDownloadUrl().addOnSuccessListener(uri1 -> {
+                                    listURLImage.add(uri1.toString());
+                                    count++;
+                                    if(count == imageList.size()){
+                                        product.setImages(listURLImage);
+
+                                        apiProductService = RetrofitProductClient.getRetrofit().create(APIProductService.class);
+                                        apiProductService.postProduct(product).enqueue(new retrofit2.Callback<Product>() {
+                                            @Override
+                                            public void onResponse(retrofit2.Call<Product> call, retrofit2.Response<Product> response) {
+                                                if(response.isSuccessful()){
+                                                    Product product = response.body();
+                                                    productModelList.add(product);
+                                                    productAdapter.notifyDataSetChanged();
+                                                    listURLImage.clear();
+                                                    imageList.clear();
+                                                    dialog.dismiss();
+
+                                                    Toast.makeText(getContext(), "Add product success", Toast.LENGTH_SHORT).show();
+                                                }
+                                                else{
+                                                    Toast.makeText(getContext(), "Add product fail", Toast.LENGTH_SHORT).show();
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onFailure(retrofit2.Call<Product> call, Throwable t) {
+                                                Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                                    }
+                                });
+                            });
                         }
-                        product.setImages(listImage);
 
-
-
-                        apiProductService.postProduct(product).enqueue(new retrofit2.Callback<Product>() {
-                            @Override
-                            public void onResponse(retrofit2.Call<Product> call, retrofit2.Response<Product> response) {
-                                if(response.isSuccessful()){
-                                    Product product = response.body();
-                                    productModelList.add(product);
-                                    productAdapter.notifyDataSetChanged();
-                                    dialog.dismiss();
-
-                                    Toast.makeText(getContext(), "Add product success", Toast.LENGTH_SHORT).show();
-                                }
-                                else{
-                                    Toast.makeText(getContext(), "Add product fail", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(retrofit2.Call<Product> call, Throwable t) {
-                                Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
-                            }
-                        });
                     }
                 });
 

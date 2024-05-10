@@ -37,20 +37,15 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="vertical">
-
             <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:id="@+id/rcViewImageUpdateProduct"
-                android:layout_width="414dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
-                android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView"
-                app:layout_editor_absoluteY="100dp">
-
-            </androidx.recyclerview.widget.RecyclerView>
-
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:orientation="horizontal" />
             <LinearLayout
                 android:layout_width="325dp"
                 android:layout_height="wrap_content"

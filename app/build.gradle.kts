@@ -1,5 +1,6 @@
 plugins {
     id("com.android.application")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -29,6 +30,15 @@ android {
 }
 
 dependencies {
+    implementation("com.google.android.gms:play-services-auth:20.4.1")
+    /**firebase dependencies*/
+    implementation ("com.google.firebase:firebase-auth:21.1.0")
+    implementation ("com.google.firebase:firebase-database:20.1.0")
+    implementation(platform("com.google.firebase:firebase-bom:32.8.1"))
+    implementation ("com.google.firebase:firebase-database-ktx")
+    implementation ("com.google.firebase:firebase-firestore:24.4.5")
+    implementation ("com.google.firebase:firebase-storage:20.1.0")
+    implementation ("com.firebaseui:firebase-ui-database:8.0.1")
     implementation ("com.squareup.retrofit2:retrofit:2.9.0")
     implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation ("com.squareup.okhttp3:logging-interceptor:3.12.0")

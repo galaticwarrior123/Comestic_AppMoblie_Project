@@ -13,16 +13,20 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import vn.appCosmetic.Model.Product;
 import vn.appCosmetic.R;
+import vn.appCosmetic.ServiceAPI.Image.APIImageService;
 
 public class ImageProductUpdateAdapter extends RecyclerView.Adapter<ImageProductUpdateAdapter.ImageProductUpdateViewHolder>{
 
     List<Uri> imageList;
     Context context;
     LayoutInflater inflater;
+
+    List<Integer> indexImage= new ArrayList<>();
 
     public ImageProductUpdateAdapter(List<Uri> imageList, Context context) {
         this.imageList = imageList;
