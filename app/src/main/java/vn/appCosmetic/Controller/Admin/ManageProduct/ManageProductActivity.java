@@ -368,15 +368,16 @@ public class ManageProductActivity extends Fragment{
     }
 
     private void onClickRequestPermission(){
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-            if(checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
-                String[] permissions = {Manifest.permission.READ_EXTERNAL_STORAGE};
-                requestPermissions(permissions, 1001);
-            }else{
-                openGallery();
-            }
-        }else{
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB_MR2){
             openGallery();
+            return;
+        }
+        if(checkSelfPermission(getContext(),Manifest.permission.READ_EXTERNAL_STORAGE)== PackageManager.PERMISSION_GRANTED){
+            openGallery();
+        }
+        else{
+            String [] permission = {Manifest.permission.READ_EXTERNAL_STORAGE};
+            requestPermissions(permission, 1);
         }
     }
 
