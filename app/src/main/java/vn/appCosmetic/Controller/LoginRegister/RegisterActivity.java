@@ -1,6 +1,5 @@
 package vn.appCosmetic.Controller.LoginRegister;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -44,7 +43,7 @@ public class RegisterActivity extends AppCompatActivity {
         passWord = findViewById(R.id.password);
         btnSignUp= findViewById(R.id.btn_sign_up);
 
-
+        apiUsersService = RetrofitUsersClient.getRetrofit().create(APIUsersService.class);
 
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -52,20 +51,16 @@ public class RegisterActivity extends AppCompatActivity {
                 String Username = userName.getText().toString().trim();
                 String Email = eMail.getText().toString().trim();
                 String Password = passWord.getText().toString().trim();
-
-                if( !TextUtils.isEmpty(Username) && !TextUtils.isEmpty(Email) && !TextUtils.isEmpty(Password)){
+                if(!TextUtils.isEmpty(Username) && !TextUtils.isEmpty(Email) && !TextUtils.isEmpty(Password)){
                     Users users = new Users();
                     users.setUsername(Username);
                     users.setEmail(Email);
                     users.setPassword(Password);
-                    apiUsersService = RetrofitUsersClient.getRetrofit().create(APIUsersService.class);
                     apiUsersService.postUsers(users).enqueue(new Callback<Users>() {
                         @Override
-                        public void onResponse(@NonNull Call<Users> call, @NonNull Response<Users> response) {
+                        public void onResponse(Call<Users> call, Response<Users> response) {
                             if(response.isSuccessful()){
                                 Toast.makeText(RegisterActivity.this, "Register successful", Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(RegisterActivity.this,LoginActivity.class);
-                                startActivity(intent);
                             }
                         }
 
