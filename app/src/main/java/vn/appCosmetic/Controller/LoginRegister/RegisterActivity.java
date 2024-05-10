@@ -1,5 +1,6 @@
 package vn.appCosmetic.Controller.LoginRegister;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -42,7 +43,7 @@ public class RegisterActivity extends AppCompatActivity {
         passWord = findViewById(R.id.password);
         btnSignUp= findViewById(R.id.btn_sign_up);
 
-        apiUsersService = RetrofitUsersClient.getRetrofit().create(APIUsersService.class);
+
 
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,9 +56,11 @@ public class RegisterActivity extends AppCompatActivity {
                 users.setEmail(Email);
                 users.setPassword(Password);
                 System.out.println(Username+ Email+ Password);
+
+                apiUsersService = RetrofitUsersClient.getRetrofit().create(APIUsersService.class);
                 apiUsersService.postUsers(users).enqueue(new Callback<Users>() {
                     @Override
-                    public void onResponse(Call<Users> call, Response<Users> response) {
+                    public void onResponse(@NonNull Call<Users> call, @NonNull Response<Users> response) {
                         if(response.isSuccessful()){
                             Toast.makeText(RegisterActivity.this, "Register successful", Toast.LENGTH_SHORT).show();
                         }
