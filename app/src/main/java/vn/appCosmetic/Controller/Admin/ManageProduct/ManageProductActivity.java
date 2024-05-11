@@ -74,6 +74,8 @@ public class ManageProductActivity extends Fragment{
     private List<Product> productModelList;
     private RecyclerView recyclerViewProduct;
 
+
+
     private int count = 0;
 
     @Nullable
@@ -387,18 +389,15 @@ public class ManageProductActivity extends Fragment{
         mActivityResultLauncher.launch(intent);
     }
 
-    private final ActivityResultLauncher<Intent> mActivityResultLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>() {
-                @Override
-                public void onActivityResult(ActivityResult result) {
-                    if(result.getResultCode() == Activity.RESULT_OK){
-                        Uri uri = result.getData().getData();
-                        imageList.add(uri);
-                        imageAdapter.notifyDataSetChanged();
-                    }
-                }
+    ActivityResultLauncher<Intent> mActivityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+        @Override
+        public void onActivityResult(ActivityResult result) {
+            if(result.getResultCode() == Activity.RESULT_OK){
+                Uri uri = result.getData().getData();
+                imageList.add(uri);
+                imageAdapter.notifyDataSetChanged();
             }
-    );
+        }
+    });
 
 }

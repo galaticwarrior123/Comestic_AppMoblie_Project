@@ -19,6 +19,9 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".Controller.Admin.ManageProduct.EditProductActivity"
+            android:exported="false" />
+        <activity
             android:name=".Controller.LoginRegister.RegisterActivity"
             android:exported="false" />
         <activity
