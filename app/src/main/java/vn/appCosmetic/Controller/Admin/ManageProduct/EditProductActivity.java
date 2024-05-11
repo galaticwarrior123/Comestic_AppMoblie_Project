@@ -43,7 +43,7 @@ public class EditProductActivity extends AppCompatActivity {
 
     private Product product;
     private List<Uri> imageList = new ArrayList<>();
-    private ImageAdapter imageAdapter = new ImageAdapter(imageList);
+    private ImageAdapter imageAdapter ;
 
     private Context context = this;
 
@@ -114,8 +114,8 @@ public class EditProductActivity extends AppCompatActivity {
         for(String url: product.getImages()){
             imageList.add(Uri.parse(url));
         }
-        imageAdapter.notifyDataSetChanged();
-        rcViewImageUpdateProduct.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        imageAdapter = new ImageAdapter(imageList);
+        rcViewImageUpdateProduct.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         rcViewImageUpdateProduct.setAdapter(imageAdapter);
 
         apiCategoryService= RetrofitCategoryClient.getRetrofit().create(APICategoryService.class);

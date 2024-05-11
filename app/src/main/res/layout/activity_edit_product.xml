@@ -213,7 +213,6 @@
                 android:layout_width="325dp"
                 android:layout_height="200dp"
                 android:layout_marginTop="10dp"
-                android:background="@drawable/border"
                 android:padding="5dp" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
