@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/img_item"
+    android:background="@drawable/border_manage_admin"
     tools:context=".Admin.ManageCategory.EditCategory">
 
     <TextView
@@ -89,14 +89,14 @@
 
     <Button
         android:id="@+id/buttonUpdateCategory"
-        android:layout_width="150dp"
+        android:layout_width="130dp"
         android:layout_height="50dp"
         android:layout_marginTop="12dp"
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="16dp"
         android:backgroundTint="#00FF00"
         android:fontFamily="sans-serif-medium"
-        android:text="Cập nhât"
+        android:text="Thêm"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

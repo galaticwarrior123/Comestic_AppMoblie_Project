@@ -95,6 +95,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
             @Override
             public void onClick(View v) {
                 String nameUpdateCategory= edtNameCategory.getText().toString().trim();
+                System.out.println("Update Click");
                 if(nameUpdateCategory.equals("")){
                     edtNameCategory.setError("Vui lòng nhập tên danh mục");
                 }else{
@@ -102,7 +103,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
 
                     apiCategoryService= RetrofitCategoryClient.getRetrofit().create(APICategoryService.class);
                     Category category = new Category();
-                    category.setId(position);
+                    category.setId(category.getId());
                     category.setNameCategory(nameUpdateCategory);
                     apiCategoryService.putCategory(position,category).enqueue(new Callback<Category>() {
                         @Override
