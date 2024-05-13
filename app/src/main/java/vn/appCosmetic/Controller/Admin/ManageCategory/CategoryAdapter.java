@@ -159,7 +159,6 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
             @Override
             public void onClick(View v) {
                 apiCategoryService= RetrofitCategoryClient.getRetrofit().create(APICategoryService.class);
-                System.out.println(apiCategoryService.toString().trim());
                 apiCategoryService.deleteCategory(position).enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
@@ -174,7 +173,6 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
                             Toast.makeText(context, "Delete success", Toast.LENGTH_SHORT).show();
                         }
                         else{
-                            int statusCode = response.code();
                             Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show();
                         }
                     }

@@ -258,10 +258,6 @@ public class ManageProductActivity extends Fragment{
                         List<String> listURLImage = new ArrayList<>();
                         count=0;
 
-                        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-
-                        
-
                         StorageReference storageReference = FirebaseStorage.getInstance().getReference();
                         StorageReference imageRef = storageReference.child("images/");
 
