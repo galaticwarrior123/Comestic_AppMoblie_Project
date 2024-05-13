@@ -174,14 +174,13 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
                             Toast.makeText(context, "Delete success", Toast.LENGTH_SHORT).show();
                         }
                         else{
-                            int statusCode = response.code();
-                            System.out.println("Error"+statusCode);
+                            Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show();
                         }
                     }
 
                     @Override
                     public void onFailure(Call<Void> call, Throwable t) {
-                        System.out.println("Error"+t.getMessage());
+                        Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show();
                     }
                 });
             }

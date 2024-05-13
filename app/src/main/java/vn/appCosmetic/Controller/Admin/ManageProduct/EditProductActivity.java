@@ -21,6 +21,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,18 +89,19 @@ public class EditProductActivity extends AppCompatActivity {
                 }
                 productUpdate.setImages(listImage);
 
-                APIProductService apiProductService = RetrofitProductClient.getRetrofit().create(APIProductService.class);
+                apiProductService = RetrofitProductClient.getRetrofit().create(APIProductService.class);
                 apiProductService.putProduct(product.getId(),productUpdate).enqueue(new Callback<Product>() {
                     @Override
                     public void onResponse(Call<Product> call, Response<Product> response) {
                         if(response.isSuccessful()){
+                            Toast.makeText(context, "Update successful", Toast.LENGTH_SHORT).show();
                             finish();
                         }
                     }
 
                     @Override
                     public void onFailure(Call<Product> call, Throwable t) {
-
+                        Toast.makeText(context, "Update fail", Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -137,7 +139,7 @@ public class EditProductActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<Category>> call, Throwable t) {
-
+                Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show();
             }
         });
         apiBrandService= RetrofitBrandClient.getRetrofit().create(APIBrandService.class);
@@ -159,7 +161,7 @@ public class EditProductActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<Brand>> call, Throwable t) {
-
+                Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show();
             }
         });
 
