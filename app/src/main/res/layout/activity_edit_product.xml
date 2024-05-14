@@ -222,19 +222,17 @@
         android:layout_width="125dp"
         android:layout_height="60dp"
         android:layout_marginStart="48dp"
-        android:layout_marginTop="41dp"
+        android:layout_marginTop="60dp"
         android:layout_marginEnd="97dp"
-        android:layout_marginBottom="16dp"
         android:backgroundTint="#E64040"
         android:fontFamily="sans-serif-medium"
         android:text="Hủy"
         android:textColor="#FFFFFF"
         android:textSize="18dp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/buttonUpdateProduct"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nestedScrollView"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toBottomOf="@+id/nestedScrollView" />
 
     <Button
         android:id="@+id/buttonUpdateProduct"
@@ -242,15 +240,12 @@
         android:layout_height="60dp"
         android:layout_marginTop="60dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
         android:backgroundTint="#4CAF50"
         android:fontFamily="sans-serif-medium"
         android:text="Cập nhật"
         android:textColor="#FFFFFF"
         android:textSize="18dp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nestedScrollView"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toBottomOf="@+id/nestedScrollView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
