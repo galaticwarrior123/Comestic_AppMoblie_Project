@@ -7,7 +7,7 @@ import java.io.Serializable;
 public class Users implements Serializable {
     @SerializedName("id")
     private int id;
-    @SerializedName("username")
+    @SerializedName("userName")
     private String username;
     @SerializedName("email")
     private String email;

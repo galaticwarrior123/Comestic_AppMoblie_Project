@@ -24,7 +24,6 @@ import vn.appCosmetic.ServiceAPI.Users.RetrofitUsersClient;
 
 public class ManageUserActivity extends Fragment {
 
-    private Context context;
     private APIUsersService apiUsersService;
     private UserAdapter userAdapter;
     private RecyclerView rcViewUser;
@@ -42,21 +41,22 @@ public class ManageUserActivity extends Fragment {
             public void onResponse(Call<List<Users>> call, Response<List<Users>> response) {
                 if(response.isSuccessful()){
                     usersList = response.body();
-                    userAdapter = new UserAdapter(context, usersList);
+                    System.out.println(usersList.size());
+                    userAdapter = new UserAdapter(getContext(), usersList);
                     rcViewUser.setHasFixedSize(true);
-                    RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
+                    RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
                     rcViewUser.setLayoutManager(layoutManager);
                     rcViewUser.setAdapter(userAdapter);
                     userAdapter.notifyDataSetChanged();
                 }
                 else{
-                    Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<List<Users>> call, Throwable t) {
-                Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
             }
 
         });
