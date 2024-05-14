@@ -5,6 +5,7 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -16,14 +17,23 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.Spinner;
+import android.widget.Toast;
+
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -50,7 +60,12 @@ public class EditProductActivity extends AppCompatActivity {
     private APICategoryService apiCategoryService;
     private APIBrandService apiBrandService;
 
+
     private APIProductService apiProductService;
+
+    List<Category> categoryList = new ArrayList<>();
+    List<Brand> brandList = new ArrayList<>();
+
 
     EditText edtNameUpdateProduct, edtPriceUpdateProduct, edtDescriptionUpdateProduct, edtQuantityUpdateProduct;
     Spinner spnCategoryUpdateProduct, spnBrandUpdateProduct;
@@ -64,42 +79,92 @@ public class EditProductActivity extends AppCompatActivity {
         product = (Product) getIntent().getSerializableExtra("product");
         initUI();
         setInfoProduct();
+        System.out.println("Update");
+
+        Product productUpdate = new Product();
+        spnCategoryUpdateProduct.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                int categoryId = categoryList.get(position).getId();
+                productUpdate.setIdCategory(categoryId);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                Log.e("Error", "Error");
+            }
+        });
+        spnBrandUpdateProduct.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                int brandId = brandList.get(position).getId();
+                productUpdate.setIdBrand(brandId);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                Log.e("Error", "Error");
+            }
+        });
 
         btnUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 String nameUpdate = edtNameUpdateProduct.getText().toString();
                 String descriptionUpdate = edtDescriptionUpdateProduct.getText().toString();
                 int priceUpdate = Integer.parseInt(edtPriceUpdateProduct.getText().toString());
                 int quantityUpdate = Integer.parseInt(edtQuantityUpdateProduct.getText().toString());
-                String categoryUpdate = spnCategoryUpdateProduct.getSelectedItem().toString();
-                String brandUpdate = spnBrandUpdateProduct.getSelectedItem().toString();
-                Product productUpdate = new Product();
+
+
+
                 productUpdate.setName(nameUpdate);
                 productUpdate.setDescription(descriptionUpdate);
                 productUpdate.setPrice(priceUpdate);
                 productUpdate.setStock(quantityUpdate);
-                productUpdate.setIdCategory(Integer.parseInt(categoryUpdate));
-                productUpdate.setIdBrand(Integer.parseInt(brandUpdate));
-
                 List<String> listImage = new ArrayList<>();
+                StorageReference storageReference = FirebaseStorage.getInstance().getReference();
+                StorageReference imageRef = storageReference.child("images/");
+                // Cập nhật lại ảnh nếu mà có ảnh trùng trong firebaseStorage thì xóa ảnh đó đi
                 for(Uri uri: imageList){
-                    listImage.add(uri.toString());
+                    // Kiểm tra xem ảnh không phải là content của firebaseStorage thì thêm vào listImage
+                    if(!uri.toString().contains("firebasestorage.googleapis.com")) {
+                        String imageName = UUID.randomUUID().toString();
+                        StorageReference ref = imageRef.child(imageName);
+                        ref.child(imageName).putFile(uri).addOnSuccessListener(taskSnapshot -> {
+                            ref.getDownloadUrl().addOnSuccessListener(uri1 -> {
+                                listImage.add(uri1.toString());
+                            });
+                        });
+                    }
+                    else{
+                        listImage.add(uri.toString());
+                    }
                 }
                 productUpdate.setImages(listImage);
-
-                APIProductService apiProductService = RetrofitProductClient.getRetrofit().create(APIProductService.class);
+                apiProductService = RetrofitProductClient.getRetrofit().create(APIProductService.class);
                 apiProductService.putProduct(product.getId(),productUpdate).enqueue(new Callback<Product>() {
                     @Override
                     public void onResponse(Call<Product> call, Response<Product> response) {
                         if(response.isSuccessful()){
+                            Toast.makeText(context, "Update Success", Toast.LENGTH_SHORT).show();
+                            // Cập nhật lại list product trước khi finish
+
+                            FragmentManager fragmentManager = getSupportFragmentManager();
+                            FrameLayout frameLayout = findViewById(R.id.frameLayoutManage);
+                            frameLayout.removeAllViews();
+                            fragmentManager.beginTransaction().replace(R.id.frameLayoutManage, new ManageProductActivity()).commit();
                             finish();
+
+
+
+
                         }
                     }
 
                     @Override
                     public void onFailure(Call<Product> call, Throwable t) {
-
+                        Toast.makeText(context, "Update Failed", Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -123,7 +188,7 @@ public class EditProductActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<List<Category>> call, Response<List<Category>> response) {
                 if(response.isSuccessful()){
-                    List<Category> categoryList = response.body();
+                    categoryList.addAll(response.body());
                     List<String> listStringCategory= new ArrayList<>();
                     for(Category category: categoryList){
                         listStringCategory.add(category.getNameCategory());
@@ -137,7 +202,7 @@ public class EditProductActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<Category>> call, Throwable t) {
-
+                Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show();
             }
         });
         apiBrandService= RetrofitBrandClient.getRetrofit().create(APIBrandService.class);
@@ -145,7 +210,7 @@ public class EditProductActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<List<Brand>> call, Response<List<Brand>> response) {
                 if(response.isSuccessful()){
-                    List<Brand> brandList = response.body();
+                    brandList.addAll(response.body());
                     List<String> listStringBrand= new ArrayList<>();
                     for(Brand brand: brandList){
                         listStringBrand.add(brand.getNameBrand());
@@ -159,7 +224,7 @@ public class EditProductActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<Brand>> call, Throwable t) {
-
+                Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -222,4 +287,6 @@ public class EditProductActivity extends AppCompatActivity {
             }
         }
     });
+
+
 }
