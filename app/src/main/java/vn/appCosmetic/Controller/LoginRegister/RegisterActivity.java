@@ -60,7 +60,6 @@ public class RegisterActivity extends AppCompatActivity {
                         @Override
                         public void onResponse(Call<Users> call, Response<Users> response) {
                             if(response.isSuccessful()){
-                                Toast.makeText(RegisterActivity.this, "Register successful", Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
                                 startActivity(intent);
                             }

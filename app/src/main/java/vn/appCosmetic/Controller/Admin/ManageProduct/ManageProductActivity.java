@@ -42,8 +42,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -114,21 +112,22 @@ public class ManageProductActivity extends Fragment{
 
 
 
-        Spinner spinner = view.findViewById(R.id.spinnerManageProduct);
+        Spinner spnCate = view.findViewById(R.id.spinnerManageProduct);
+        List<Category> categoryList = new ArrayList<>();
         apiCategoryService = RetrofitCategoryClient.getRetrofit().create(APICategoryService.class);
         apiCategoryService.getCategory().enqueue(new retrofit2.Callback<List<Category>>() {
             @Override
             public void onResponse(Call<List<Category>> call, Response<List<Category>> response) {
                 if(response.isSuccessful()){
-                    List<Category> categoryList = new ArrayList<>();
                     categoryList.addAll(response.body());
                     List<String> list = new ArrayList<>();
+                    list.add("All");
                     for (Category category : categoryList){
                         list.add(category.getNameCategory());
                     }
                     ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, list);
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    spinner.setAdapter(adapter);
+                    spnCate.setAdapter(adapter);
 
 
                 }
@@ -136,6 +135,60 @@ public class ManageProductActivity extends Fragment{
             @Override
             public void onFailure(Call<List<Category>> call, Throwable t) {
                 Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        spnCate.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String nameCategory = parent.getItemAtPosition(position).toString();
+                if(nameCategory.equals("All")){
+                    apiProductService.getAllProduct().enqueue(new retrofit2.Callback<List<Product>>() {
+                        @Override
+                        public void onResponse(retrofit2.Call<List<Product>> call, retrofit2.Response<List<Product>> response) {
+                            if(response.isSuccessful()){
+                                productModelList.clear();
+                                productModelList.addAll(response.body());
+                                productAdapter.notifyDataSetChanged();
+                            }
+                            else{
+                                Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(retrofit2.Call<List<Product>> call, Throwable t) {
+                            Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+                else{
+                    int idCategory = categoryList.get(position-1).getId();
+                    apiProductService.getProductByCategory(idCategory).enqueue(new retrofit2.Callback<List<Product>>() {
+                        @Override
+                        public void onResponse(retrofit2.Call<List<Product>> call, retrofit2.Response<List<Product>> response) {
+                            if(response.isSuccessful()){
+                                productModelList.clear();
+                                productModelList.addAll(response.body());
+                                productAdapter.notifyDataSetChanged();
+                            }
+                            else{
+                                Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(retrofit2.Call<List<Product>> call, Throwable t) {
+                            Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
             }
         });
 
