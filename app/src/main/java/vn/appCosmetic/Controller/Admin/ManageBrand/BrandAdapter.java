@@ -23,7 +23,7 @@ import retrofit2.Response;
 import vn.appCosmetic.Model.Brand;
 import vn.appCosmetic.R;
 import vn.appCosmetic.ServiceAPI.Brand.APIBrandService;
-import vn.appCosmetic.ServiceAPI.Brand.RetrofitBrandClient;
+import vn.appCosmetic.ServiceAPI.RetrofitClient;
 
 public class BrandAdapter extends RecyclerView.Adapter<BrandAdapter.ViewHolder> {
     private Context context;
@@ -93,7 +93,7 @@ public class BrandAdapter extends RecyclerView.Adapter<BrandAdapter.ViewHolder> 
                 Brand updateBrand = new Brand();
                 updateBrand.setId(position);
                 updateBrand.setNameBrand(nameUpdateBrand);
-                apiBrandService= RetrofitBrandClient.getRetrofit().create(APIBrandService.class);
+                apiBrandService= RetrofitClient.getRetrofit().create(APIBrandService.class);
                 apiBrandService.putBrand(position,updateBrand).enqueue(new Callback<Brand>() {
                     @Override
                     public void onResponse(Call<Brand> call, Response<Brand> response) {
@@ -140,7 +140,7 @@ public class BrandAdapter extends RecyclerView.Adapter<BrandAdapter.ViewHolder> 
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                apiBrandService = RetrofitBrandClient.getRetrofit().create(APIBrandService.class);
+                apiBrandService = RetrofitClient.getRetrofit().create(APIBrandService.class);
                 apiBrandService.deleteBrand(position).enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {

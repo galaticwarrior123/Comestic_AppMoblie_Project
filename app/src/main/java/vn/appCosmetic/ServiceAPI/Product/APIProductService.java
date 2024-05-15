@@ -14,19 +14,22 @@ import retrofit2.http.Query;
 import vn.appCosmetic.Model.Product;
 
 public interface APIProductService {
-    @GET(" ")
+    @GET("product/")
     Call<List<Product>> getAllProduct();
 
 
-    @GET("category/{id}")
+    @GET("product/category/{id}")
     Call<List<Product>> getProductByCategory(@Path("id") int id);
 
-    @POST(" ")
+    @POST("product/")
     Call<Product> postProduct(@Body Product product);
 
-    @PUT("{id}")
+    @PUT("product/{id}")
     Call<Product> putProduct(@Path("id") int id, @Body Product product);
 
-    @DELETE("{id}")
+    @PUT("product/status/{id}")
+    Call<Product> putStatusProduct(@Path("id") int id);
+
+    @DELETE("product/{id}")
     Call<Void> deleteProduct(@Path("id") int id);
 }

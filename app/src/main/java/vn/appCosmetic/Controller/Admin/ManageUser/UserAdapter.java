@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -14,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.bumptech.glide.Glide;
 
 import java.util.List;
 
@@ -22,8 +24,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import vn.appCosmetic.Model.Users;
 import vn.appCosmetic.R;
+import vn.appCosmetic.ServiceAPI.RetrofitClient;
 import vn.appCosmetic.ServiceAPI.Users.APIUsersService;
-import vn.appCosmetic.ServiceAPI.Users.RetrofitUsersClient;
 
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder>{
     List<Users> userList;
@@ -56,6 +58,30 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder>{
             }
         });
 
+        holder.btnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                apiUsersService = RetrofitClient.getRetrofit().create(APIUsersService.class);
+                apiUsersService.putStatusUser(user.getId()).enqueue(new Callback<Users>() {
+                    @Override
+                    public void onResponse(Call<Users> call, Response<Users> response) {
+                        if(response.isSuccessful()){
+                            Toast.makeText(context, "Block user success", Toast.LENGTH_SHORT).show();
+                            notifyDataSetChanged();
+                        }
+                        else{
+                            Toast.makeText(context, "Error block user", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Users> call, Throwable t) {
+                        Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
+
     }
 
     @Override
@@ -84,6 +110,8 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder>{
         TextView txtEmail = dialog.findViewById(R.id.textViewEmailEdit);
         TextView txtPhone = dialog.findViewById(R.id.textViewPhoneNumberEdit);
         TextView txtAddress = dialog.findViewById(R.id.textViewAddressEdit);
+        TextView txtStatus = dialog.findViewById(R.id.textViewStatusEdit);
+        ImageView imgUser = dialog.findViewById(R.id.imageViewUserEdit);
         Button btnUpdate = dialog.findViewById(R.id.buttonEditUser);
         Button btnCancel = dialog.findViewById(R.id.buttonCancelEditUser);
 
@@ -91,17 +119,41 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder>{
         txtEmail.setText(user.getEmail());
         txtPhone.setText(user.getPhone());
         txtAddress.setText(user.getAddress());
+        if(user.isStatus()){
+            txtStatus.setText("Active");
+            btnUpdate.setText("Khóa tài khoản");
+        }
+        else{
+            txtStatus.setText("Block");
+            btnUpdate.setText("Mở khóa tài khoản");
+        }
+
+        if(user.getAvatar() != null){
+            Glide.with(context).load(user.getAvatar()).into(imgUser);
+        }
+        else{
+            imgUser.setImageResource(R.drawable.account);
+        }
+
 
         btnUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Update user
-                apiUsersService = RetrofitUsersClient.getRetrofit().create(APIUsersService.class);
+                apiUsersService = RetrofitClient.getRetrofit().create(APIUsersService.class);
                 apiUsersService.putStatusUser(user.getId()).enqueue(new Callback<Users>() {
                     @Override
                     public void onResponse(Call<Users> call, Response<Users> response) {
                         if(response.isSuccessful()){
                             Toast.makeText(context, "update status", Toast.LENGTH_SHORT).show();
+                            // cập nhật lại trạng thái
+                            if(user.isStatus()){
+                                user.setStatus(false);
+                            }
+                            else{
+                                user.setStatus(true);
+                            }
+                            notifyDataSetChanged();
                             dialog.dismiss();
                         }
                         else{

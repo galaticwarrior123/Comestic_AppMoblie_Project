@@ -14,17 +14,17 @@ import vn.appCosmetic.Model.Category;
 
 
 public interface APICategoryService {
-    @GET(" ")
+    @GET("category/")
     Call<List<Category>> getCategory();
 
-    @POST(" ")
+    @POST("category/")
     Call<Category> postCategory(@Body Category category);
 
-    @PUT("{id}")
+    @PUT("category/{id}")
     Call<Category> putCategory(@Path("id") int id, @Body Category category);
 
 
-    @DELETE("{id}")
+    @DELETE("category/{id}")
     Call<Void> deleteCategory(@Path("id") int id);
 
 }

@@ -8,11 +8,12 @@ import android.widget.Button;
 
 import vn.appCosmetic.Controller.Admin.AdminMainActivity;
 import vn.appCosmetic.Controller.LoginRegister.LoginActivity;
+import vn.appCosmetic.Controller.Payment.BankActivity;
 import vn.appCosmetic.Controller.User.UserMainActivity;
 
 
 public class MainActivity extends AppCompatActivity {
-    Button btnLogin, btnUser, btnAdmin;
+    Button btnLogin, btnUser, btnAdmin , btnBank;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
         btnLogin = findViewById(R.id.buttonLoginRegister);
         btnUser = findViewById(R.id.buttonUser);
         btnAdmin = findViewById(R.id.buttonAdmin);
+        btnBank = findViewById(R.id.buttonBank);
 
         btnLogin.setOnClickListener(v -> {
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
@@ -29,6 +31,10 @@ public class MainActivity extends AppCompatActivity {
         });
         btnAdmin.setOnClickListener(v -> {
             startActivity(new Intent(MainActivity.this, AdminMainActivity.class));
+        });
+
+        btnBank.setOnClickListener(v -> {
+            startActivity(new Intent(MainActivity.this, BankActivity.class));
         });
     }
 }

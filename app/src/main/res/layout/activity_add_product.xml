@@ -86,7 +86,7 @@
                     android:ems="10"
                     android:gravity="top|left"
                     android:hint="Nhập mô tả sản phẩm"
-                    android:inputType="text"
+                    android:inputType="textMultiLine"
                     android:paddingLeft="10dp"
                     android:paddingTop="10dp" />
             </LinearLayout>

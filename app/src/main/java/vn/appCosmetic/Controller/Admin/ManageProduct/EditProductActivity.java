@@ -33,7 +33,6 @@ import com.google.firebase.storage.StorageReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -43,11 +42,9 @@ import vn.appCosmetic.Model.Category;
 import vn.appCosmetic.Model.Product;
 import vn.appCosmetic.R;
 import vn.appCosmetic.ServiceAPI.Brand.APIBrandService;
-import vn.appCosmetic.ServiceAPI.Brand.RetrofitBrandClient;
 import vn.appCosmetic.ServiceAPI.Category.APICategoryService;
-import vn.appCosmetic.ServiceAPI.Category.RetrofitCategoryClient;
 import vn.appCosmetic.ServiceAPI.Product.APIProductService;
-import vn.appCosmetic.ServiceAPI.Product.RetrofitProductClient;
+import vn.appCosmetic.ServiceAPI.RetrofitClient;
 
 public class EditProductActivity extends AppCompatActivity {
 
@@ -79,7 +76,6 @@ public class EditProductActivity extends AppCompatActivity {
         product = (Product) getIntent().getSerializableExtra("product");
         initUI();
         setInfoProduct();
-        System.out.println("Update");
 
         Product productUpdate = new Product();
         spnCategoryUpdateProduct.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -142,7 +138,7 @@ public class EditProductActivity extends AppCompatActivity {
                     }
                 }
                 productUpdate.setImages(listImage);
-                apiProductService = RetrofitProductClient.getRetrofit().create(APIProductService.class);
+                apiProductService = RetrofitClient.getRetrofit().create(APIProductService.class);
                 apiProductService.putProduct(product.getId(),productUpdate).enqueue(new Callback<Product>() {
                     @Override
                     public void onResponse(Call<Product> call, Response<Product> response) {
@@ -183,7 +179,7 @@ public class EditProductActivity extends AppCompatActivity {
         rcViewImageUpdateProduct.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         rcViewImageUpdateProduct.setAdapter(imageAdapter);
 
-        apiCategoryService= RetrofitCategoryClient.getRetrofit().create(APICategoryService.class);
+        apiCategoryService= RetrofitClient.getRetrofit().create(APICategoryService.class);
         apiCategoryService.getCategory().enqueue(new Callback<List<Category>>() {
             @Override
             public void onResponse(Call<List<Category>> call, Response<List<Category>> response) {
@@ -205,7 +201,7 @@ public class EditProductActivity extends AppCompatActivity {
                 Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show();
             }
         });
-        apiBrandService= RetrofitBrandClient.getRetrofit().create(APIBrandService.class);
+        apiBrandService= RetrofitClient.getRetrofit().create(APIBrandService.class);
         apiBrandService.getAllBrand().enqueue(new Callback<List<Brand>>() {
             @Override
             public void onResponse(Call<List<Brand>> call, Response<List<Brand>> response) {
@@ -258,7 +254,7 @@ public class EditProductActivity extends AppCompatActivity {
     }
 
     private void onClickRequestPermission() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
             openGallery();
             return;
         }

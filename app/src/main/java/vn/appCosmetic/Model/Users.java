@@ -20,16 +20,24 @@ public class Users implements Serializable {
     @SerializedName("phone")
     private String phone;
 
+    @SerializedName("avatar")
+    private String avatar;
+
+    @SerializedName("status")
+    private boolean status;
+
     public Users() {
     }
 
-    public Users(int id, String username, String email, String password, String address, String phone) {
+    public Users(int id, String username, String email, String password, String address, String phone, String avatar, boolean status) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.password = password;
         this.address = address;
         this.phone = phone;
+        this.avatar = avatar;
+        this.status = status;
     }
 
     public int getId() {
@@ -78,5 +86,21 @@ public class Users implements Serializable {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
     }
 }

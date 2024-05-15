@@ -17,7 +17,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -26,7 +25,7 @@ import retrofit2.Response;
 import vn.appCosmetic.Model.Brand;
 import vn.appCosmetic.R;
 import vn.appCosmetic.ServiceAPI.Brand.APIBrandService;
-import vn.appCosmetic.ServiceAPI.Brand.RetrofitBrandClient;
+import vn.appCosmetic.ServiceAPI.RetrofitClient;
 
 public class ManageBrandActivity extends Fragment {
     private APIBrandService apiBrandService;
@@ -39,7 +38,7 @@ public class ManageBrandActivity extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view =inflater.inflate(R.layout.activity_manage_brand, container, false);
         recyclerView = view.findViewById(R.id.rcViewManageBrand);
-        apiBrandService = RetrofitBrandClient.getRetrofit().create(APIBrandService.class);
+        apiBrandService = RetrofitClient.getRetrofit().create(APIBrandService.class);
         apiBrandService.getAllBrand().enqueue(new Callback<List<Brand>>() {
             @Override
             public void onResponse(Call<List<Brand>> call, Response<List<Brand>> response) {

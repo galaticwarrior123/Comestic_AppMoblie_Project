@@ -2,44 +2,29 @@ package vn.appCosmetic.Controller.Admin;
 
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.RecyclerView;
 
 
-import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import vn.appCosmetic.Controller.Admin.ManageBrand.ManageBrandActivity;
 import vn.appCosmetic.Controller.Admin.ManageCategory.ManageCategoryActivity;
 import vn.appCosmetic.Controller.Admin.ManageProduct.ManageProductActivity;
-import vn.appCosmetic.Controller.Admin.ManageProduct.ProductAdapter;
 import vn.appCosmetic.Controller.Admin.ManageUser.ManageUserActivity;
-import vn.appCosmetic.Model.Product;
 import vn.appCosmetic.R;
-import vn.appCosmetic.ServiceAPI.Product.APIProductService;
-import vn.appCosmetic.ServiceAPI.Product.RetrofitProductClient;
 
 public class AdminMainActivity extends AppCompatActivity {
     ImageButton btnSlide;
     Toolbar toolbar;
     LinearLayout linearLayout;
-    FrameLayout frameLayout;
-    ProductAdapter productAdapter;
-    RecyclerView rcViewProduct;
-    APIProductService apiProductService;
+
 
 
     @Override
@@ -119,6 +104,12 @@ public class AdminMainActivity extends AppCompatActivity {
             }
 
         });
+
+        TextView txtUserName = findViewById(R.id.textViewUserNameAdmin);
+        txtUserName.setText("Nguyen Van A");
+
+        TextView txtTitle = findViewById(R.id.textViewTitleAdmin);
+        txtTitle.setText("Admin Page");
 
     }
 

@@ -16,8 +16,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import vn.appCosmetic.Model.Users;
 import vn.appCosmetic.R;
+import vn.appCosmetic.ServiceAPI.RetrofitClient;
 import vn.appCosmetic.ServiceAPI.Users.APIUsersService;
-import vn.appCosmetic.ServiceAPI.Users.RetrofitUsersClient;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -43,7 +43,7 @@ public class RegisterActivity extends AppCompatActivity {
         passWord = findViewById(R.id.password);
         btnSignUp= findViewById(R.id.btn_sign_up);
 
-        apiUsersService = RetrofitUsersClient.getRetrofit().create(APIUsersService.class);
+        apiUsersService = RetrofitClient.getRetrofit().create(APIUsersService.class);
 
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override

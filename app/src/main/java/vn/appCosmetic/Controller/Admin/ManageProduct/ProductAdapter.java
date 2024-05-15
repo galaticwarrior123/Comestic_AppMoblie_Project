@@ -2,65 +2,36 @@ package vn.appCosmetic.Controller.Admin.ManageProduct;
 
 
 
-import static androidx.core.app.ActivityCompat.requestPermissions;
-import static androidx.core.content.PermissionChecker.checkSelfPermission;
-
-import android.Manifest;
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Build;
-import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContract;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.app.ActivityOptionsCompat;
-import androidx.core.content.PermissionChecker;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import vn.appCosmetic.Model.Brand;
-import vn.appCosmetic.Model.Category;
 import vn.appCosmetic.Model.Product;
 import vn.appCosmetic.R;
-import vn.appCosmetic.ServiceAPI.Brand.APIBrandService;
-import vn.appCosmetic.ServiceAPI.Brand.RetrofitBrandClient;
-import vn.appCosmetic.ServiceAPI.Category.APICategoryService;
-import vn.appCosmetic.ServiceAPI.Category.RetrofitCategoryClient;
 import vn.appCosmetic.ServiceAPI.Product.APIProductService;
-import vn.appCosmetic.ServiceAPI.Product.RetrofitProductClient;
-import vn.appCosmetic.Utils.ImageUtils;
+import vn.appCosmetic.ServiceAPI.RetrofitClient;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHolder> {
 
@@ -92,14 +63,55 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Product productModel = productModelList.get(position);
         holder.txtNameProduct.setText(productModel.getName());
+        if(productModel.getStock()==0){
+            holder.txtStockProduct.setText("Hết hàng");
+        }
+        else{
+            holder.txtStockProduct.setText("Số lượng: " + productModel.getStock());
+        }
         if(productModel.getImages() != null && productModel.getImages().size() > 0){
             String url = productModel.getImages().get(0);
             Uri uri = Uri.parse(url);
             Glide.with(holder.itemView.getContext()).load(uri).into(holder.imgProduct);
         }
         else{
-            holder.imgProduct.setImageResource(R.drawable.ic_launcher_background);
+            holder.imgProduct.setImageResource(R.drawable.noimageproduct);
         }
+
+        if(productModel.isStatus()){
+            holder.switchStatus.setChecked(true);
+        }
+        else{
+            holder.switchStatus.setChecked(false);
+        }
+
+       holder.switchStatus.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+           @Override
+           public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                apiProductService = RetrofitClient.getRetrofit().create(APIProductService.class);
+                apiProductService.putStatusProduct(productModel.getId()).enqueue(new Callback<Product>() {
+                     @Override
+                     public void onResponse(Call<Product> call, Response<Product> response) {
+                          if(response.isSuccessful()){
+                            if(isChecked){
+                                 Toast.makeText(context, "Product is active", Toast.LENGTH_SHORT).show();
+                            }
+                            else{
+                                 Toast.makeText(context, "Product is inactive", Toast.LENGTH_SHORT).show();
+                            }
+                          }
+                          else{
+                            Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show();
+                          }
+                     }
+
+                     @Override
+                     public void onFailure(Call<Product> call, Throwable t) {
+                          Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show();
+                     }
+                });
+           }
+       });
 
 
         holder.btnEdit.setOnClickListener(new View.OnClickListener() {
@@ -126,13 +138,16 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
     }
 
     class ViewHolder extends RecyclerView.ViewHolder{
-        private TextView txtNameProduct;
+        private TextView txtNameProduct, txtStockProduct;
         private ImageView imgProduct;
         private ImageButton btnEdit, btnDelete;
+        private Switch switchStatus;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             txtNameProduct = itemView.findViewById(R.id.textViewProductName);
+            txtStockProduct = itemView.findViewById(R.id.textViewProductStock);
+            switchStatus = itemView.findViewById(R.id.switchProductStatus);
             imgProduct = itemView.findViewById(R.id.imageViewProduct);
             btnEdit = itemView.findViewById(R.id.imageButtonEditProduct);
             btnDelete = itemView.findViewById(R.id.imageButtonDeleteProduct);
@@ -159,7 +174,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                apiProductService = RetrofitProductClient.getRetrofit().create(APIProductService.class);
+                apiProductService = RetrofitClient.getRetrofit().create(APIProductService.class);
                 apiProductService.deleteProduct(position).enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {

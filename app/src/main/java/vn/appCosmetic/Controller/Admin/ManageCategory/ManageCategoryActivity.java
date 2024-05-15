@@ -26,7 +26,7 @@ import retrofit2.Response;
 import vn.appCosmetic.Model.Category;
 import vn.appCosmetic.R;
 import vn.appCosmetic.ServiceAPI.Category.APICategoryService;
-import vn.appCosmetic.ServiceAPI.Category.RetrofitCategoryClient;
+import vn.appCosmetic.ServiceAPI.RetrofitClient;
 
 public class ManageCategoryActivity extends Fragment {
     RecyclerView recyclerView;
@@ -43,7 +43,7 @@ public class ManageCategoryActivity extends Fragment {
         View view =inflater.inflate(R.layout.activity_manage_category, container, false);
         recyclerView = view.findViewById(R.id.rcViewManageCategory);
         categoryList = new ArrayList<>();
-        apiCategoryService = RetrofitCategoryClient.getRetrofit().create(APICategoryService.class);
+        apiCategoryService = RetrofitClient.getRetrofit().create(APICategoryService.class);
         apiCategoryService.getCategory().enqueue(new Callback<List<Category>>() {
             @Override
             public void onResponse(Call<List<Category>> call, Response<List<Category>> response) {
