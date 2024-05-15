@@ -5,6 +5,6 @@ import retrofit2.http.DELETE;
 import retrofit2.http.Path;
 
 public interface APIImageService {
-    @DELETE("{id}")
+    @DELETE("image/{id}")
     Call<Void> deleteImage(@Path("id") int id);
 }

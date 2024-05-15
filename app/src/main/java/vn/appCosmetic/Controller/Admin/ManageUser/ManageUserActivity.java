@@ -1,6 +1,5 @@
 package vn.appCosmetic.Controller.Admin.ManageUser;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,8 +18,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import vn.appCosmetic.Model.Users;
 import vn.appCosmetic.R;
+import vn.appCosmetic.ServiceAPI.RetrofitClient;
 import vn.appCosmetic.ServiceAPI.Users.APIUsersService;
-import vn.appCosmetic.ServiceAPI.Users.RetrofitUsersClient;
 
 public class ManageUserActivity extends Fragment {
 
@@ -35,7 +34,7 @@ public class ManageUserActivity extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_manage_user, container, false);
         rcViewUser = view.findViewById(R.id.rcViewManageUser);
-        apiUsersService = RetrofitUsersClient.getRetrofit().create(APIUsersService.class);
+        apiUsersService = RetrofitClient.getRetrofit().create(APIUsersService.class);
         apiUsersService.getUsers().enqueue(new Callback<List<Users>>() {
             @Override
             public void onResponse(Call<List<Users>> call, Response<List<Users>> response) {

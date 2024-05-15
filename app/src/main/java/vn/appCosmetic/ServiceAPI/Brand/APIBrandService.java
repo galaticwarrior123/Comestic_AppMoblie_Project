@@ -12,16 +12,16 @@ import retrofit2.http.Path;
 import vn.appCosmetic.Model.Brand;
 
 public interface APIBrandService {
-    @GET(" ")
+    @GET("brand/")
     Call<List<Brand>> getAllBrand();
 
-    @POST(" ")
+    @POST("brand/")
     Call<Brand> postBrand(@Body Brand brand);
 
-    @PUT("{id}")
+    @PUT("brand/{id}")
     Call<Brand> putBrand(@Path("id") int id, @Body Brand brand);
 
-    @DELETE("{id}")
+    @DELETE("brand/{id}")
     Call<Void> deleteBrand(@Path("id") int id);
 
 }

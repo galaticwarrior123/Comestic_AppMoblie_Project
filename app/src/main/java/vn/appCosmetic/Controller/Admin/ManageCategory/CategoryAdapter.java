@@ -2,7 +2,6 @@ package vn.appCosmetic.Controller.Admin.ManageCategory;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,7 +23,7 @@ import retrofit2.Response;
 import vn.appCosmetic.Model.Category;
 import vn.appCosmetic.R;
 import vn.appCosmetic.ServiceAPI.Category.APICategoryService;
-import vn.appCosmetic.ServiceAPI.Category.RetrofitCategoryClient;
+import vn.appCosmetic.ServiceAPI.RetrofitClient;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>{
     private Context context;
@@ -101,7 +100,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
                 }else{
                     //Call API update category
 
-                    apiCategoryService= RetrofitCategoryClient.getRetrofit().create(APICategoryService.class);
+                    apiCategoryService= RetrofitClient.getRetrofit().create(APICategoryService.class);
                     Category category = new Category();
                     category.setId(category.getId());
                     category.setNameCategory(nameUpdateCategory);
@@ -158,7 +157,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                apiCategoryService= RetrofitCategoryClient.getRetrofit().create(APICategoryService.class);
+                apiCategoryService= RetrofitClient.getRetrofit().create(APICategoryService.class);
                 apiCategoryService.deleteCategory(position).enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {

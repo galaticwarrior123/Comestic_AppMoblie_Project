@@ -14,6 +14,9 @@ public class Product implements Serializable {
     private String description;
     @SerializedName("price")
     private int price;
+    @SerializedName("status")
+    private boolean status;
+
     @SerializedName("stock")
     private int stock;
     @SerializedName("images")
@@ -102,6 +105,14 @@ public class Product implements Serializable {
 
     public void setIdBrand(int idBrand) {
         this.idBrand = idBrand;
+    }
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
     }
 
 }

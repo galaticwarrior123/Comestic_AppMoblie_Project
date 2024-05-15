@@ -8,10 +8,11 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rcViewManageProduct"
-        android:layout_width="409dp"
-        android:layout_height="627dp"
+        android:layout_width="415dp"
+        android:layout_height="566dp"
 
         android:layout_marginTop="5dp"
+        android:layout_marginBottom="32dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
