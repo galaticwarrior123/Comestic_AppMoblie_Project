@@ -17,6 +17,7 @@ import com.bumptech.glide.Glide;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import vn.appCosmetic.Controller.LoginRegister.LoginActivity;
 import vn.appCosmetic.Model.Users;
 import vn.appCosmetic.R;
 import vn.appCosmetic.ServiceAPI.RetrofitClient;
@@ -24,7 +25,7 @@ import vn.appCosmetic.ServiceAPI.RetrofitPrivate;
 import vn.appCosmetic.ServiceAPI.Users.APIUsersService;
 
 public class UserFragment extends Fragment {
-    private Button btnProfile;
+    private Button btnProfile, btnLogout;
     private TextView txtUserFragmentName;
     private ImageView imgUserFragment;
 
@@ -67,6 +68,25 @@ public class UserFragment extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), ProfileActivity.class);
                 startActivity(intent);
+            }
+        });
+
+        // Trong UserFragment.java
+        btnLogout = view.findViewById(R.id.btnUserFragmentLogOut);
+        btnLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Xóa các giá trị đã lưu trong SharedPreferences
+                SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.clear();
+                editor.apply();
+
+                // Hiển thị thông báo và đưa người dùng về màn hình đăng nhập
+                Toast.makeText(getContext(), "Logged out successfully", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getActivity(), LoginActivity.class);
+                startActivity(intent);
+                requireActivity().finish();
             }
         });
         return view;
