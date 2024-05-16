@@ -6,18 +6,11 @@
     android:layout_height="match_parent"
     tools:context=".Controller.User.User.UserFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="185dp"
-        android:layout_height="29dp"
-        android:layout_marginStart="113dp"
-        android:layout_marginTop="246dp"
-        android:layout_marginEnd="113dp"
-        android:layout_marginBottom="456dp"
-        android:text="hello_user_fragment"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:layout_editor_absoluteX="142dp"
+        tools:layout_editor_absoluteY="129dp"
+        tools:src="@tools:sample/avatars" />
 </androidx.constraintlayout.widget.ConstraintLayout>

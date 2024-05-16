@@ -33,10 +33,8 @@ import vn.appCosmetic.ServiceAPI.Product.APIProductService;
 import vn.appCosmetic.ServiceAPI.RetrofitClient;
 
 public class HomeFragment extends Fragment {
-
     private RecyclerView recyclerView;
     private UserProductAdapter productAdapter;
-    private List<Product> productList = new ArrayList<>();
     private SearchView searchView;
     private Spinner categorySpinner;
     private List<Category> categories = new ArrayList<>(); // List to store categories
@@ -50,16 +48,14 @@ public class HomeFragment extends Fragment {
         searchView = view.findViewById(R.id.search_view);
         categorySpinner = view.findViewById(R.id.category_spinner);
         recyclerView = view.findViewById(R.id.recycler_view);
-
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        productAdapter = new UserProductAdapter(getContext(), productList);
-        recyclerView.setAdapter(productAdapter);
 
         setupSearchView();
 
         apiCategoryService = RetrofitClient.getRetrofit().create(APICategoryService.class);
         loadCategories();
 
+        LoadProducts("", 0);
         return view;
     }
 
@@ -67,13 +63,13 @@ public class HomeFragment extends Fragment {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                filterProducts(query, categories.get(categorySpinner.getSelectedItemPosition()).getId());
+                LoadProducts(query, categories.get(categorySpinner.getSelectedItemPosition()).getId());
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                filterProducts(newText, categories.get(categorySpinner.getSelectedItemPosition()).getId());
+                LoadProducts(newText, categories.get(categorySpinner.getSelectedItemPosition()).getId());
                 return false;
             }
         });
@@ -91,7 +87,6 @@ public class HomeFragment extends Fragment {
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     categorySpinner.setAdapter(adapter);
                     setupCategorySpinner();
-                    loadProducts();
                 } else {
                     Toast.makeText(getContext(), "Failed to retrieve categories", Toast.LENGTH_SHORT).show();
                 }
@@ -108,7 +103,7 @@ public class HomeFragment extends Fragment {
         categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                filterProducts(searchView.getQuery().toString(), categories.get(position).getId());
+                LoadProducts(searchView.getQuery().toString(), categories.get(position).getId());
             }
 
             @Override
@@ -117,15 +112,26 @@ public class HomeFragment extends Fragment {
         });
     }
 
-    private void loadProducts() {
+    private void LoadProducts(String query, int categoryId) {
         APIProductService apiService = RetrofitClient.getRetrofit().create(APIProductService.class);
-        apiService.getAllProduct().enqueue(new Callback<List<Product>>() {
+        Call<List<Product>> call;
+        if (categoryId == 0) {
+            call = apiService.getAllProduct();
+        } else {
+            call = apiService.getProductByCategory(categoryId);
+        }
+        call.enqueue(new Callback<List<Product>>() {
             @Override
             public void onResponse(Call<List<Product>> call, Response<List<Product>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    productList.clear();
-                    productList.addAll(response.body());
-                    productAdapter = new UserProductAdapter(getContext(), productList);
+                    List<Product> filteredList = new ArrayList<>();
+                    for (Product product : response.body()) {
+                        boolean matchesName = product.getName().toLowerCase(Locale.ROOT).contains(query.toLowerCase(Locale.ROOT));
+                        if (matchesName) {
+                            filteredList.add(product);
+                        }
+                    }
+                    productAdapter = new UserProductAdapter(getContext(), filteredList);
                     recyclerView.setAdapter(productAdapter);
                     productAdapter.notifyDataSetChanged();
                 } else {
@@ -138,21 +144,6 @@ public class HomeFragment extends Fragment {
                 Toast.makeText(getContext(), "An error occurred: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    private void filterProducts(String query, int categoryId) {
-        List<Product> filteredList = new ArrayList<>();
-        for (Product product : productList) {
-            boolean matchesName = product.getName().toLowerCase(Locale.ROOT).contains(query.toLowerCase(Locale.ROOT));
-            boolean matchesCategory = categoryId == 0 || product.getIdCategory() == categoryId;
-            Toast.makeText(getContext(), "Category ID: " + product.getIdCategory(), Toast.LENGTH_SHORT).show();
-            if (matchesName && matchesCategory) {
-                filteredList.add(product);
-            }
-        }
-        productAdapter = new UserProductAdapter(getContext(), filteredList);
-        recyclerView.setAdapter(productAdapter);
-        productAdapter.notifyDataSetChanged();
     }
 
     // Custom Adapter to display category names
