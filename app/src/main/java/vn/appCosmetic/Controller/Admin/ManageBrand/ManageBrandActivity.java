@@ -1,6 +1,7 @@
 package vn.appCosmetic.Controller.Admin.ManageBrand;
 
 import android.app.Dialog;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,12 +27,14 @@ import vn.appCosmetic.Model.Brand;
 import vn.appCosmetic.R;
 import vn.appCosmetic.ServiceAPI.Brand.APIBrandService;
 import vn.appCosmetic.ServiceAPI.RetrofitClient;
+import vn.appCosmetic.ServiceAPI.RetrofitPrivate;
 
 public class ManageBrandActivity extends Fragment {
     private APIBrandService apiBrandService;
     private RecyclerView recyclerView;
     private BrandAdapter brandAdapter;
     private List<Brand> brandList;
+    private SharedPreferences sharedPreferences;
 
     @Nullable
     @Override
@@ -80,6 +83,9 @@ public class ManageBrandActivity extends Fragment {
                         Brand newBrand = new Brand();
                         newBrand.setNameBrand(nameBrand);
 
+                        sharedPreferences = getContext().getSharedPreferences("MyPrefs", getContext().MODE_PRIVATE);
+                        String token = sharedPreferences.getString("token", "");
+                        apiBrandService= RetrofitPrivate.getRetrofit(token).create(APIBrandService.class);
                         apiBrandService.postBrand(newBrand).enqueue(new Callback<Brand>() {
                             @Override
                             public void onResponse(Call<Brand> call, Response<Brand> response) {

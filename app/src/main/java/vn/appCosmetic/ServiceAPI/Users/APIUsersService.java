@@ -13,11 +13,6 @@ import vn.appCosmetic.Model.UserLogin;
 import vn.appCosmetic.Model.Users;
 
 public interface APIUsersService {
-    @POST("users/")
-    Call<Users> postUsers(@Body Users users);
-    @POST("users/")
-    Call<UserLogin> loginUsers(@Body UserLogin userLogin);
-
     @GET("users/all")
     Call<List<Users>> getUsers();
 

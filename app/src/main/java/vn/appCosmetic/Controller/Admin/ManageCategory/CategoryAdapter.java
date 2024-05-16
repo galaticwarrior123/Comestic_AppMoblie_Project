@@ -2,6 +2,7 @@ package vn.appCosmetic.Controller.Admin.ManageCategory;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,12 +25,13 @@ import vn.appCosmetic.Model.Category;
 import vn.appCosmetic.R;
 import vn.appCosmetic.ServiceAPI.Category.APICategoryService;
 import vn.appCosmetic.ServiceAPI.RetrofitClient;
+import vn.appCosmetic.ServiceAPI.RetrofitPrivate;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>{
     private Context context;
     private List<Category> categoryList;
     private LayoutInflater inflater;
-
+    private SharedPreferences sharedPreferences;
     private APICategoryService apiCategoryService;
 
     public CategoryAdapter(Context context, List<Category> categoryList) {
@@ -103,6 +105,10 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
                     Category category = new Category();
                     category.setId(position);
                     category.setNameCategory(nameUpdateCategory);
+
+                    sharedPreferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+                    String token = sharedPreferences.getString("token", "");
+                    apiCategoryService = RetrofitPrivate.getRetrofit(token).create(APICategoryService.class);
                     apiCategoryService.putCategory(position,category).enqueue(new Callback<Category>() {
                         @Override
                         public void onResponse(Call<Category> call, Response<Category> response) {
@@ -156,7 +162,11 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                apiCategoryService= RetrofitClient.getRetrofit().create(APICategoryService.class);
+
+                sharedPreferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+                String token = sharedPreferences.getString("token", "");
+
+                apiCategoryService= RetrofitPrivate.getRetrofit(token).create(APICategoryService.class);
                 apiCategoryService.deleteCategory(position).enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {

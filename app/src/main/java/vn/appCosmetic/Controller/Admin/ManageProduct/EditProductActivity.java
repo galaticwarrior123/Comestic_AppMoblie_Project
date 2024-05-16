@@ -13,6 +13,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
@@ -45,6 +46,7 @@ import vn.appCosmetic.ServiceAPI.Brand.APIBrandService;
 import vn.appCosmetic.ServiceAPI.Category.APICategoryService;
 import vn.appCosmetic.ServiceAPI.Product.APIProductService;
 import vn.appCosmetic.ServiceAPI.RetrofitClient;
+import vn.appCosmetic.ServiceAPI.RetrofitPrivate;
 
 public class EditProductActivity extends AppCompatActivity {
 
@@ -56,9 +58,9 @@ public class EditProductActivity extends AppCompatActivity {
 
     private APICategoryService apiCategoryService;
     private APIBrandService apiBrandService;
-
-
     private APIProductService apiProductService;
+
+    private SharedPreferences sharedPreferences;
 
     List<Category> categoryList = new ArrayList<>();
     List<Brand> brandList = new ArrayList<>();
@@ -138,7 +140,10 @@ public class EditProductActivity extends AppCompatActivity {
                     }
                 }
                 productUpdate.setImages(listImage);
-                apiProductService = RetrofitClient.getRetrofit().create(APIProductService.class);
+
+                sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+                String token = sharedPreferences.getString("token", "");
+                apiProductService = RetrofitPrivate.getRetrofit(token).create(APIProductService.class);
                 apiProductService.putProduct(product.getId(),productUpdate).enqueue(new Callback<Product>() {
                     @Override
                     public void onResponse(Call<Product> call, Response<Product> response) {

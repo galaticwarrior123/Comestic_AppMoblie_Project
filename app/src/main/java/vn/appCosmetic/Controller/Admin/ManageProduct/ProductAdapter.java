@@ -5,6 +5,7 @@ package vn.appCosmetic.Controller.Admin.ManageProduct;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +33,7 @@ import vn.appCosmetic.Model.Product;
 import vn.appCosmetic.R;
 import vn.appCosmetic.ServiceAPI.Product.APIProductService;
 import vn.appCosmetic.ServiceAPI.RetrofitClient;
+import vn.appCosmetic.ServiceAPI.RetrofitPrivate;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHolder> {
 
@@ -42,6 +44,8 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
 
 
     private APIProductService apiProductService;
+
+    private SharedPreferences sharedPreferences;
 
 
 
@@ -174,7 +178,10 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                apiProductService = RetrofitClient.getRetrofit().create(APIProductService.class);
+                sharedPreferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+                String token = sharedPreferences.getString("token", "");
+
+                apiProductService = RetrofitPrivate.getRetrofit(token).create(APIProductService.class);
                 apiProductService.deleteProduct(position).enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {

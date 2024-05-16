@@ -2,6 +2,7 @@ package vn.appCosmetic.Controller.Admin.ManageBrand;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,11 +25,14 @@ import vn.appCosmetic.Model.Brand;
 import vn.appCosmetic.R;
 import vn.appCosmetic.ServiceAPI.Brand.APIBrandService;
 import vn.appCosmetic.ServiceAPI.RetrofitClient;
+import vn.appCosmetic.ServiceAPI.RetrofitPrivate;
 
 public class BrandAdapter extends RecyclerView.Adapter<BrandAdapter.ViewHolder> {
     private Context context;
     private List<Brand> brandList;
     private APIBrandService apiBrandService;
+
+    private SharedPreferences sharedPreferences;
 
     public BrandAdapter(Context context, List<Brand> brandList) {
         this.context = context;
@@ -93,7 +97,10 @@ public class BrandAdapter extends RecyclerView.Adapter<BrandAdapter.ViewHolder> 
                 Brand updateBrand = new Brand();
                 updateBrand.setId(position);
                 updateBrand.setNameBrand(nameUpdateBrand);
-                apiBrandService= RetrofitClient.getRetrofit().create(APIBrandService.class);
+
+                sharedPreferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+                String token = sharedPreferences.getString("token", "");
+                apiBrandService= RetrofitPrivate.getRetrofit(token).create(APIBrandService.class);
                 apiBrandService.putBrand(position,updateBrand).enqueue(new Callback<Brand>() {
                     @Override
                     public void onResponse(Call<Brand> call, Response<Brand> response) {
@@ -140,7 +147,10 @@ public class BrandAdapter extends RecyclerView.Adapter<BrandAdapter.ViewHolder> 
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                apiBrandService = RetrofitClient.getRetrofit().create(APIBrandService.class);
+
+                sharedPreferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+                String token = sharedPreferences.getString("token", "");
+                apiBrandService = RetrofitPrivate.getRetrofit(token).create(APIBrandService.class);
                 apiBrandService.deleteBrand(position).enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {

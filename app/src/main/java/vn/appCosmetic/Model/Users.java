@@ -26,10 +26,13 @@ public class Users implements Serializable {
     @SerializedName("status")
     private boolean status;
 
+    @SerializedName("isAdmin")
+    private boolean isAdmin;
+
     public Users() {
     }
 
-    public Users(int id, String username, String email, String password, String address, String phone, String avatar, boolean status) {
+    public Users(int id, String username, String email, String password, String address, String phone, String avatar, boolean status, boolean isAdmin) {
         this.id = id;
         this.username = username;
         this.email = email;
@@ -38,6 +41,7 @@ public class Users implements Serializable {
         this.phone = phone;
         this.avatar = avatar;
         this.status = status;
+        this.isAdmin = isAdmin;
     }
 
     public int getId() {
@@ -103,4 +107,14 @@ public class Users implements Serializable {
     public void setStatus(boolean status) {
         this.status = status;
     }
+
+    public boolean isAdmin() {
+        return isAdmin;
+    }
+
+    public void setAdmin(boolean admin) {
+        isAdmin = admin;
+    }
 }
+
+

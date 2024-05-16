@@ -1,6 +1,7 @@
 package vn.appCosmetic.Controller.Admin.ManageCategory;
 
 import android.app.Dialog;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.jsonwebtoken.Claims;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -27,6 +29,7 @@ import vn.appCosmetic.Model.Category;
 import vn.appCosmetic.R;
 import vn.appCosmetic.ServiceAPI.Category.APICategoryService;
 import vn.appCosmetic.ServiceAPI.RetrofitClient;
+import vn.appCosmetic.ServiceAPI.RetrofitPrivate;
 
 public class ManageCategoryActivity extends Fragment {
     RecyclerView recyclerView;
@@ -35,6 +38,8 @@ public class ManageCategoryActivity extends Fragment {
     APICategoryService apiCategoryService;
 
     ImageButton btnAddCategory;
+
+    SharedPreferences sharedPreferences;
 
 
     @Nullable
@@ -93,6 +98,10 @@ public class ManageCategoryActivity extends Fragment {
                 Category category = new Category();
                 category.setNameCategory(nameCategory);
 
+                sharedPreferences = getContext().getSharedPreferences("MyPrefs", getContext().MODE_PRIVATE);
+                String token = sharedPreferences.getString("token", "");
+
+                apiCategoryService = RetrofitPrivate.getRetrofit(token).create(APICategoryService.class);
                 apiCategoryService.postCategory(category).enqueue(new Callback<Category>() {
                     @Override
                     public void onResponse(Call<Category> call, Response<Category> response) {
@@ -114,9 +123,10 @@ public class ManageCategoryActivity extends Fragment {
                         Log.e("Error", t.getMessage());
                     }
                 });
-
             }
         });
+
+
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

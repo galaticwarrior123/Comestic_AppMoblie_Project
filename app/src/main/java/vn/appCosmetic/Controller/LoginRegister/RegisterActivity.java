@@ -16,6 +16,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import vn.appCosmetic.Model.Users;
 import vn.appCosmetic.R;
+import vn.appCosmetic.ServiceAPI.Auth.APIAuthService;
 import vn.appCosmetic.ServiceAPI.RetrofitClient;
 import vn.appCosmetic.ServiceAPI.Users.APIUsersService;
 
@@ -24,7 +25,7 @@ public class RegisterActivity extends AppCompatActivity {
     TextView signIn;
     Button btnSignUp;
     EditText userName, passWord, eMail;
-    APIUsersService apiUsersService;
+    APIAuthService apiAuthService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +44,7 @@ public class RegisterActivity extends AppCompatActivity {
         passWord = findViewById(R.id.password);
         btnSignUp= findViewById(R.id.btn_sign_up);
 
-        apiUsersService = RetrofitClient.getRetrofit().create(APIUsersService.class);
+        apiAuthService = RetrofitClient.getRetrofit().create(APIAuthService.class);
 
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,7 +57,7 @@ public class RegisterActivity extends AppCompatActivity {
                     users.setUsername(Username);
                     users.setEmail(Email);
                     users.setPassword(Password);
-                    apiUsersService.postUsers(users).enqueue(new Callback<Users>() {
+                    apiAuthService.postUsers(users).enqueue(new Callback<Users>() {
                         @Override
                         public void onResponse(Call<Users> call, Response<Users> response) {
                             if(response.isSuccessful()){

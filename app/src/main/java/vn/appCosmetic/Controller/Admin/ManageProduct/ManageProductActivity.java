@@ -10,6 +10,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
@@ -53,6 +54,7 @@ import vn.appCosmetic.ServiceAPI.Brand.APIBrandService;
 import vn.appCosmetic.ServiceAPI.Category.APICategoryService;
 import vn.appCosmetic.ServiceAPI.Product.APIProductService;
 import vn.appCosmetic.ServiceAPI.RetrofitClient;
+import vn.appCosmetic.ServiceAPI.RetrofitPrivate;
 
 public class ManageProductActivity extends Fragment{
     private APIProductService apiProductService;
@@ -73,6 +75,7 @@ public class ManageProductActivity extends Fragment{
     private Spinner spinnerBrand;
     private List<Category> categoryList = new ArrayList<>();
 
+    private SharedPreferences sharedPreferences;
 
     private int count = 0;
 
@@ -323,7 +326,9 @@ public class ManageProductActivity extends Fragment{
                                     if(count == imageList.size()){
                                         product.setImages(listURLImage);
 
-                                        apiProductService = RetrofitClient.getRetrofit().create(APIProductService.class);
+                                        sharedPreferences = getContext().getSharedPreferences("MyPrefs", getContext().MODE_PRIVATE);
+                                        String token = sharedPreferences.getString("token", "");
+                                        apiProductService = RetrofitPrivate.getRetrofit(token).create(APIProductService.class);
                                         apiProductService.postProduct(product).enqueue(new retrofit2.Callback<Product>() {
                                             @Override
                                             public void onResponse(retrofit2.Call<Product> call, retrofit2.Response<Product> response) {

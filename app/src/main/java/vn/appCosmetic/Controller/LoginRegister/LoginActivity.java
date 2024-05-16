@@ -3,6 +3,7 @@ package vn.appCosmetic.Controller.LoginRegister;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -15,8 +16,12 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vn.appCosmetic.Controller.Admin.AdminMainActivity;
+import vn.appCosmetic.MainActivity;
+import vn.appCosmetic.Model.AuthLogin;
 import vn.appCosmetic.Model.UserLogin;
+import vn.appCosmetic.Model.Users;
 import vn.appCosmetic.R;
+import vn.appCosmetic.ServiceAPI.Auth.APIAuthService;
 import vn.appCosmetic.ServiceAPI.RetrofitClient;
 import vn.appCosmetic.ServiceAPI.Users.APIUsersService;
 
@@ -24,7 +29,8 @@ public class LoginActivity extends AppCompatActivity {
     TextView signUp;
     Button btnSignIp;
     EditText passWord, eMail;
-    APIUsersService apiUsersService;
+    APIAuthService apiAuthService;
+    SharedPreferences sharedPreferences;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,36 +47,41 @@ public class LoginActivity extends AppCompatActivity {
         passWord = findViewById(R.id.password);
         btnSignIp= findViewById(R.id.btn_sign_in);
 
-        apiUsersService = RetrofitClient.getRetrofit().create(APIUsersService.class);
+        sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+
+        apiAuthService = RetrofitClient.getRetrofit().create(APIAuthService.class);
 
         btnSignIp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String Email = eMail.getText().toString().trim();
                 String Password = passWord.getText().toString().trim();
-
-                System.out.println(Email+Password);
-
                 UserLogin userLogin = new UserLogin();
                 userLogin.setEmail(Email);
                 userLogin.setPassword(Password);
 
                 if (!TextUtils.isEmpty(Email) && !TextUtils.isEmpty(Password)){
-                    apiUsersService.loginUsers(userLogin).enqueue(new Callback<UserLogin>() {
-                        @Override
-                        public void onResponse(Call<UserLogin> call, Response<UserLogin> response) {
-                            if(response.isSuccessful()){
-                                System.out.println("gsugyu");
-                                Intent intent = new Intent(LoginActivity.this, AdminMainActivity.class);
-                                startActivity(intent);
-                            }
-                            else{Toast.makeText(LoginActivity.this, "Login fail", Toast.LENGTH_SHORT).show();}
-                        }
-                        @Override
-                        public void onFailure(Call<UserLogin> call, Throwable t) {
-                            Toast.makeText(LoginActivity.this, "Login fail, Email or password wrong", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                   apiAuthService.loginUsers(userLogin).enqueue(new Callback<AuthLogin>() {
+                       @Override
+                       public void onResponse(Call<AuthLogin> call, Response<AuthLogin> response) {
+                           if(response.isSuccessful()){
+                               AuthLogin users = response.body();
+                               SharedPreferences.Editor editor = sharedPreferences.edit();
+                               editor.putString("token", users.getToken());
+                               editor.apply();
+                               Intent intent = new Intent(LoginActivity.this, AdminMainActivity.class);
+                               startActivity(intent);
+                           }
+                           else {
+                               Toast.makeText(LoginActivity.this, "Login fail, Email or Password is incorrect", Toast.LENGTH_SHORT).show();
+                           }
+                       }
+
+                       @Override
+                       public void onFailure(Call<AuthLogin> call, Throwable t) {
+                           Toast.makeText(LoginActivity.this, "Login fail, Element is null", Toast.LENGTH_SHORT).show();
+                       }
+                   });
 
                 }
                 else {
