@@ -4,13 +4,70 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/anhnenbackgroundadmin"
     tools:context=".Controller.User.User.UserFragment">
 
     <ImageView
-        android:id="@+id/imageView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:layout_editor_absoluteX="142dp"
-        tools:layout_editor_absoluteY="129dp"
-        tools:src="@tools:sample/avatars" />
+        android:id="@+id/imgUserFragment"
+        android:layout_width="130dp"
+        android:layout_height="130dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="60dp"
+        android:scaleType="centerCrop"
+        android:background="@drawable/image_button_round_corner"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:src="@drawable/logo"/>
+
+    <TextView
+        android:id="@+id/txtUserFragmentName"
+        android:layout_width="201dp"
+        android:layout_height="53dp"
+        android:layout_marginTop="104dp"
+        android:layout_marginEnd="32dp"
+        android:text="TextView"
+        android:textSize="28dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:layout_width="343dp"
+        android:layout_height="388dp"
+        android:layout_marginStart="36dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="95dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <Button
+            android:id="@+id/btnUserFragmentUpdateProfile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_user_fragment"
+            android:text="Thông tin cá nhân"
+            android:textSize="20dp"
+            android:layout_marginBottom="16dp"/>
+
+        <Button
+            android:id="@+id/btnUserFragmentOrder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_user_fragment"
+            android:text="Đơn hàng của tôi"
+            android:textSize="20dp"
+
+            android:layout_marginBottom="16dp"/>
+
+        <Button
+            android:id="@+id/btnUserFragmentLogOut"
+            android:textSize="20dp"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_user_fragment"
+            android:text="Đăng xuất" />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

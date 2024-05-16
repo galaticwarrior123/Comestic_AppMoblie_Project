@@ -22,4 +22,6 @@ public interface APIUsersService {
     @PUT("users/status/{id}")
     Call<Users> putStatusUser(@Path("id") int id);
 
+    @PUT("users/update/{id}")
+    Call<Users> putUpdateUser(@Path("id") int id, @Body Users user);
 }
