@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@drawable/anhnenbackgroundadmin"
     tools:context=".Controller.User.Home.HomeFragment">
 
     <androidx.appcompat.widget.SearchView
@@ -28,8 +29,8 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
-        android:layout_width="403dp"
-        android:layout_height="644dp"
+        android:layout_width="match_parent"
+        android:layout_height="704dp"
         android:layout_marginTop="30dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
