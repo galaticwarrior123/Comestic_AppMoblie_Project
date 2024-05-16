@@ -41,6 +41,9 @@
             android:name=".Controller.Admin.AdminMainActivity"
             android:exported="false" />
         <activity
+            android:name=".Controller.User.Home.ProductDetail.ProductDetailActivity"
+            android:exported="false"/>
+        <activity
             android:name=".MainActivity"
             android:exported="true" >
             <intent-filter>

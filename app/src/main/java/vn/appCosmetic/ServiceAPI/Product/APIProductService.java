@@ -17,7 +17,8 @@ public interface APIProductService {
     @GET("product/")
     Call<List<Product>> getAllProduct();
 
-
+    @GET("product/{id}")
+    Call<Product> getProductById(@Path("id") int id);
     @GET("product/category/{id}")
     Call<List<Product>> getProductByCategory(@Path("id") int id);
 
