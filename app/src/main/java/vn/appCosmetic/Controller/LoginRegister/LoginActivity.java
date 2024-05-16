@@ -16,6 +16,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vn.appCosmetic.Controller.Admin.AdminMainActivity;
+import vn.appCosmetic.Controller.User.UserMainActivity;
 import vn.appCosmetic.MainActivity;
 import vn.appCosmetic.Model.AuthLogin;
 import vn.appCosmetic.Model.UserLogin;
@@ -49,8 +50,6 @@ public class LoginActivity extends AppCompatActivity {
 
         sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
 
-        apiAuthService = RetrofitClient.getRetrofit().create(APIAuthService.class);
-
         btnSignIp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -61,6 +60,7 @@ public class LoginActivity extends AppCompatActivity {
                 userLogin.setPassword(Password);
 
                 if (!TextUtils.isEmpty(Email) && !TextUtils.isEmpty(Password)){
+                    apiAuthService = RetrofitClient.getRetrofit().create(APIAuthService.class);
                    apiAuthService.loginUsers(userLogin).enqueue(new Callback<AuthLogin>() {
                        @Override
                        public void onResponse(Call<AuthLogin> call, Response<AuthLogin> response) {
@@ -69,7 +69,7 @@ public class LoginActivity extends AppCompatActivity {
                                SharedPreferences.Editor editor = sharedPreferences.edit();
                                editor.putString("token", users.getToken());
                                editor.apply();
-                               Intent intent = new Intent(LoginActivity.this, AdminMainActivity.class);
+                               Intent intent = new Intent(LoginActivity.this, UserMainActivity.class);
                                startActivity(intent);
                            }
                            else {
@@ -79,7 +79,7 @@ public class LoginActivity extends AppCompatActivity {
 
                        @Override
                        public void onFailure(Call<AuthLogin> call, Throwable t) {
-                           Toast.makeText(LoginActivity.this, "Login fail, Element is null", Toast.LENGTH_SHORT).show();
+                           Toast.makeText(LoginActivity.this, "Login fail, Element is null 1", Toast.LENGTH_SHORT).show();
                        }
                    });
 
