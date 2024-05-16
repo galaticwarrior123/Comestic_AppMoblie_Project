@@ -8,8 +8,12 @@ public class AuthLogin implements Serializable {
     @SerializedName("token")
     private String token;
 
+    @SerializedName("user")
+    private Users user;
+
     public AuthLogin(){
     }
+
 
     public AuthLogin(String token){
         this.token = token;
@@ -22,5 +26,14 @@ public class AuthLogin implements Serializable {
     public void setToken(String token) {
         this.token = token;
     }
+
+    public Users getUser() {
+        return user;
+    }
+
+    public void setUser(Users user) {
+        this.user = user;
+    }
+
 
 }

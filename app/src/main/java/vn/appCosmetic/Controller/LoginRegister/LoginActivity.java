@@ -68,6 +68,7 @@ public class LoginActivity extends AppCompatActivity {
                                AuthLogin users = response.body();
                                SharedPreferences.Editor editor = sharedPreferences.edit();
                                editor.putString("token", users.getToken());
+                               editor.putInt("idUser", users.getUser().getId());
                                editor.apply();
                                Intent intent = new Intent(LoginActivity.this, UserMainActivity.class);
                                startActivity(intent);

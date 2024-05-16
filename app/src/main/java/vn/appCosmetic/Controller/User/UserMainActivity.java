@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -39,6 +40,7 @@ public class UserMainActivity extends AppCompatActivity {
                     return true;
                 }
                 else if(item.getItemId() == R.id.navigation_user) {
+
                     loadFragment(new UserFragment());
                     return true;
                 }
