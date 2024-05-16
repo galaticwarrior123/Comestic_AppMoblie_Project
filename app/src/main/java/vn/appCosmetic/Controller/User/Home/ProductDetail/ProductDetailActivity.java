@@ -1,8 +1,8 @@
 package vn.appCosmetic.Controller.User.Home.ProductDetail;
 
 import android.os.Bundle;
-import android.widget.EditText;
-import android.widget.ImageButton;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -16,9 +16,6 @@ import vn.appCosmetic.ServiceAPI.RetrofitClient;
 
 public class ProductDetailActivity extends AppCompatActivity {
     private TextView productName, productDescription, productPrice, productStock;
-
-    private ImageButton imgBtnSub, imgBtnAdd;
-    private EditText edtQuantity;
     private ViewPager viewPager;
 
     @Override
@@ -30,36 +27,19 @@ public class ProductDetailActivity extends AppCompatActivity {
         productDescription = findViewById(R.id.product_detail_description);
         productPrice = findViewById(R.id.product_detail_price);
         productStock = findViewById(R.id.product_detail_stock);
-        imgBtnSub = findViewById(R.id.imageButtonSubtract);
-        imgBtnAdd = findViewById(R.id.imageButtonAdd);
-        edtQuantity = findViewById(R.id.editTextNumberQuantity);
         viewPager = findViewById(R.id.viewPager);
-
-        handleButtonQuantity();
-
+        Button btnBack = findViewById(R.id.btn_product_detail_back);
         int productId = getIntent().getIntExtra("PRODUCT_ID", -1);
         if (productId != -1) {
             loadProductDetails(productId);
         }
-    }
-
-
-    private void handleButtonQuantity() {
-        imgBtnSub.setOnClickListener(v -> {
-            int quantity = Integer.parseInt(edtQuantity.getText().toString());
-            if (quantity > 1) {
-                quantity--;
-                edtQuantity.setText(String.valueOf(quantity));
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
             }
         });
-
-        imgBtnAdd.setOnClickListener(v -> {
-            int quantity = Integer.parseInt(edtQuantity.getText().toString());
-            quantity++;
-            edtQuantity.setText(String.valueOf(quantity));
-        });
     }
-
     private void loadProductDetails(int productId) {
         APIProductService apiProductService = RetrofitClient.getRetrofit().create(APIProductService.class);
         apiProductService.getProductById(productId).enqueue(new retrofit2.Callback<Product>() {
