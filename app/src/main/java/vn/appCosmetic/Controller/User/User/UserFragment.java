@@ -20,6 +20,7 @@ import retrofit2.Response;
 import vn.appCosmetic.Model.Users;
 import vn.appCosmetic.R;
 import vn.appCosmetic.ServiceAPI.RetrofitClient;
+import vn.appCosmetic.ServiceAPI.RetrofitPrivate;
 import vn.appCosmetic.ServiceAPI.Users.APIUsersService;
 
 public class UserFragment extends Fragment {
@@ -37,8 +38,10 @@ public class UserFragment extends Fragment {
         SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
 
         Integer idUser = sharedPreferences.getInt("idUser", 0);
+        String token = sharedPreferences.getString("token", "");
         if (idUser!=0) {
-            APIUsersService apiService = RetrofitClient.getRetrofit().create(APIUsersService.class);
+
+            APIUsersService apiService = RetrofitPrivate.getRetrofit(token).create(APIUsersService.class);
             Call<Users> call = apiService.getUserById(idUser);
             call.enqueue(new Callback<Users>() {
                 @Override

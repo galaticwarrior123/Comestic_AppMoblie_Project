@@ -44,6 +44,16 @@ public class AdminMainActivity extends AppCompatActivity {
         linearLayout.bringToFront();
         linearLayout.startAnimation(AnimationUtils.loadAnimation(AdminMainActivity.this, R.anim.slide_out));
         linearLayout.setVisibility(View.GONE);
+
+        // khi click vào linearLayout thì sẽ ẩn linearLayout
+        linearLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Animation slideOutAnimation = AnimationUtils.loadAnimation(AdminMainActivity.this, R.anim.slide_out);
+                linearLayout.startAnimation(slideOutAnimation);
+                linearLayout.setVisibility(View.GONE);
+            }
+        });
         
 
 

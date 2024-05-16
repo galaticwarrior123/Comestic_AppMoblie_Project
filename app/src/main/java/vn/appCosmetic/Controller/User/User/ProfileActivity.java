@@ -25,7 +25,7 @@ import vn.appCosmetic.ServiceAPI.Users.APIUsersService;
 public class ProfileActivity extends AppCompatActivity {
     private ImageView imgProfile;
     private TextView ProfileEmail;
-    private EditText ProfileUsername, ProfilePassword, ProfileGender, ProfilePhone, ProfileAddress;
+    private EditText ProfileUsername, ProfileGender, ProfilePhone, ProfileAddress;
     private Button btnProfileSave;
 
     @Override
@@ -36,7 +36,6 @@ public class ProfileActivity extends AppCompatActivity {
         imgProfile = findViewById(R.id.imgProfile);
         ProfileEmail = findViewById(R.id.ProfileEmail);
         ProfileUsername = findViewById(R.id.ProfileUsername);
-        ProfilePassword = findViewById(R.id.ProfilePassword);
         ProfilePhone = findViewById(R.id.ProfilePhone);
         ProfileAddress = findViewById(R.id.ProfileAddress);
         btnProfileSave = findViewById(R.id.btnProfileSave);
@@ -54,9 +53,10 @@ public class ProfileActivity extends AppCompatActivity {
     private void loadProfileData() {
         SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
         int userId = sharedPreferences.getInt("idUser", 0);
+        String token = sharedPreferences.getString( "token", "");
         if (userId != 0) {
             // Create an instance of APIUsersService
-            APIUsersService apiUsersService = RetrofitClient.getRetrofit().create(APIUsersService.class);
+            APIUsersService apiUsersService = RetrofitPrivate.getRetrofit(token).create(APIUsersService.class);
             // Call the API and handle the response
             apiUsersService.getUserById(userId).enqueue(new Callback<Users>() {
                 @Override
@@ -66,7 +66,6 @@ public class ProfileActivity extends AppCompatActivity {
                         if (user != null) {
                             ProfileEmail.setText(user.getEmail());
                             ProfileUsername.setText(user.getUsername());
-                            ProfilePassword.setText(user.getPassword());
                             ProfilePhone.setText(user.getPhone());
                             ProfileAddress.setText(user.getAddress());
 
@@ -87,7 +86,6 @@ public class ProfileActivity extends AppCompatActivity {
     private void saveProfileData() {
         // Get data from UI
         String username = ProfileUsername.getText().toString();
-        String password = ProfilePassword.getText().toString();
         String phone = ProfilePhone.getText().toString();
         String address = ProfileAddress.getText().toString();
         // Get UserID from SharedPreferences
@@ -99,7 +97,6 @@ public class ProfileActivity extends AppCompatActivity {
             APIUsersService apiUsersService = RetrofitPrivate.getRetrofit(token).create(APIUsersService.class);
             Users updatedUser = new Users();
             updatedUser.setUsername(username);
-            updatedUser.setPassword(password);
             updatedUser.setPhone(phone);
             updatedUser.setAddress(address);
             apiUsersService.putUpdateUser(userId, updatedUser).enqueue(new Callback<Users>() {

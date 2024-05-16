@@ -23,12 +23,14 @@
         android:id="@+id/txtUserFragmentName"
         android:layout_width="201dp"
         android:layout_height="53dp"
-        android:layout_marginTop="104dp"
-        android:layout_marginEnd="32dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="100dp"
+        android:layout_marginEnd="16dp"
         android:text="TextView"
         android:textSize="28dp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imgUserFragment"
         app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
