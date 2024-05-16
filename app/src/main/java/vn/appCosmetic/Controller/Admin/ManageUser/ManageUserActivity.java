@@ -1,5 +1,6 @@
 package vn.appCosmetic.Controller.Admin.ManageUser;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,7 @@ import retrofit2.Response;
 import vn.appCosmetic.Model.Users;
 import vn.appCosmetic.R;
 import vn.appCosmetic.ServiceAPI.RetrofitClient;
+import vn.appCosmetic.ServiceAPI.RetrofitPrivate;
 import vn.appCosmetic.ServiceAPI.Users.APIUsersService;
 
 public class ManageUserActivity extends Fragment {
@@ -28,13 +30,16 @@ public class ManageUserActivity extends Fragment {
     private RecyclerView rcViewUser;
 
     private List<Users> usersList;
+    private SharedPreferences sharedPreferences;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_manage_user, container, false);
         rcViewUser = view.findViewById(R.id.rcViewManageUser);
-        apiUsersService = RetrofitClient.getRetrofit().create(APIUsersService.class);
+        sharedPreferences = getContext().getSharedPreferences("MyPrefs", getContext().MODE_PRIVATE);
+        String token = sharedPreferences.getString("token", "");
+        apiUsersService = RetrofitPrivate.getRetrofit(token).create(APIUsersService.class);
         apiUsersService.getUsers().enqueue(new Callback<List<Users>>() {
             @Override
             public void onResponse(Call<List<Users>> call, Response<List<Users>> response) {
@@ -49,7 +54,7 @@ public class ManageUserActivity extends Fragment {
                     userAdapter.notifyDataSetChanged();
                 }
                 else{
-                    Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Error 1", Toast.LENGTH_SHORT).show();
                 }
             }
 

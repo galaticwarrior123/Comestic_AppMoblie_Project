@@ -1,5 +1,6 @@
 package vn.appCosmetic.Controller.Admin;
 
+import android.content.SharedPreferences;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -25,7 +26,7 @@ public class AdminMainActivity extends AppCompatActivity {
     Toolbar toolbar;
     LinearLayout linearLayout;
 
-
+    SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,8 +106,10 @@ public class AdminMainActivity extends AppCompatActivity {
 
         });
 
+        sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+        String userName = sharedPreferences.getString("userName", "");
         TextView txtUserName = findViewById(R.id.textViewUserNameAdmin);
-        txtUserName.setText("Nguyen Van A");
+        txtUserName.setText(userName);
 
         TextView txtTitle = findViewById(R.id.textViewTitleAdmin);
         txtTitle.setText("Admin Page");

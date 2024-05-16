@@ -97,8 +97,7 @@ public class ManageBrandActivity extends Fragment {
                                     Toast.makeText(getContext(), "Add success", Toast.LENGTH_SHORT).show();
                                 }
                                 else{
-                                    int statusCode = response.code();
-                                    Log.e("Error", String.valueOf(statusCode));
+                                    Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
                                 }
                             }
 

@@ -20,7 +20,7 @@ public class Users implements Serializable {
     @SerializedName("phone")
     private String phone;
 
-    @SerializedName("avatar")
+    @SerializedName("image")
     private String avatar;
 
     @SerializedName("status")

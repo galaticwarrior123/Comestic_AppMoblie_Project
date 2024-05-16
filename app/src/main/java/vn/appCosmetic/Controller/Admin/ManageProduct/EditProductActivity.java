@@ -156,10 +156,9 @@ public class EditProductActivity extends AppCompatActivity {
                             frameLayout.removeAllViews();
                             fragmentManager.beginTransaction().replace(R.id.frameLayoutManage, new ManageProductActivity()).commit();
                             finish();
-
-
-
-
+                        }
+                        else{
+                            Toast.makeText(context, "Update Failed", Toast.LENGTH_SHORT).show();
                         }
                     }
 

@@ -188,7 +188,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
 
                     @Override
                     public void onFailure(Call<Void> call, Throwable t) {
-                        Log.e("Error", t.getMessage());
+                        Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show();
                     }
                 });
             }

@@ -117,8 +117,7 @@ public class BrandAdapter extends RecyclerView.Adapter<BrandAdapter.ViewHolder> 
 
                         }
                         else{
-                            int statusCode = response.code();
-                            Log.e("Error", String.valueOf(statusCode));
+                            Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show();
                         }
                     }
 
@@ -165,14 +164,13 @@ public class BrandAdapter extends RecyclerView.Adapter<BrandAdapter.ViewHolder> 
                             }
                         }
                         else{
-                            int statusCode = response.code();
-                            Log.e("Error", String.valueOf(statusCode));
+                            Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show();
                         }
                     }
 
                     @Override
                     public void onFailure(Call<Void> call, Throwable t) {
-                        Log.e("Error", t.getMessage());
+                        Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show();
                     }
                 });
 

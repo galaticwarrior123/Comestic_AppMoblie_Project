@@ -30,13 +30,24 @@
             tools:layout_editor_absoluteY="68dp" />
     </androidx.appcompat.widget.Toolbar>
 
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:clickable="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
         <LinearLayout
-            android:id="@+id/linearLayout"
+            android:id="@+id/linearLayout2"
             android:layout_width="250dp"
             android:layout_height="match_parent"
             android:background="#EBD6CFC9"
             android:orientation="vertical"
-            android:visibility="gone"
+            android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -45,30 +56,30 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
-                android:padding="10dp"
                 android:background="#EAE6D8"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:padding="10dp">
 
                 <ImageView
                     android:id="@+id/imageView3"
                     android:layout_width="70dp"
                     android:layout_height="75dp"
                     android:layout_weight="0"
-                    android:src="@drawable/friends"/>
+                    android:src="@drawable/friends" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="0"
                     android:layout_marginLeft="10dp"
+                    android:layout_weight="0"
                     android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/textViewUserNameAdmin"
                         android:layout_width="match_parent"
                         android:layout_height="30dp"
-                        android:textStyle="bold"
-                        android:text="Admin" />
+                        android:text="Admin"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/textViewTitleAdmin"
@@ -91,29 +102,29 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:drawableLeft="@drawable/product"
                     android:layout_marginBottom="5dp"
                     android:background="@drawable/border_button"
+                    android:drawableLeft="@drawable/product"
                     android:text="Quản lý sản phẩm" />
 
                 <Button
                     android:id="@+id/buttonManageCategory"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawableLeft="@drawable/category"
                     android:layout_marginTop="5dp"
                     android:layout_marginBottom="5dp"
                     android:background="@drawable/border_button"
+                    android:drawableLeft="@drawable/category"
                     android:text="Quản lý danh mục" />
 
                 <Button
                     android:id="@+id/buttonManageBrand"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawableLeft="@drawable/brand"
                     android:layout_marginTop="5dp"
                     android:layout_marginBottom="5dp"
                     android:background="@drawable/border_button"
+                    android:drawableLeft="@drawable/brand"
                     android:text="Quản lý nhãn hiệu" />
 
                 <Button
@@ -131,11 +142,13 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="75dp"
                 android:drawableLeft="@drawable/icon_c"
                 android:text="2024 P2T Team"
-                android:layout_marginLeft="75dp"
                 android:textStyle="bold" />
         </LinearLayout>
+    </LinearLayout>
+
 
     <FrameLayout
         android:id="@+id/frameLayoutManage"

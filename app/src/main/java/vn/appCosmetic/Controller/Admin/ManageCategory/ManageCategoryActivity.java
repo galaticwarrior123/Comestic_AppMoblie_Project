@@ -62,14 +62,13 @@ public class ManageCategoryActivity extends Fragment {
                     categoryAdapter.notifyDataSetChanged();
                 }
                 else{
-                    int statusCode = response.code();
-                    Log.e("Error", String.valueOf(statusCode));
+                    Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<List<Category>> call, Throwable t) {
-                Log.e("Error", t.getMessage());
+                Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -113,14 +112,13 @@ public class ManageCategoryActivity extends Fragment {
                             Toast.makeText(getContext(), "Add success", Toast.LENGTH_SHORT).show();
                         }
                         else{
-                            int statusCode = response.code();
-                            Log.e("Error", String.valueOf(statusCode));
+                            Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
                         }
                     }
 
                     @Override
                     public void onFailure(Call<Category> call, Throwable t) {
-                        Log.e("Error", t.getMessage());
+                        Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
                     }
                 });
             }

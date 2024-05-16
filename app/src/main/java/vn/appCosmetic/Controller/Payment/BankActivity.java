@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -25,6 +26,8 @@ public class BankActivity extends AppCompatActivity {
     private List<Bank> bankList = new ArrayList<>();
     private BankAdapter bankAdapter;
     private APIBankService apiBankService;
+
+    private ImageButton btnBack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +57,11 @@ public class BankActivity extends AppCompatActivity {
                     Toast.makeText(BankActivity.this, "Error", Toast.LENGTH_SHORT).show();
                 }
             }
+        });
+
+        btnBack = findViewById(R.id.imageButtonBack);
+        btnBack.setOnClickListener(v -> {
+            finish();
         });
 
     }

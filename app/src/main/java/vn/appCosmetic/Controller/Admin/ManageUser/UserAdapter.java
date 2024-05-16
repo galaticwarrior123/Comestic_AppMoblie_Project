@@ -2,6 +2,7 @@ package vn.appCosmetic.Controller.Admin.ManageUser;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,7 @@ import retrofit2.Response;
 import vn.appCosmetic.Model.Users;
 import vn.appCosmetic.R;
 import vn.appCosmetic.ServiceAPI.RetrofitClient;
+import vn.appCosmetic.ServiceAPI.RetrofitPrivate;
 import vn.appCosmetic.ServiceAPI.Users.APIUsersService;
 
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder>{
@@ -33,6 +35,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder>{
     LayoutInflater inflater;
 
     private APIUsersService apiUsersService;
+    SharedPreferences sharedPreferences;
 
     public UserAdapter(Context context, List<Users> userList) {
         this.context = context;
@@ -51,6 +54,13 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder>{
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Users user = userList.get(position);
         holder.txtName.setText(user.getUsername());
+
+        if(user.getAvatar() != null){
+            Glide.with(context).load(user.getAvatar()).into(holder.imgUser);
+        }
+        else{
+            holder.imgUser.setImageResource(R.drawable.account);
+        }
         holder.btnEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -61,7 +71,9 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder>{
         holder.btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                apiUsersService = RetrofitClient.getRetrofit().create(APIUsersService.class);
+                sharedPreferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+                String token = sharedPreferences.getString("token", "");
+                apiUsersService = RetrofitPrivate.getRetrofit(token).create(APIUsersService.class);
                 apiUsersService.putStatusUser(user.getId()).enqueue(new Callback<Users>() {
                     @Override
                     public void onResponse(Call<Users> call, Response<Users> response) {
@@ -93,11 +105,15 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder>{
         ImageButton btnEdit, btnDelete;
         TextView txtName;
 
+        ImageView imgUser;
+
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             btnDelete = itemView.findViewById(R.id.imageButtonDeleteUser);
             btnEdit = itemView.findViewById(R.id.imageButtonEditUser);
             txtName = itemView.findViewById(R.id.textViewUserName);
+            imgUser = itemView.findViewById(R.id.imageViewUser);
         }
     }
 
@@ -140,7 +156,9 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder>{
             @Override
             public void onClick(View v) {
                 // Update user
-                apiUsersService = RetrofitClient.getRetrofit().create(APIUsersService.class);
+                sharedPreferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+                String token = sharedPreferences.getString("token", "");
+                apiUsersService = RetrofitPrivate.getRetrofit(token).create(APIUsersService.class);
                 apiUsersService.putStatusUser(user.getId()).enqueue(new Callback<Users>() {
                     @Override
                     public void onResponse(Call<Users> call, Response<Users> response) {

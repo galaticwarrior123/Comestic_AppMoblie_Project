@@ -92,7 +92,9 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
        holder.switchStatus.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
            @Override
            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                apiProductService = RetrofitClient.getRetrofit().create(APIProductService.class);
+                sharedPreferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+                String token = sharedPreferences.getString("token", "");
+                apiProductService = RetrofitPrivate.getRetrofit(token).create(APIProductService.class);
                 apiProductService.putStatusProduct(productModel.getId()).enqueue(new Callback<Product>() {
                      @Override
                      public void onResponse(Call<Product> call, Response<Product> response) {
