@@ -38,7 +38,9 @@ public class ProductDetailActivity extends AppCompatActivity {
     private Product product;
     APICartService apiCartService;
     APIProductService apiProductService;
+    APICartProductService apiCartProductService;
     SharedPreferences sharedPreferences;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,89 +65,132 @@ public class ProductDetailActivity extends AppCompatActivity {
             }
         });
 
-        // Trong ProductDetailActivity.java
+        CartProductInput cartProduct = new CartProductInput();
+        cartProduct.setIdProduct(productId);
+
         Button btnAddToCart = findViewById(R.id.buttonAddToCart);
         btnAddToCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Tạo một hộp thoại để người dùng nhập số lượng
+                // Create an alert dialog to let the user input quantity
                 AlertDialog.Builder builder = new AlertDialog.Builder(ProductDetailActivity.this);
                 builder.setTitle("Enter quantity");
-
                 final EditText input = new EditText(ProductDetailActivity.this);
                 input.setInputType(InputType.TYPE_CLASS_NUMBER);
                 builder.setView(input);
 
-                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                apiCartService = RetrofitPrivate.getRetrofit(token).create(APICartService.class);
+                apiCartService.getCarts(idUser).enqueue(new Callback<List<Cart>>() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        int quantity = Integer.parseInt(input.getText().toString());
+                    public void onResponse(Call<List<Cart>> call, Response<List<Cart>> response) {
+                        if (response.isSuccessful()) {
+                            List<Cart> carts = response.body();
+                            if (carts != null) {
+                                for (Cart cart : carts) {
+                                    if (!cart.getStatus()) {
+                                        cartProduct.setIdCart(cart.getId());
 
-                        // Tạo một đối tượng CartProduct
-                        CartProductInput cartProduct = new CartProductInput();
-
-                        //Lấy cart mới nhất của user có status= false
-                        apiCartService = RetrofitPrivate.getRetrofit(token).create(APICartService.class);
-                        apiCartService.getCarts(idUser).enqueue(new Callback<List<Cart>>() {
-                            @Override
-                            public void onResponse(Call<List<Cart>> call, Response<List<Cart>> response) {
-                                if (response.isSuccessful()) {
-                                    List<Cart> carts = response.body();
-                                    if (carts != null) {
-                                        for (Cart cart : carts) {
-                                            if (cart.getStatus() == false) {
-                                                cartProduct.setIdCart(cart.getId());
-                                                break;
-                                            }
-                                        }
-
-                                        cartProduct.setIdProduct(productId);
-                                        cartProduct.setQuantity(quantity);
-                                        System.out.println(cartProduct.getIdCart());
-                                        System.out.println(cartProduct.getIdProduct());
-                                        System.out.println(cartProduct.getQuantity());
-
-
-
-                                        // Gọi API để thêm sản phẩm vào giỏ hàng
-                                        APICartProductService apiCartProductService = RetrofitPrivate.getRetrofit(token).create(APICartProductService.class);
-                                        apiCartProductService.postCartProduct(cartProduct).enqueue(new Callback<CartProduct>() {
+                                        apiCartProductService = RetrofitPrivate.getRetrofit(token).create(APICartProductService.class);
+                                        apiCartProductService.getCartProductByCartId(cart.getId()).enqueue(new Callback<List<CartProduct>>() {
                                             @Override
-                                            public void onResponse(Call<CartProduct> call, Response<CartProduct> response) {
+                                            public void onResponse(Call<List<CartProduct>> call, Response<List<CartProduct>> response) {
                                                 if (response.isSuccessful()) {
-                                                    Toast.makeText(ProductDetailActivity.this, "Product added to cart", Toast.LENGTH_SHORT).show();
-                                                } else {
-                                                    Toast.makeText(ProductDetailActivity.this, "Failed to add product to cart", Toast.LENGTH_SHORT).show();
+                                                    List<CartProduct> cartProducts = response.body();
+                                                    if (cartProducts != null) {
+                                                        boolean productExistsInCart = false;
+                                                        for (CartProduct cartProduct1 : cartProducts) {
+                                                            if (cartProduct1.getProduct().getId() == productId) {
+                                                                productExistsInCart = true;
+                                                                input.setText(String.valueOf(cartProduct1.getQuantity()));
+                                                                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                                    @Override
+                                                                    public void onClick(DialogInterface dialog, int which) {
+                                                                        int quantity = Integer.parseInt(input.getText().toString());
+                                                                        cartProduct.setQuantity(quantity);
+                                                                        apiCartProductService.putCartProduct(cartProduct1.getId(), cartProduct).enqueue(new Callback<CartProduct>() {
+                                                                            @Override
+                                                                            public void onResponse(Call<CartProduct> call, Response<CartProduct> response) {
+                                                                                if (response.isSuccessful()) {
+                                                                                    Toast.makeText(ProductDetailActivity.this, "Product quantity updated in cart", Toast.LENGTH_SHORT).show();
+                                                                                } else {
+                                                                                    Toast.makeText(ProductDetailActivity.this, "Failed to update product quantity in cart", Toast.LENGTH_SHORT).show();
+                                                                                }
+                                                                            }
+
+                                                                            @Override
+                                                                            public void onFailure(Call<CartProduct> call, Throwable t) {
+                                                                                t.printStackTrace();
+                                                                            }
+                                                                        });
+                                                                    }
+                                                                });
+                                                                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                                                    @Override
+                                                                    public void onClick(DialogInterface dialog, int which) {
+                                                                        dialog.cancel();
+                                                                    }
+                                                                });
+                                                                builder.show();
+                                                                break;
+                                                            }
+                                                        }
+
+                                                        if (!productExistsInCart) {
+                                                            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                                @Override
+                                                                public void onClick(DialogInterface dialog, int which) {
+                                                                    int quantity = Integer.parseInt(input.getText().toString());
+                                                                    cartProduct.setQuantity(quantity);
+                                                                    apiCartProductService.postCartProduct(cartProduct).enqueue(new Callback<CartProduct>() {
+                                                                        @Override
+                                                                        public void onResponse(Call<CartProduct> call, Response<CartProduct> response) {
+                                                                            if (response.isSuccessful()) {
+                                                                                Toast.makeText(ProductDetailActivity.this, "Product added to cart", Toast.LENGTH_SHORT).show();
+                                                                            } else {
+                                                                                Toast.makeText(ProductDetailActivity.this, "Failed to add product to cart", Toast.LENGTH_SHORT).show();
+                                                                            }
+                                                                        }
+
+                                                                        @Override
+                                                                        public void onFailure(Call<CartProduct> call, Throwable t) {
+                                                                            t.printStackTrace();
+                                                                        }
+                                                                    });
+                                                                }
+                                                            });
+                                                            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                                                @Override
+                                                                public void onClick(DialogInterface dialog, int which) {
+                                                                    dialog.cancel();
+                                                                }
+                                                            });
+                                                            builder.show();
+                                                        }
+                                                    }
                                                 }
                                             }
 
                                             @Override
-                                            public void onFailure(Call<CartProduct> call, Throwable t) {
+                                            public void onFailure(Call<List<CartProduct>> call, Throwable t) {
                                                 t.printStackTrace();
                                             }
                                         });
+                                        break;
                                     }
                                 }
                             }
-
-                            @Override
-                            public void onFailure(Call<List<Cart>> call, Throwable t) {
-                                t.printStackTrace();
-                            }
-                        });
+                        }
                     }
-                });
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
+                    public void onFailure(Call<List<Cart>> call, Throwable t) {
+                        t.printStackTrace();
                     }
                 });
-
-                builder.show();
             }
         });
     }
+
     private void loadProductDetails(int productId) {
         APIProductService apiProductService = RetrofitClient.getRetrofit().create(APIProductService.class);
         apiProductService.getProductById(productId).enqueue(new retrofit2.Callback<Product>() {
