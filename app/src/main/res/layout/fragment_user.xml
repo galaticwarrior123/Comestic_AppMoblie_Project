@@ -64,6 +64,15 @@
             android:layout_marginBottom="16dp"/>
 
         <Button
+            android:id="@+id/btnUserFragmentChangePassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_user_fragment"
+            android:text="Đổi mật khẩu"
+            android:textSize="20dp"
+            android:layout_marginBottom="16dp"/>
+
+        <Button
             android:id="@+id/btnUserFragmentLogOut"
             android:textSize="20dp"
 

@@ -24,7 +24,7 @@ import vn.appCosmetic.ServiceAPI.RetrofitPrivate;
 import vn.appCosmetic.ServiceAPI.Users.APIUsersService;
 
 public class UserFragment extends Fragment {
-    private Button btnProfile;
+    private Button btnProfile,btnChangePassword;
     private TextView txtUserFragmentName;
     private ImageView imgUserFragment;
 
@@ -66,6 +66,15 @@ public class UserFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), ProfileActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        btnChangePassword = view.findViewById(R.id.btnUserFragmentChangePassword);
+        btnChangePassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), ChangePasswordActivity.class);
                 startActivity(intent);
             }
         });

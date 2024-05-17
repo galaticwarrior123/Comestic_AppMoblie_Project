@@ -20,6 +20,9 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".Controller.User.User.ChangePasswordActivity"
+            android:exported="false" />
+        <activity
             android:name=".Controller.User.User.ProfileActivity"
             android:exported="false" />
         <activity
