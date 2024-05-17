@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -35,6 +36,8 @@ public class BankActivity extends AppCompatActivity {
         setContentView(R.layout.activity_bank);
         recyclerViewBank = findViewById(R.id.rcViewBank);
         recyclerViewBank.setLayoutManager(new GridLayoutManager(this, 2));
+
+
 
         apiBankService = RetrofitBank.getRetrofit().create(APIBankService.class);
         apiBankService.getAllBank().enqueue(new Callback<ResponseBank>() {

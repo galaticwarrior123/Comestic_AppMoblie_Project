@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.webkit.WebSettings;
 import android.webkit.WebViewClient;
@@ -14,15 +15,24 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vn.appCosmetic.Controller.User.UserMainActivity;
+import vn.appCosmetic.Model.Cart;
+import vn.appCosmetic.Model.Order;
 import vn.appCosmetic.Model.Payment;
 import vn.appCosmetic.Model.ResponsePayment;
 import vn.appCosmetic.ServiceAPI.Bank.APIPaymentService;
+import vn.appCosmetic.ServiceAPI.Cart.APICartService;
+import vn.appCosmetic.ServiceAPI.Order.APIOrderService;
 import vn.appCosmetic.ServiceAPI.RetrofitClient;
+import vn.appCosmetic.ServiceAPI.RetrofitPrivate;
 import vn.appCosmetic.databinding.ActivityPaymentBinding;
 
 public class PaymentActivity extends AppCompatActivity {
     private ActivityPaymentBinding binding;
     private APIPaymentService apiPaymentService;
+    private APIOrderService apiOrderService;
+    private APICartService apiCartService;
+    private SharedPreferences sharedPreferences;
+
     @SuppressLint({"SetJavaScriptEnabled", "SetDomStorageEnabled", "SetDatabaseEnabled", "SetCacheMode","WebViewApiAvailability"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,8 +48,13 @@ public class PaymentActivity extends AppCompatActivity {
         binding.webViewPayment.getSettings().setDatabaseEnabled(true);
         binding.webViewPayment.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
         binding.webViewPayment.setWebViewClient(new CustomWebViewClient(this));
-        Payment payment = new Payment("Payment", 10000);
-        apiPaymentService = RetrofitClient.getRetrofit().create(APIPaymentService.class);
+
+        sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+        Long totalPrice = sharedPreferences.getLong("totalPrice", 0);
+        String token = sharedPreferences.getString("token", "");
+        Payment payment = new Payment("Payment", totalPrice);
+
+        apiPaymentService = RetrofitPrivate.getRetrofit(token).create(APIPaymentService.class);
         apiPaymentService.createPayment(payment).enqueue(new Callback<ResponsePayment>() {
             @Override
             public void onResponse(Call<ResponsePayment> call, Response<ResponsePayment> response) {
@@ -65,11 +80,43 @@ public class PaymentActivity extends AppCompatActivity {
             this.activity = activity;
         }
 
+        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+
         @Override
         public boolean shouldOverrideUrlLoading(android.webkit.WebView view, String url) {
             if(url.contains("http://localhost:8080/api/payment/pay_success")) {
-                Intent intent = new Intent(activity, UserMainActivity.class);
-                startActivity(intent);
+                int orderId= sharedPreferences.getInt("orderId", 0);
+                String token = sharedPreferences.getString("token", "");
+                int idUser = sharedPreferences.getInt("idUser", 0);
+                apiOrderService= RetrofitPrivate.getRetrofit(token).create(APIOrderService.class);
+                apiOrderService.updateStatusOrder(orderId).enqueue(new Callback<Order>() {
+                    @Override
+                    public void onResponse(Call<Order> call, Response<Order> response) {
+
+                        apiCartService = RetrofitPrivate.getRetrofit(token).create(APICartService.class);
+                        apiCartService.createCart(idUser).enqueue(new Callback<Cart>() {
+                            @Override
+                            public void onResponse(Call<Cart> call, Response<Cart> response) {
+                                if (response.isSuccessful()) {
+                                    sharedPreferences.edit().remove("totalPrice").apply();
+                                    sharedPreferences.edit().remove("orderId").apply();
+                                    Intent intent = new Intent(PaymentActivity.this, UserMainActivity.class);
+                                    startActivity(intent);
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<Cart> call, Throwable t) {
+
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onFailure(Call<Order> call, Throwable t) {
+                        Toast.makeText(PaymentActivity.this, "Error", Toast.LENGTH_SHORT).show();
+                    }
+                });
                 return true;
             }
             return false;

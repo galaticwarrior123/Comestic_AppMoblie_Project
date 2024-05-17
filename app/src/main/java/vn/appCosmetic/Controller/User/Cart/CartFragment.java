@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
@@ -18,6 +19,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import vn.appCosmetic.Controller.User.Order.OrderFragment;
 import vn.appCosmetic.Model.Cart;
 import vn.appCosmetic.Model.CartProduct;
 import vn.appCosmetic.R;
@@ -34,12 +36,16 @@ public class CartFragment extends Fragment {
     private int totalPrice = 0;
     private TextView txtTotalPrice;
 
+    private Button btnOrder;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_cart, container, false);
 
         recyclerCart = view.findViewById(R.id.recycler_cart);
         cartProductList = new ArrayList<>();
+
+        btnOrder = view.findViewById(R.id.btn_place_order);
 
         cartItemAdapter = new CartItemAdapter(getContext(), cartProductList);
         recyclerCart.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -90,6 +96,18 @@ public class CartFragment extends Fragment {
             @Override
             public void onFailure(Call<List<Cart>> call, Throwable t) {
                 t.printStackTrace();
+            }
+
+
+        });
+
+        btnOrder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Chuyển qua màn hình Order
+                Fragment fragment = new OrderFragment();
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
+
             }
         });
         return view;
