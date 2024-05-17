@@ -11,7 +11,6 @@ public class CartProduct implements Serializable {
     private int quantity;
     @SerializedName("product")
     private Product product;
-
     @SerializedName("cart")
     private Cart cart;
 

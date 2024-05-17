@@ -35,12 +35,10 @@ import vn.appCosmetic.ServiceAPI.RetrofitPrivate;
 public class ProductDetailActivity extends AppCompatActivity {
     private TextView productName, productDescription, productPrice, productStock;
     private ViewPager viewPager;
-
+    private Product product;
     APICartService apiCartService;
     APIProductService apiProductService;
     SharedPreferences sharedPreferences;
-
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -111,7 +109,7 @@ public class ProductDetailActivity extends AppCompatActivity {
 
                                         // Gọi API để thêm sản phẩm vào giỏ hàng
                                         APICartProductService apiCartProductService = RetrofitPrivate.getRetrofit(token).create(APICartProductService.class);
-                                        apiCartProductService.addCartProduct(cartProduct).enqueue(new Callback<CartProduct>() {
+                                        apiCartProductService.postCartProduct(cartProduct).enqueue(new Callback<CartProduct>() {
                                             @Override
                                             public void onResponse(Call<CartProduct> call, Response<CartProduct> response) {
                                                 if (response.isSuccessful()) {
@@ -154,7 +152,7 @@ public class ProductDetailActivity extends AppCompatActivity {
             @Override
             public void onResponse(retrofit2.Call<Product> call, retrofit2.Response<Product> response) {
                 if (response.isSuccessful()) {
-                    Product product = response.body();
+                    product = response.body();
                     if (product != null) {
                         productName.setText(product.getName());
                         productDescription.setText(product.getDescription());

@@ -8,6 +8,10 @@ import retrofit2.http.Path;
 import vn.appCosmetic.Model.Cart;
 
 public interface APICartService {
+
     @GET("cart/all/{idUser}")
     Call<List<Cart>> getCarts(@Path("idUser") int idUser);
+
+    @GET("cartProduct/add")
+    Call<Cart> getCartByUserId();
 }
