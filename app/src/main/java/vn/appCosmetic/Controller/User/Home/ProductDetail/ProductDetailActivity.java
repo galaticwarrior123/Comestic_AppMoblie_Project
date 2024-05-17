@@ -1,18 +1,31 @@
 package vn.appCosmetic.Controller.User.Home.ProductDetail;
 
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import vn.appCosmetic.Model.CartProduct;
 import vn.appCosmetic.Model.Product;
 import vn.appCosmetic.R;
+import vn.appCosmetic.ServiceAPI.CartProduct.APICartProductService;
 import vn.appCosmetic.ServiceAPI.Product.APIProductService;
 import vn.appCosmetic.ServiceAPI.RetrofitClient;
+import vn.appCosmetic.ServiceAPI.RetrofitPrivate;
 
 public class ProductDetailActivity extends AppCompatActivity {
     private TextView productName, productDescription, productPrice, productStock;
@@ -37,6 +50,63 @@ public class ProductDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 finish();
+            }
+        });
+
+        // Trong ProductDetailActivity.java
+        Button btnAddToCart = findViewById(R.id.buttonAddToCart);
+        btnAddToCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Tạo một hộp thoại để người dùng nhập số lượng
+                AlertDialog.Builder builder = new AlertDialog.Builder(ProductDetailActivity.this);
+                builder.setTitle("Enter quantity");
+
+                final EditText input = new EditText(ProductDetailActivity.this);
+                input.setInputType(InputType.TYPE_CLASS_NUMBER);
+                builder.setView(input);
+
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        int quantity = Integer.parseInt(input.getText().toString());
+
+                        // Tạo một đối tượng CartProduct mới
+                        CartProduct cartProduct = new CartProduct();
+                        cartProduct.setProduct(new Product());
+                        cartProduct.setQuantity(quantity);
+
+                        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+
+                        String token = sharedPreferences.getString("token", "");
+
+                        // Gọi API để thêm sản phẩm vào giỏ hàng
+                        APICartProductService apiCartProductService = RetrofitPrivate.getRetrofit(token).create(APICartProductService.class);
+                        apiCartProductService.postCartProduct(cartProduct).enqueue(new Callback<CartProduct>() {
+                            @Override
+                            public void onResponse(Call<CartProduct> call, Response<CartProduct> response) {
+                                if (response.isSuccessful()) {
+                                    Toast.makeText(ProductDetailActivity.this, "Product added to cart", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(ProductDetailActivity.this, "Failed to add product to cart", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<CartProduct> call, Throwable t) {
+                                t.printStackTrace();
+                            }
+                        });
+                    }
+                });
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+                builder.show();
             }
         });
     }
