@@ -68,7 +68,23 @@
                 android:textSize="20dp" />
         </TableRow>
 
-        <TableRow android:layout_marginBottom="10dp"/>
+        <TableRow android:layout_marginBottom="10dp">
+
+                <TextView
+                    android:layout_width="108dp"
+                    android:layout_height="match_parent"
+                    android:background="#00C853"
+                    android:text="Gender"
+                    android:textSize="20dp" />
+
+                <Spinner
+                    android:id="@+id/ProfileGender"
+                    android:layout_width="302dp"
+                    android:layout_height="60dp"
+                    android:padding="12dp"
+                    android:text="TableLayout Example"
+                    android:textSize="20dp" />
+        </TableRow>
 
 
         <TableRow android:layout_marginBottom="10dp">

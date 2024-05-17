@@ -71,8 +71,16 @@ public class LoginActivity extends AppCompatActivity {
                                editor.putInt("idUser", users.getUser().getId());
                                editor.putString("userName", users.getUser().getUsername());
                                editor.apply();
-                               Intent intent = new Intent(LoginActivity.this, UserMainActivity.class);
-                               startActivity(intent);
+
+
+                               if(users.getUser().isAdmin()){
+                                      Intent intent = new Intent(LoginActivity.this, AdminMainActivity.class);
+                                      startActivity(intent);
+                               }
+                               else {
+                                   Intent intent = new Intent(LoginActivity.this, UserMainActivity.class);
+                                   startActivity(intent);
+                               }
                            }
                            else {
                                Toast.makeText(LoginActivity.this, "Login fail, Email or Password is incorrect", Toast.LENGTH_SHORT).show();
@@ -81,7 +89,7 @@ public class LoginActivity extends AppCompatActivity {
 
                        @Override
                        public void onFailure(Call<AuthLogin> call, Throwable t) {
-                           Toast.makeText(LoginActivity.this, "Login fail, Element is null 1", Toast.LENGTH_SHORT).show();
+                           Toast.makeText(LoginActivity.this, "Login fail, Element is null ", Toast.LENGTH_SHORT).show();
                        }
                    });
 

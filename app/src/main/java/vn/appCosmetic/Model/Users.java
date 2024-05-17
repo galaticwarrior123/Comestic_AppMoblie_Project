@@ -14,6 +14,9 @@ public class Users implements Serializable {
     @SerializedName("password")
     private String password;
 
+    @SerializedName("gender")
+    private String gender;
+
     @SerializedName("address")
     private String address;
 
@@ -26,13 +29,13 @@ public class Users implements Serializable {
     @SerializedName("status")
     private boolean status;
 
-    @SerializedName("isAdmin")
+    @SerializedName("admin")
     private boolean isAdmin;
 
     public Users() {
     }
 
-    public Users(int id, String username, String email, String password, String address, String phone, String avatar, boolean status, boolean isAdmin) {
+    public Users(int id, String username, String email, String password, String address, String phone,String gender, String avatar, boolean status, boolean isAdmin) {
         this.id = id;
         this.username = username;
         this.email = email;
@@ -42,6 +45,7 @@ public class Users implements Serializable {
         this.avatar = avatar;
         this.status = status;
         this.isAdmin = isAdmin;
+        this.gender = gender;
     }
 
     public int getId() {
@@ -114,6 +118,14 @@ public class Users implements Serializable {
 
     public void setAdmin(boolean admin) {
         isAdmin = admin;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 }
 
