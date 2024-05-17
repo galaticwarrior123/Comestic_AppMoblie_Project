@@ -31,6 +31,7 @@ public class ProductDetailActivity extends AppCompatActivity {
     private TextView productName, productDescription, productPrice, productStock;
     private ViewPager viewPager;
 
+    private Product product;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,11 +74,10 @@ public class ProductDetailActivity extends AppCompatActivity {
 
                         // Tạo một đối tượng CartProduct mới
                         CartProduct cartProduct = new CartProduct();
-                        cartProduct.setProduct(new Product());
+                        cartProduct.setProduct(product);
                         cartProduct.setQuantity(quantity);
 
                         SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
-
                         String token = sharedPreferences.getString("token", "");
 
                         // Gọi API để thêm sản phẩm vào giỏ hàng
@@ -116,7 +116,7 @@ public class ProductDetailActivity extends AppCompatActivity {
             @Override
             public void onResponse(retrofit2.Call<Product> call, retrofit2.Response<Product> response) {
                 if (response.isSuccessful()) {
-                    Product product = response.body();
+                    product = response.body();
                     if (product != null) {
                         productName.setText(product.getName());
                         productDescription.setText(product.getDescription());
