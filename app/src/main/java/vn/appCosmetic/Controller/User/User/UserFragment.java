@@ -41,7 +41,6 @@ public class UserFragment extends Fragment {
         Integer idUser = sharedPreferences.getInt("idUser", 0);
         String token = sharedPreferences.getString("token", "");
         if (idUser!=0) {
-
             APIUsersService apiService = RetrofitPrivate.getRetrofit(token).create(APIUsersService.class);
             Call<Users> call = apiService.getUserById(idUser);
             call.enqueue(new Callback<Users>() {

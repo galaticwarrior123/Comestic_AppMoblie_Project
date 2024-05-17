@@ -12,6 +12,6 @@ public interface APICartService {
     @GET("cart/all/{idUser}")
     Call<List<Cart>> getCarts(@Path("idUser") int idUser);
 
-    @GET("cartProduct/add")
-    Call<Cart> getCartByUserId();
+    @GET("cart/all/{userId}")
+    Call<Cart> getCartByUserId(@Path("userId") int userId);
 }
