@@ -16,12 +16,17 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import vn.appCosmetic.Model.Cart;
 import vn.appCosmetic.Model.CartProduct;
+import vn.appCosmetic.Model.CartProductInput;
 import vn.appCosmetic.Model.Product;
 import vn.appCosmetic.R;
+import vn.appCosmetic.ServiceAPI.Cart.APICartService;
 import vn.appCosmetic.ServiceAPI.CartProduct.APICartProductService;
 import vn.appCosmetic.ServiceAPI.Product.APIProductService;
 import vn.appCosmetic.ServiceAPI.RetrofitClient;
@@ -31,11 +36,18 @@ public class ProductDetailActivity extends AppCompatActivity {
     private TextView productName, productDescription, productPrice, productStock;
     private ViewPager viewPager;
 
+    APICartService apiCartService;
+    APIProductService apiProductService;
+    SharedPreferences sharedPreferences;
+
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_detail);
-
+        sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        int idUser = sharedPreferences.getInt("idUser", 0);
+        String token = sharedPreferences.getString("token", "");
         productName = findViewById(R.id.product_detail_name);
         productDescription = findViewById(R.id.product_detail_description);
         productPrice = findViewById(R.id.product_detail_price);
@@ -71,29 +83,55 @@ public class ProductDetailActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         int quantity = Integer.parseInt(input.getText().toString());
 
-                        // Tạo một đối tượng CartProduct mới
-                        CartProduct cartProduct = new CartProduct();
-                        cartProduct.setProduct(new Product());
-                        cartProduct.setQuantity(quantity);
+                        // Tạo một đối tượng CartProduct
+                        CartProductInput cartProduct = new CartProductInput();
 
-                        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
-
-                        String token = sharedPreferences.getString("token", "");
-
-                        // Gọi API để thêm sản phẩm vào giỏ hàng
-                        APICartProductService apiCartProductService = RetrofitPrivate.getRetrofit(token).create(APICartProductService.class);
-                        apiCartProductService.postCartProduct(cartProduct).enqueue(new Callback<CartProduct>() {
+                        //Lấy cart mới nhất của user có status= false
+                        apiCartService = RetrofitPrivate.getRetrofit(token).create(APICartService.class);
+                        apiCartService.getCarts(idUser).enqueue(new Callback<List<Cart>>() {
                             @Override
-                            public void onResponse(Call<CartProduct> call, Response<CartProduct> response) {
+                            public void onResponse(Call<List<Cart>> call, Response<List<Cart>> response) {
                                 if (response.isSuccessful()) {
-                                    Toast.makeText(ProductDetailActivity.this, "Product added to cart", Toast.LENGTH_SHORT).show();
-                                } else {
-                                    Toast.makeText(ProductDetailActivity.this, "Failed to add product to cart", Toast.LENGTH_SHORT).show();
+                                    List<Cart> carts = response.body();
+                                    if (carts != null) {
+                                        for (Cart cart : carts) {
+                                            if (cart.getStatus() == false) {
+                                                cartProduct.setIdCart(cart.getId());
+                                                break;
+                                            }
+                                        }
+
+                                        cartProduct.setIdProduct(productId);
+                                        cartProduct.setQuantity(quantity);
+                                        System.out.println(cartProduct.getIdCart());
+                                        System.out.println(cartProduct.getIdProduct());
+                                        System.out.println(cartProduct.getQuantity());
+
+
+
+                                        // Gọi API để thêm sản phẩm vào giỏ hàng
+                                        APICartProductService apiCartProductService = RetrofitPrivate.getRetrofit(token).create(APICartProductService.class);
+                                        apiCartProductService.addCartProduct(cartProduct).enqueue(new Callback<CartProduct>() {
+                                            @Override
+                                            public void onResponse(Call<CartProduct> call, Response<CartProduct> response) {
+                                                if (response.isSuccessful()) {
+                                                    Toast.makeText(ProductDetailActivity.this, "Product added to cart", Toast.LENGTH_SHORT).show();
+                                                } else {
+                                                    Toast.makeText(ProductDetailActivity.this, "Failed to add product to cart", Toast.LENGTH_SHORT).show();
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onFailure(Call<CartProduct> call, Throwable t) {
+                                                t.printStackTrace();
+                                            }
+                                        });
+                                    }
                                 }
                             }
 
                             @Override
-                            public void onFailure(Call<CartProduct> call, Throwable t) {
+                            public void onFailure(Call<List<Cart>> call, Throwable t) {
                                 t.printStackTrace();
                             }
                         });

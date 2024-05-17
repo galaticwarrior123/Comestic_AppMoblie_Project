@@ -21,6 +21,13 @@ public class Product implements Serializable {
     private int stock;
     @SerializedName("images")
     private List<String> images;
+
+    @SerializedName("category")
+    private Category category;
+    @SerializedName("brand")
+    private Brand brand;
+
+
     @SerializedName("categoryId")
     private int idCategory;
 
