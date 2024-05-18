@@ -92,8 +92,10 @@
 
             </TableLayout>
             <LinearLayout
+                android:id="@+id/ll_order_seeDetail"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:visibility="gone"
                 android:orientation="vertical">
                 <TextView
                     android:layout_width="wrap_content"
@@ -107,7 +109,7 @@
                 <EditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/edt_name_seeDetail"
+                    android:id="@+id/edt_name_order_seeDetail"
                     android:hint="Họ và tên"
                     android:textSize="20sp"
                     android:layout_marginTop="10dp"
@@ -139,9 +141,18 @@
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Đặt hàng"
+                android:text="Xác nhận"
                 android:visibility="gone"
                 android:textSize="30sp"
+                android:id="@+id/btn_confirm_seeDetail"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"/>
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Đặt hàng"
+                android:textSize="30sp"
+                android:visibility="gone"
                 android:id="@+id/btn_order_seeDetail"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"/>

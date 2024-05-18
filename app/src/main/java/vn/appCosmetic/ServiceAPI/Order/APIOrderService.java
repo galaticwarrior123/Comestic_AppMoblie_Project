@@ -18,6 +18,9 @@ public interface APIOrderService {
     @PUT("order/update-status/{orderId}")
     Call<Order> updateStatusOrder(@Path("orderId") int orderId);
 
+    @PUT("order/update/{orderId}")
+    Call<Order> updateOrder(@Path("orderId") int orderId, @Body Order order);
+
     @GET("order/all/{userId}")
     Call<List<Order>> getAllOrderByIdUser(@Path("userId") int userId);
 

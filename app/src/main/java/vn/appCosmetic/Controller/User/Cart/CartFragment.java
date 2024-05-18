@@ -1,6 +1,9 @@
 package vn.appCosmetic.Controller.User.Cart;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,7 +12,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,38 +31,60 @@ import vn.appCosmetic.Model.CartProduct;
 import vn.appCosmetic.R;
 import vn.appCosmetic.ServiceAPI.Cart.APICartService;
 import vn.appCosmetic.ServiceAPI.CartProduct.APICartProductService;
-import vn.appCosmetic.ServiceAPI.Product.APIProductService;
 import vn.appCosmetic.ServiceAPI.RetrofitPrivate;
 
-public class CartFragment extends Fragment implements CartItemAdapter.OnCartProductChangeListener{
+public class CartFragment extends Fragment implements CartItemAdapter.OnCartProductChangeListener {
     private RecyclerView recyclerCart;
     private CartItemAdapter cartItemAdapter;
     private List<CartProduct> cartProductList;
-
     private int totalPrice = 0;
     private TextView txtTotalPrice;
-
     private Button btnOrder;
+    private SharedPreferences sharedPreferences;
+    private String token;
+    private int idUser;
 
+    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_cart, container, false);
 
         recyclerCart = view.findViewById(R.id.recycler_cart);
         cartProductList = new ArrayList<>();
-
         btnOrder = view.findViewById(R.id.btn_place_order);
+        txtTotalPrice = view.findViewById(R.id.txt_total_price);
+
+        sharedPreferences = getActivity().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        idUser = sharedPreferences.getInt("idUser", 0);
+        token = sharedPreferences.getString("token", "");
 
         cartItemAdapter = new CartItemAdapter(getContext(), cartProductList, this);
         recyclerCart.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerCart.setAdapter(cartItemAdapter);
 
-        txtTotalPrice = view.findViewById(R.id.txt_total_price);
+        loadCartData();
 
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
-        int idUser = sharedPreferences.getInt("idUser", 0);
-        String token = sharedPreferences.getString("token", "");
+        // nếu nhận được broadcast thì load lại dữ liệu giỏ hàng
+        if(getActivity() != null) {
+            loadCartData();
+            LocalBroadcastManager.getInstance(getContext()).registerReceiver(cartUpdateReceiver, new IntentFilter("cart-update"));
+        }
 
+        btnOrder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Navigate to OrderFragment
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, new OrderFragment())
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
+
+        return view;
+    }
+
+    private void loadCartData() {
         APICartService apiCartService = RetrofitPrivate.getRetrofit(token).create(APICartService.class);
         apiCartService.getCarts(idUser).enqueue(new Callback<List<Cart>>() {
             @Override
@@ -74,16 +102,18 @@ public class CartFragment extends Fragment implements CartItemAdapter.OnCartProd
                                         if (response.isSuccessful()) {
                                             List<CartProduct> cartProducts = response.body();
                                             if (cartProducts != null) {
+                                                cartProductList.clear();
+                                                totalPrice = 0;
                                                 for (CartProduct cartProduct : cartProducts) {
                                                     cartProductList.add(cartProduct);
                                                     totalPrice += cartProduct.getProduct().getPrice() * cartProduct.getQuantity();
-                                                    System.out.println("getPrice: " + cartProduct.getProduct().getPrice() + " getQuantity: " + cartProduct.getQuantity() + " totalPrice: " + totalPrice);
                                                 }
                                                 txtTotalPrice.setText(String.format("%d VND", totalPrice));
                                                 cartItemAdapter.notifyDataSetChanged();
                                             }
                                         }
                                     }
+
                                     @Override
                                     public void onFailure(Call<List<CartProduct>> call, Throwable t) {
                                         t.printStackTrace();
@@ -94,32 +124,33 @@ public class CartFragment extends Fragment implements CartItemAdapter.OnCartProd
                     }
                 }
             }
+
             @Override
             public void onFailure(Call<List<Cart>> call, Throwable t) {
                 t.printStackTrace();
             }
-
-
         });
-
-        btnOrder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Chuyển qua màn hình Order
-                Fragment fragment = new OrderFragment();
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
-
-            }
-        });
-        return view;
     }
+
+    private BroadcastReceiver cartUpdateReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            loadCartData();
+        }
+    };
 
     @Override
     public void onCartProductChange() {
-        totalPrice = 0;
-        for (CartProduct cartProduct : cartProductList) {
-            totalPrice += cartProduct.getProduct().getPrice() * cartProduct.getQuantity();
-        }
-        txtTotalPrice.setText(String.format("%d VND", totalPrice));
+        loadCartData();
     }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(cartUpdateReceiver);
+    }
+
+
 }
+
+

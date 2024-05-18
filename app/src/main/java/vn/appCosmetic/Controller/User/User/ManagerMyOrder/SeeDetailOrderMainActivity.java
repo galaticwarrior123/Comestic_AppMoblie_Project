@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,9 +39,10 @@ public class SeeDetailOrderMainActivity extends AppCompatActivity {
 
     private Long total = 0L;
 
-    private EditText edtOrderAddress, edtOrderPhone, edtOrderName;
+    private LinearLayout layoutInfoOrder;
+    private Button btnUpdateOrder, btnConfirmOrder;
 
-    private Button btnUpdateOrder;
+    private EditText edtAddress, edtPhone, edtName;
 
     private List<CartProduct> cartProductList=new ArrayList<>();
 
@@ -59,14 +61,16 @@ public class SeeDetailOrderMainActivity extends AppCompatActivity {
         txtOrderTotalPrice = findViewById(R.id.txt_total_price_seeDetail);
         txtOrderTotalQuantity = findViewById(R.id.txt_total_quantity_seeDetail);
 
-        edtOrderAddress = findViewById(R.id.edt_address_order_seeDetail);
-        edtOrderPhone = findViewById(R.id.edt_phone_order_seeDetail);
-        edtOrderName = findViewById(R.id.edt_name_seeDetail);
+        layoutInfoOrder = findViewById(R.id.ll_order_seeDetail);
+
+        edtAddress = findViewById(R.id.edt_address_order_seeDetail);
+        edtPhone = findViewById(R.id.edt_phone_order_seeDetail);
+        edtName = findViewById(R.id.edt_name_order_seeDetail);
 
         btnUpdateOrder = findViewById(R.id.btn_order_seeDetail);
+        btnConfirmOrder= findViewById(R.id.btn_confirm_seeDetail);
 
         sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-        int userId = sharedPreferences.getInt("idUser", 0);
         String token = sharedPreferences.getString("token", "");
 
         // Call API to get order by id
@@ -79,10 +83,6 @@ public class SeeDetailOrderMainActivity extends AppCompatActivity {
             public void onResponse(Call<Order> call, Response<Order> response) {
                 if(response.isSuccessful()){
                     Order order = response.body();
-                    edtOrderAddress.setText(order.getAddress());
-                    edtOrderPhone.setText(order.getPhone());
-
-
 
                     apiCartProductService.getCartProductByCartId(order.getCart().getId()).enqueue(new Callback<List<CartProduct>>() {
                         @Override
@@ -106,10 +106,48 @@ public class SeeDetailOrderMainActivity extends AppCompatActivity {
                                     btnUpdateOrder.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
-                                            sharedPreferences.edit().putLong("total", order.getTotal()).apply();
-                                            sharedPreferences.edit().putInt("orderId", order.getId()).apply();
-                                            Intent intent = new Intent(SeeDetailOrderMainActivity.this, BankActivity.class);
-                                            startActivity(intent);
+
+                                            btnConfirmOrder.setVisibility(View.VISIBLE);
+                                            btnUpdateOrder.setVisibility(View.GONE);
+                                            layoutInfoOrder.setVisibility(View.VISIBLE);
+
+                                            btnConfirmOrder.setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+                                                    String name = edtName.getText().toString().trim();
+                                                    String phone = edtPhone.getText().toString().trim();
+                                                    String address = edtAddress.getText().toString().trim();
+
+                                                    if(name.isEmpty() || phone.isEmpty() || address.isEmpty()){
+                                                        Toast.makeText(SeeDetailOrderMainActivity.this, "Please fill all information", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                    else{
+                                                        order.setAddress(address);
+                                                        order.setPhone(phone);
+                                                        apiOrderService.updateOrder(order.getId(),order).enqueue(new Callback<Order>() {
+                                                            @Override
+                                                            public void onResponse(Call<Order> call, Response<Order> response) {
+                                                                if(response.isSuccessful()){
+                                                                    Toast.makeText(SeeDetailOrderMainActivity.this, "Update success", Toast.LENGTH_SHORT).show();
+                                                                    sharedPreferences.edit().putLong("total", order.getTotal()).apply();
+                                                                    sharedPreferences.edit().putInt("orderId", order.getId()).apply();
+                                                                    Intent intent = new Intent(SeeDetailOrderMainActivity.this, BankActivity.class);
+                                                                    startActivity(intent);
+                                                                }
+                                                                else{
+                                                                    Toast.makeText(SeeDetailOrderMainActivity.this, "Error", Toast.LENGTH_SHORT).show();
+                                                                }
+                                                            }
+
+                                                            @Override
+                                                            public void onFailure(Call<Order> call, Throwable t) {
+                                                                Toast.makeText(SeeDetailOrderMainActivity.this, "Error", Toast.LENGTH_SHORT).show();
+                                                            }
+                                                        });
+                                                    }
+                                                }
+                                            });
+
                                         }
                                     });
                                 }
@@ -129,7 +167,7 @@ public class SeeDetailOrderMainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Order> call, Throwable t) {
-
+                Toast.makeText(SeeDetailOrderMainActivity.this, "Error", Toast.LENGTH_SHORT).show();
             }
         });
 

@@ -2,6 +2,7 @@ package vn.appCosmetic.Controller.User.Home.ProductDetail;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputType;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.viewpager.widget.ViewPager;
 
 import java.util.List;
@@ -21,6 +23,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import vn.appCosmetic.Controller.User.Cart.CartItemAdapter;
 import vn.appCosmetic.Model.Cart;
 import vn.appCosmetic.Model.CartProduct;
 import vn.appCosmetic.Model.CartProductInput;
@@ -117,6 +120,8 @@ public class ProductDetailActivity extends AppCompatActivity {
                                                                             public void onResponse(Call<CartProduct> call, Response<CartProduct> response) {
                                                                                 if (response.isSuccessful()) {
                                                                                     Toast.makeText(ProductDetailActivity.this, "Product quantity updated in cart", Toast.LENGTH_SHORT).show();
+                                                                                    // Broadcast cart update
+                                                                                    broadcastCartUpdate();
                                                                                 } else {
                                                                                     Toast.makeText(ProductDetailActivity.this, "Failed to update product quantity in cart", Toast.LENGTH_SHORT).show();
                                                                                 }
@@ -156,6 +161,8 @@ public class ProductDetailActivity extends AppCompatActivity {
                                                                         public void onResponse(Call<CartProduct> call, Response<CartProduct> response) {
                                                                             if (response.isSuccessful()) {
                                                                                 Toast.makeText(ProductDetailActivity.this, "Product added to cart", Toast.LENGTH_SHORT).show();
+                                                                                // Broadcast cart update
+                                                                                broadcastCartUpdate();
                                                                             } else {
                                                                                 Toast.makeText(ProductDetailActivity.this, "Failed to add product to cart", Toast.LENGTH_SHORT).show();
                                                                             }
@@ -229,5 +236,13 @@ public class ProductDetailActivity extends AppCompatActivity {
                 t.printStackTrace();
             }
         });
+    }
+
+    // Method to broadcast cart updates
+    private void broadcastCartUpdate() {
+        Intent resultIntent = new Intent();
+        setResult(RESULT_OK, resultIntent);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent("cart-update"));
+        finish();
     }
 }

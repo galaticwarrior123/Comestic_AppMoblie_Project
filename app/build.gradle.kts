@@ -33,9 +33,7 @@ android {
 }
 
 dependencies {
-    implementation ("io.jsonwebtoken:jjwt-api:0.11.2")
-    implementation ("io.jsonwebtoken:jjwt-impl:0.11.2")
-    implementation ("io.jsonwebtoken:jjwt-jackson:0.11.2")
+    implementation("com.google.android.material:material:1.4.0")
     implementation("com.google.android.gms:play-services-auth:20.4.1")
     /**firebase dependencies*/
     implementation ("com.google.firebase:firebase-auth:21.1.0")
