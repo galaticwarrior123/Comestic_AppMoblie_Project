@@ -9,6 +9,7 @@ import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,17 +57,18 @@ public class ProductDetailActivity extends AppCompatActivity {
         productPrice = findViewById(R.id.product_detail_price);
         productStock = findViewById(R.id.product_detail_stock);
         viewPager = findViewById(R.id.viewPager);
-        Button btnBack = findViewById(R.id.btn_product_detail_back);
-        int productId = getIntent().getIntExtra("PRODUCT_ID", -1);
-        if (productId != -1) {
-            loadProductDetails(productId);
-        }
+        ImageButton btnBack = findViewById(R.id.btn_product_detail_back);
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
+
+        int productId = getIntent().getIntExtra("PRODUCT_ID", -1);
+        if (productId != -1) {
+            loadProductDetails(productId);
+        }
 
         CartProductInput cartProduct = new CartProductInput();
         cartProduct.setIdProduct(productId);
@@ -220,7 +222,7 @@ public class ProductDetailActivity extends AppCompatActivity {
                         productDescription.setText(product.getDescription());
                         productPrice.setText(String.format("%d VND", product.getPrice()));
                         if (product.getStock() > 0) {
-                            productStock.setText(String.valueOf(product.getStock()));
+                            productStock.setText(String.format("Stock: %d", product.getStock()));
                         } else {
                             productStock.setText("Out of stock");
                         }

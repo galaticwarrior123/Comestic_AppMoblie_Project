@@ -6,136 +6,160 @@
     android:layout_height="match_parent">
 
 
+    <ImageButton
+        android:id="@+id/btn_detail_order_back"
+        android:layout_width="54dp"
+        android:layout_height="44dp"
+        android:background="@drawable/user_back_arrow"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="27dp"
+        android:layout_marginEnd="82dp"
+        android:gravity="center"
+        android:text="Thông tin hóa đơn"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/btn_detail_order_back"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <ScrollView
-        android:layout_width="409dp"
-        android:layout_height="729dp"
-        android:layout_marginStart="1dp"
-        android:layout_marginTop="1dp"
-        android:layout_marginEnd="1dp"
-        android:layout_marginBottom="1dp"
+        android:layout_width="408dp"
+        android:layout_height="688dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginEnd="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/textView10">
+
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="Thông tin hóa đơn"
-                android:textSize="30sp"
-                android:textStyle="bold"
-                android:gravity="center"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"/>
             <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_order_seeDetail"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/recycler_order_seeDetail">
+                android:layout_height="match_parent">
 
             </androidx.recyclerview.widget.RecyclerView>
+
             <TableLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
+
                 <TableRow
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:gravity="center"
                         android:text="Tổng số lượng:"
                         android:textSize="22sp"
-                        android:textStyle="bold"
-                        android:gravity="center"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginBottom="10dp"/>
+                        android:textStyle="bold" />
+
                     <TextView
+                        android:id="@+id/txt_total_quantity_seeDetail"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/txt_total_quantity_seeDetail"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:gravity="center"
                         android:text="0"
                         android:textSize="22sp"
-                        android:textStyle="bold"
-                        android:gravity="center"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginBottom="10dp"/>
+                        android:textStyle="bold" />
                 </TableRow>
 
                 <TableRow
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:gravity="center"
                         android:text="Tổng tiền:"
                         android:textSize="22sp"
-                        android:textStyle="bold"
-                        android:gravity="center"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginBottom="10dp"/>
+                        android:textStyle="bold" />
+
                     <TextView
+                        android:id="@+id/txt_total_price_seeDetail"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/txt_total_price_seeDetail"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:gravity="center"
                         android:text="0"
                         android:textSize="22sp"
-                        android:textStyle="bold"
-                        android:gravity="center"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginBottom="10dp"/>
+                        android:textStyle="bold" />
                 </TableRow>
 
 
             </TableLayout>
+
             <LinearLayout
                 android:id="@+id/ll_order_seeDetail"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:visibility="gone"
                 android:orientation="vertical">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:gravity="center"
                     android:text="Thông tin khách hàng"
                     android:textSize="30sp"
-                    android:textStyle="bold"
-                    android:gravity="center"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"/>
+                    android:textStyle="bold" />
+
                 <EditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/edt_name_order_seeDetail"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
                     android:hint="Họ và tên"
-                    android:textSize="20sp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"/>
+                    android:textSize="20sp" />
+
                 <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
                     android:id="@+id/edt_phone_order_seeDetail"
-                    android:hint="Số điện thoại"
-                    android:textSize="20sp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"/>
-                <EditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/edt_address_order_seeDetail"
-                    android:hint="Địa chỉ"
-                    android:textSize="20sp"
                     android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"/>
+                    android:layout_marginBottom="10dp"
+                    android:hint="Số điện thoại"
+                    android:textSize="20sp" />
+
+                <EditText
+                    android:id="@+id/edt_address_order_seeDetail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:hint="Địa chỉ"
+                    android:textSize="20sp" />
+
                 <Spinner
+                    android:id="@+id/spn_payment_seeDetail"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:id="@+id/spn_payment_seeDetail"
                     android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"/>
+                    android:layout_marginBottom="10dp" />
             </LinearLayout>
 
             <Button
@@ -155,7 +179,8 @@
                 android:visibility="gone"
                 android:id="@+id/btn_order_seeDetail"
                 android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"/>
+                android:layout_marginBottom="10dp"
+                android:backgroundTint="#FF8A65" />
 
         </LinearLayout>
     </ScrollView>

@@ -20,6 +20,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -74,6 +75,13 @@ public class ProfileActivity extends AppCompatActivity {
         ProfileGender = findViewById(R.id.ProfileGender);
         btnProfileSave = findViewById(R.id.btnProfileSave);
 
+        ImageButton btnBack = findViewById(R.id.btn_user_detail_back);
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, listGender);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

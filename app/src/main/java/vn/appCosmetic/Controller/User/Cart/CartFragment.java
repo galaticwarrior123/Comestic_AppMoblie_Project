@@ -108,7 +108,7 @@ public class CartFragment extends Fragment implements CartItemAdapter.OnCartProd
                                                     cartProductList.add(cartProduct);
                                                     totalPrice += cartProduct.getProduct().getPrice() * cartProduct.getQuantity();
                                                 }
-                                                txtTotalPrice.setText(String.format("%d VND", totalPrice));
+                                                txtTotalPrice.setText(String.format("Total Price: %d VND", totalPrice));
                                                 cartItemAdapter.notifyDataSetChanged();
                                             }
                                         }
