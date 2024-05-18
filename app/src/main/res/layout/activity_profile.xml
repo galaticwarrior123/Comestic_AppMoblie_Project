@@ -35,7 +35,7 @@
             <TextView
                 android:layout_width="108dp"
                 android:layout_height="match_parent"
-                android:background="#00C853"
+                android:background="#FF8A65"
                 android:text="Email"
                 android:textSize="20dp" />
 
@@ -55,7 +55,7 @@
             <TextView
                 android:layout_width="108dp"
                 android:layout_height="match_parent"
-                android:background="#00C853"
+                android:background="#FF8A65"
                 android:text="Username"
                 android:textSize="20dp" />
 
@@ -73,7 +73,7 @@
                 <TextView
                     android:layout_width="108dp"
                     android:layout_height="match_parent"
-                    android:background="#00C853"
+                    android:background="#FF8A65"
                     android:text="Gender"
                     android:textSize="20dp" />
 
@@ -92,7 +92,7 @@
             <TextView
                 android:layout_width="108dp"
                 android:layout_height="match_parent"
-                android:background="#00C853"
+                android:background="#FF8A65"
                 android:text="Phone"
                 android:textSize="20dp" />
 
@@ -110,7 +110,7 @@
             <TextView
                 android:layout_width="108dp"
                 android:layout_height="match_parent"
-                android:background="#00C853"
+                android:background="#FF8A65"
                 android:text="Address"
                 android:textSize="20dp" />
 
@@ -133,11 +133,24 @@
         android:layout_marginEnd="159dp"
         android:layout_marginBottom="112dp"
         android:text="Save"
+        android:backgroundTint="#FF8A65"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tableLayout"
         app:layout_constraintVertical_bias="0.0" />
+
+    <ImageButton
+        android:id="@+id/btn_user_detail_back"
+        android:layout_width="54dp"
+        android:layout_height="54dp"
+        android:layout_marginEnd="42dp"
+        android:layout_marginBottom="190dp"
+        android:background="@drawable/user_back_arrow"
+        app:layout_constraintBottom_toTopOf="@+id/tableLayout"
+        app:layout_constraintEnd_toStartOf="@+id/imgProfile"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

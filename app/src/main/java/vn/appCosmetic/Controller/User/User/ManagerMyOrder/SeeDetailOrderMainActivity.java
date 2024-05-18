@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -64,6 +65,15 @@ public class SeeDetailOrderMainActivity extends AppCompatActivity {
         edtOrderName = findViewById(R.id.edt_name_seeDetail);
 
         btnUpdateOrder = findViewById(R.id.btn_order_seeDetail);
+
+        ImageButton btnBack = findViewById(R.id.btn_detail_order_back);
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
 
         sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
         int userId = sharedPreferences.getInt("idUser", 0);

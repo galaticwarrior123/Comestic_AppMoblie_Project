@@ -55,16 +55,17 @@ public class ProductDetailActivity extends AppCompatActivity {
         productStock = findViewById(R.id.product_detail_stock);
         viewPager = findViewById(R.id.viewPager);
         ImageButton btnBack = findViewById(R.id.btn_product_detail_back);
-        int productId = getIntent().getIntExtra("PRODUCT_ID", -1);
-        if (productId != -1) {
-            loadProductDetails(productId);
-        }
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
+
+        int productId = getIntent().getIntExtra("PRODUCT_ID", -1);
+        if (productId != -1) {
+            loadProductDetails(productId);
+        }
 
         CartProductInput cartProduct = new CartProductInput();
         cartProduct.setIdProduct(productId);

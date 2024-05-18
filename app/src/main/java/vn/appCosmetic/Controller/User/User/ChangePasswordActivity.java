@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import retrofit2.Call;
@@ -35,6 +36,15 @@ public class ChangePasswordActivity extends AppCompatActivity {
         edtConfirmPassword = findViewById(R.id.edtReNewPassword);
 
         btnChangePassword = findViewById(R.id.btnChangePassword);
+
+        ImageButton btnBack = findViewById(R.id.btn_change_password_back);
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
 
         sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
         String token = sharedPreferences.getString("token", "");
