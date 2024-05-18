@@ -17,6 +17,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import vn.appCosmetic.Controller.Admin.ManageBrand.ManageBrandActivity;
 import vn.appCosmetic.Controller.Admin.ManageCategory.ManageCategoryActivity;
+import vn.appCosmetic.Controller.Admin.ManageOrder.ManageOrderActivity;
 import vn.appCosmetic.Controller.Admin.ManageProduct.ManageProductActivity;
 import vn.appCosmetic.Controller.Admin.ManageUser.ManageUserActivity;
 import vn.appCosmetic.R;
@@ -101,7 +102,15 @@ public class AdminMainActivity extends AppCompatActivity {
 
             }
         });
-
+        findViewById(R.id.buttonManageOrder).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getSupportFragmentManager().beginTransaction().replace(R.id.frameLayoutManage, new ManageOrderActivity()).commit();
+                linearLayout.bringToFront();
+                linearLayout.startAnimation(AnimationUtils.loadAnimation(AdminMainActivity.this, R.anim.slide_out));
+                linearLayout.setVisibility(View.GONE);
+            }
+        });
         findViewById(R.id.buttonLogout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

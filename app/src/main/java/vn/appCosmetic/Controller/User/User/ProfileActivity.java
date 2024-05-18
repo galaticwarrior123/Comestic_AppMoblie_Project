@@ -1,8 +1,19 @@
 package vn.appCosmetic.Controller.User.User;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.Manifest;
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -15,9 +26,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -34,6 +47,8 @@ public class ProfileActivity extends AppCompatActivity {
     private EditText ProfileUsername, ProfilePhone, ProfileAddress;
     private Spinner ProfileGender;
     private Button btnProfileSave;
+
+    private Context context = this;
 
     private List<String> listGender = new ArrayList<String>(){
         {
@@ -71,7 +86,14 @@ public class ProfileActivity extends AppCompatActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
+                ProfileGender.setSelection(0);
+            }
+        });
 
+        imgProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickRequestPermission();
             }
         });
 
@@ -106,10 +128,15 @@ public class ProfileActivity extends AppCompatActivity {
                             ProfileAddress.setText(user.getAddress());
                             ProfileGender.setSelection(listGender.indexOf(user.getGender()));
 
-                            // Load avatar with Glide
-                            Glide.with(ProfileActivity.this)
-                                    .load(user.getAvatar())
-                                    .into(imgProfile);
+                            if(user.getAvatar() != null){
+                                // Load avatar with Glide
+                                Glide.with(ProfileActivity.this)
+                                        .load(user.getAvatar())
+                                        .into(imgProfile);
+                            }
+                            else{
+                                imgProfile.setImageResource(R.drawable.account);
+                            }
                         }
                     }
                 }
@@ -128,6 +155,12 @@ public class ProfileActivity extends AppCompatActivity {
         String phone = ProfilePhone.getText().toString();
         String address = ProfileAddress.getText().toString();
         String gender = ProfileGender.getSelectedItem().toString();
+
+
+
+
+
+
         // Get UserID from SharedPreferences
         SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
         int userId = sharedPreferences.getInt("idUser", 0);
@@ -140,24 +173,106 @@ public class ProfileActivity extends AppCompatActivity {
             updatedUser.setPhone(phone);
             updatedUser.setAddress(address);
             updatedUser.setGender(gender);
-            apiUsersService.putUpdateUser(userId, updatedUser).enqueue(new Callback<Users>() {
-                @Override
-                public void onResponse(Call<Users> call, Response<Users> response) {
-                    if (response.isSuccessful()) {
-                        // Handle successful update
-                        Toast.makeText(ProfileActivity.this, "Profile updated successfully", Toast.LENGTH_SHORT).show();
-                    } else {
-                        // Handle unsuccessful update
-                        Toast.makeText(ProfileActivity.this, "Failed to update profile", Toast.LENGTH_SHORT).show();
-                    }
-                }
 
-                @Override
-                public void onFailure(Call<Users> call, Throwable t) {
-                    // Handle failure
-                    t.printStackTrace();
-                }
-            });
+
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+            if(sharedPreferences.getString("avatar", null) != null){
+                Uri uri = Uri.parse(sharedPreferences.getString("avatar", null));
+                String fileName = UUID.randomUUID().toString();
+                storage.getReference().child("avatars/" + fileName).putFile(uri).addOnSuccessListener(taskSnapshot -> {
+                    taskSnapshot.getStorage().getDownloadUrl().addOnSuccessListener(uri1 -> {
+                        updatedUser.setAvatar(uri1.toString());
+                        sharedPreferences.edit().putString("urlImageAvatar", uri1.toString()).apply();
+                        sharedPreferences.edit().remove("avatar").apply();
+
+
+                        // Call the API and handle the response
+
+                        apiUsersService.putUpdateUser(userId, updatedUser).enqueue(new Callback<Users>() {
+                            @Override
+                            public void onResponse(Call<Users> call, Response<Users> response) {
+                                if (response.isSuccessful()) {
+                                    // Handle successful update
+                                    Toast.makeText(ProfileActivity.this, "Profile updated successfully", Toast.LENGTH_SHORT).show();
+                                    setResult(Activity.RESULT_OK); // Notify UserFragment of update
+                                    finish();
+
+                                } else {
+                                    // Handle unsuccessful update
+                                    Toast.makeText(ProfileActivity.this, "Failed to update profile", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<Users> call, Throwable t) {
+                                // Handle failure
+                                t.printStackTrace();
+                            }
+                        });
+
+                    });
+                });
+            }
+            else{
+                String avatar = sharedPreferences.getString("urlImageAvatar", null);
+                updatedUser.setAvatar(avatar);
+                // Call the API and handle the response
+                apiUsersService.putUpdateUser(userId, updatedUser).enqueue(new Callback<Users>() {
+                    @Override
+                    public void onResponse(Call<Users> call, Response<Users> response) {
+                        if (response.isSuccessful()) {
+                            // Handle successful update
+                            Toast.makeText(ProfileActivity.this, "Profile updated successfully", Toast.LENGTH_SHORT).show();
+                        } else {
+                            // Handle unsuccessful update
+                            Toast.makeText(ProfileActivity.this, "Failed to update profile", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Users> call, Throwable t) {
+                        // Handle failure
+                        t.printStackTrace();
+                    }
+                });
+            }
+
+
         }
     }
+
+
+    private void onClickRequestPermission() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            openGallery();
+            return;
+        }
+        if (context.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            openGallery();
+        } else {
+            String[] permission = {Manifest.permission.READ_EXTERNAL_STORAGE};
+            ((Activity) context).requestPermissions(permission, 1);
+        }
+    }
+
+    private void openGallery() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        mActivityResultLauncher.launch(Intent.createChooser(intent, "Select Picture"));
+    }
+
+    ActivityResultLauncher<Intent> mActivityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+        @Override
+        public void onActivityResult(ActivityResult result) {
+            if(result.getResultCode() == Activity.RESULT_OK){
+                Uri uri = result.getData().getData();
+                imgProfile.setImageURI(uri);
+
+                SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+                sharedPreferences.edit().putString("avatar", uri.toString()).apply();
+
+            }
+        }
+    });
 }

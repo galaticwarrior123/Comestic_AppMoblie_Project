@@ -23,4 +23,7 @@ public interface APIOrderService {
 
     @GET("order/{orderId}")
     Call<Order> getOrderById(@Path("orderId") int orderId);
+
+    @GET("order/all")
+    Call<List<Order>> getAllOrder();
 }

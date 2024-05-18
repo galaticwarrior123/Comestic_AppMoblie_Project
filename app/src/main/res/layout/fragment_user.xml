@@ -7,7 +7,7 @@
     android:background="@drawable/anhnenbackgroundadmin"
     tools:context=".Controller.User.User.UserFragment">
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/imgUserFragment"
         android:layout_width="130dp"
         android:layout_height="130dp"

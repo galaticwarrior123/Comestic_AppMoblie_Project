@@ -108,4 +108,39 @@ public class UserFragment extends Fragment {
         });
         return view;
     }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadUserData();
+    }
+
+    private void loadUserData() {
+        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+
+        Integer idUser = sharedPreferences.getInt("idUser", 0);
+        String token = sharedPreferences.getString("token", "");
+        if (idUser != 0) {
+            APIUsersService apiService = RetrofitPrivate.getRetrofit(token).create(APIUsersService.class);
+            Call<Users> call = apiService.getUserById(idUser);
+            call.enqueue(new Callback<Users>() {
+                @Override
+                public void onResponse(@NonNull Call<Users> call, @NonNull Response<Users> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        Users user = response.body();
+                        txtUserFragmentName.setText(user.getUsername());
+                        Glide.with(requireContext()).load(user.getAvatar()).into(imgUserFragment);
+                    } else {
+                        Toast.makeText(getContext(), "Failed to retrieve user data", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<Users> call, @NonNull Throwable t) {
+                    Toast.makeText(getContext(), "An error occurred: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
 }
