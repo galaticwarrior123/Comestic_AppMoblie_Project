@@ -28,7 +28,7 @@ import vn.appCosmetic.ServiceAPI.CartProduct.APICartProductService;
 import vn.appCosmetic.ServiceAPI.Product.APIProductService;
 import vn.appCosmetic.ServiceAPI.RetrofitPrivate;
 
-public class CartFragment extends Fragment {
+public class CartFragment extends Fragment implements CartItemAdapter.OnCartProductChangeListener{
     private RecyclerView recyclerCart;
     private CartItemAdapter cartItemAdapter;
     private List<CartProduct> cartProductList;
@@ -47,7 +47,7 @@ public class CartFragment extends Fragment {
 
         btnOrder = view.findViewById(R.id.btn_place_order);
 
-        cartItemAdapter = new CartItemAdapter(getContext(), cartProductList);
+        cartItemAdapter = new CartItemAdapter(getContext(), cartProductList, this);
         recyclerCart.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerCart.setAdapter(cartItemAdapter);
 
@@ -77,6 +77,7 @@ public class CartFragment extends Fragment {
                                                 for (CartProduct cartProduct : cartProducts) {
                                                     cartProductList.add(cartProduct);
                                                     totalPrice += cartProduct.getProduct().getPrice() * cartProduct.getQuantity();
+                                                    System.out.println("getPrice: " + cartProduct.getProduct().getPrice() + " getQuantity: " + cartProduct.getQuantity() + " totalPrice: " + totalPrice);
                                                 }
                                                 txtTotalPrice.setText(String.format("%d VND", totalPrice));
                                                 cartItemAdapter.notifyDataSetChanged();
@@ -111,5 +112,14 @@ public class CartFragment extends Fragment {
             }
         });
         return view;
+    }
+
+    @Override
+    public void onCartProductChange() {
+        totalPrice = 0;
+        for (CartProduct cartProduct : cartProductList) {
+            totalPrice += cartProduct.getProduct().getPrice() * cartProduct.getQuantity();
+        }
+        txtTotalPrice.setText(String.format("%d VND", totalPrice));
     }
 }

@@ -67,7 +67,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Product productModel = productModelList.get(position);
         holder.txtNameProduct.setText(productModel.getName());
-        if(productModel.getStock()==0){
+        if(productModel.getStock()<=0){
             holder.txtStockProduct.setText("Hết hàng");
         }
         else{

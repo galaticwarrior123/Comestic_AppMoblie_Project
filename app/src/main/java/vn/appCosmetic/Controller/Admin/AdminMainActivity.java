@@ -102,6 +102,17 @@ public class AdminMainActivity extends AppCompatActivity {
             }
         });
 
+        findViewById(R.id.buttonLogout).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.clear();
+                editor.apply();
+                finish();
+            }
+        });
+
         btnSlide.setOnClickListener(v -> {
             if(linearLayout.getVisibility()== View.VISIBLE){
                 Animation slideOutAnimation = AnimationUtils.loadAnimation(this, R.anim.slide_out);

@@ -87,7 +87,7 @@ public class ProductDetailActivity extends AppCompatActivity {
                             List<Cart> carts = response.body();
                             if (carts != null) {
                                 for (Cart cart : carts) {
-                                    if (!cart.getStatus()) {
+                                    if (!cart.getStatus() && !cart.isPaid()) {
                                         cartProduct.setIdCart(cart.getId());
 
                                         apiCartProductService = RetrofitPrivate.getRetrofit(token).create(APICartProductService.class);
@@ -106,6 +106,11 @@ public class ProductDetailActivity extends AppCompatActivity {
                                                                     @Override
                                                                     public void onClick(DialogInterface dialog, int which) {
                                                                         int quantity = Integer.parseInt(input.getText().toString());
+                                                                        // kiểm tra số lượng sản phẩm còn trong kho
+                                                                        if (product.getStock() < quantity) {
+                                                                            Toast.makeText(ProductDetailActivity.this, "Not enough stock", Toast.LENGTH_SHORT).show();
+                                                                            return;
+                                                                        }
                                                                         cartProduct.setQuantity(quantity);
                                                                         apiCartProductService.putCartProduct(cartProduct1.getId(), cartProduct).enqueue(new Callback<CartProduct>() {
                                                                             @Override
@@ -140,6 +145,11 @@ public class ProductDetailActivity extends AppCompatActivity {
                                                                 @Override
                                                                 public void onClick(DialogInterface dialog, int which) {
                                                                     int quantity = Integer.parseInt(input.getText().toString());
+                                                                    // kiểm tra số lượng sản phẩm còn trong kho
+                                                                    if (product.getStock() < quantity) {
+                                                                        Toast.makeText(ProductDetailActivity.this, "Not enough stock", Toast.LENGTH_SHORT).show();
+                                                                        return;
+                                                                    }
                                                                     cartProduct.setQuantity(quantity);
                                                                     apiCartProductService.postCartProduct(cartProduct).enqueue(new Callback<CartProduct>() {
                                                                         @Override

@@ -127,10 +127,16 @@ public class HomeFragment extends Fragment {
                 if (response.isSuccessful() && response.body() != null) {
                     List<Product> filteredList = new ArrayList<>();
                     for (Product product : response.body()) {
-                        boolean matchesName = product.getName().toLowerCase(Locale.ROOT).contains(query.toLowerCase(Locale.ROOT));
-                        if (matchesName) {
-                            filteredList.add(product);
+                        if(product.isStatus()){
+                            boolean matchesName = product.getName().toLowerCase(Locale.ROOT).contains(query.toLowerCase(Locale.ROOT));
+                            if (matchesName) {
+                                filteredList.add(product);
+                            }
                         }
+                        else{
+                            continue;
+                        }
+
                     }
                     productAdapter = new UserProductAdapter(getContext(), filteredList);
                     recyclerView.setAdapter(productAdapter);
