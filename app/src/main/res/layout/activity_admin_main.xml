@@ -137,6 +137,26 @@
                     android:drawableLeft="@drawable/user"
                     android:text="Quản lý khách hàng" />
 
+                <Button
+                    android:id="@+id/buttonManageOrder"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:background="@drawable/border_button"
+                    android:drawableLeft="@drawable/order"
+                    android:text="Quản lý đơn hàng" />
+
+                <Button
+                    android:id="@+id/buttonLogout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:background="@drawable/border_button"
+                    android:drawableLeft="@drawable/logout"
+                    android:text="Đăng xuất" />
+
             </LinearLayout>
 
             <TextView

@@ -65,7 +65,7 @@ public class CartFragment extends Fragment {
                     List<Cart> carts = response.body();
                     if (carts != null) {
                         for (Cart cart : carts) {
-                            if (!cart.getStatus()) {
+                            if (!cart.getStatus() && !cart.isPaid()) {
                                 int cartId = cart.getId();
                                 APICartProductService apiCartProductService = RetrofitPrivate.getRetrofit(token).create(APICartProductService.class);
                                 apiCartProductService.getCartProductByCartId(cartId).enqueue(new Callback<List<CartProduct>>() {

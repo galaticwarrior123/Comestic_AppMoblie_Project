@@ -30,7 +30,6 @@ public class PaymentActivity extends AppCompatActivity {
     private ActivityPaymentBinding binding;
     private APIPaymentService apiPaymentService;
     private APIOrderService apiOrderService;
-    private APICartService apiCartService;
     private SharedPreferences sharedPreferences;
 
     @SuppressLint({"SetJavaScriptEnabled", "SetDomStorageEnabled", "SetDatabaseEnabled", "SetCacheMode","WebViewApiAvailability"})
@@ -92,26 +91,17 @@ public class PaymentActivity extends AppCompatActivity {
                 apiOrderService.updateStatusOrder(orderId).enqueue(new Callback<Order>() {
                     @Override
                     public void onResponse(Call<Order> call, Response<Order> response) {
-
-                        apiCartService = RetrofitPrivate.getRetrofit(token).create(APICartService.class);
-                        apiCartService.createCart(idUser).enqueue(new Callback<Cart>() {
-                            @Override
-                            public void onResponse(Call<Cart> call, Response<Cart> response) {
-                                if (response.isSuccessful()) {
-                                    sharedPreferences.edit().remove("totalPrice").apply();
-                                    sharedPreferences.edit().remove("orderId").apply();
-                                    Intent intent = new Intent(PaymentActivity.this, UserMainActivity.class);
-                                    startActivity(intent);
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(Call<Cart> call, Throwable t) {
-
-                            }
-                        });
+                        if (response.isSuccessful()) {
+                            Toast.makeText(PaymentActivity.this, "Payment success", Toast.LENGTH_SHORT).show();
+                            sharedPreferences.edit().remove("totalPrice").apply();
+                            sharedPreferences.edit().remove("orderId").apply();
+                            Intent intent = new Intent(PaymentActivity.this, UserMainActivity.class);
+                            startActivity(intent);
+                        }
+                        else{
+                            Toast.makeText(PaymentActivity.this, "Error update status", Toast.LENGTH_SHORT).show();
+                        }
                     }
-
                     @Override
                     public void onFailure(Call<Order> call, Throwable t) {
                         Toast.makeText(PaymentActivity.this, "Error", Toast.LENGTH_SHORT).show();

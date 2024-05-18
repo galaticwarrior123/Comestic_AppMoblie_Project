@@ -18,14 +18,14 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vn.appCosmetic.Controller.LoginRegister.LoginActivity;
+import vn.appCosmetic.Controller.User.User.ManagerMyOrder.MyOrdersActivity;
 import vn.appCosmetic.Model.Users;
 import vn.appCosmetic.R;
-import vn.appCosmetic.ServiceAPI.RetrofitClient;
 import vn.appCosmetic.ServiceAPI.RetrofitPrivate;
 import vn.appCosmetic.ServiceAPI.Users.APIUsersService;
 
 public class UserFragment extends Fragment {
-    private Button btnProfile,btnChangePassword , btnLogout;
+    private Button btnProfile,btnChangePassword , btnLogout, btnMyOrders;
     private TextView txtUserFragmentName;
     private ImageView imgUserFragment;
 
@@ -70,6 +70,14 @@ public class UserFragment extends Fragment {
             }
         });
 
+        btnMyOrders = view.findViewById(R.id.btnUserFragmentOrder);
+        btnMyOrders.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), MyOrdersActivity.class);
+                startActivity(intent);
+            }
+        });
 
         btnChangePassword = view.findViewById(R.id.btnUserFragmentChangePassword);
         btnChangePassword.setOnClickListener(new View.OnClickListener() {

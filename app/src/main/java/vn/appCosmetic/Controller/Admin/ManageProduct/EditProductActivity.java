@@ -108,69 +108,73 @@ public class EditProductActivity extends AppCompatActivity {
         btnUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 String nameUpdate = edtNameUpdateProduct.getText().toString();
                 String descriptionUpdate = edtDescriptionUpdateProduct.getText().toString();
                 int priceUpdate = Integer.parseInt(edtPriceUpdateProduct.getText().toString());
                 int quantityUpdate = Integer.parseInt(edtQuantityUpdateProduct.getText().toString());
 
-
-
                 productUpdate.setName(nameUpdate);
                 productUpdate.setDescription(descriptionUpdate);
                 productUpdate.setPrice(priceUpdate);
                 productUpdate.setStock(quantityUpdate);
+
                 List<String> listImage = new ArrayList<>();
                 StorageReference storageReference = FirebaseStorage.getInstance().getReference();
                 StorageReference imageRef = storageReference.child("images/");
-                // Cập nhật lại ảnh nếu mà có ảnh trùng trong firebaseStorage thì xóa ảnh đó đi
-                for(Uri uri: imageList){
+                int[] uploadCounter = {0}; // Array to keep track of the number of uploaded images
+
+                for (Uri uri : imageList) {
                     // Kiểm tra xem ảnh không phải là content của firebaseStorage thì thêm vào listImage
-                    if(!uri.toString().contains("firebasestorage.googleapis.com")) {
+                    if (!uri.toString().contains("firebasestorage.googleapis.com")) {
                         String imageName = UUID.randomUUID().toString();
                         StorageReference ref = imageRef.child(imageName);
-                        ref.child(imageName).putFile(uri).addOnSuccessListener(taskSnapshot -> {
+                        ref.putFile(uri).addOnSuccessListener(taskSnapshot -> {
                             ref.getDownloadUrl().addOnSuccessListener(uri1 -> {
                                 listImage.add(uri1.toString());
+                                checkAndUpdateProduct(listImage, uploadCounter, imageList.size(), productUpdate);
                             });
                         });
-                    }
-                    else{
+                    } else {
                         listImage.add(uri.toString());
+                        checkAndUpdateProduct(listImage, uploadCounter, imageList.size(), productUpdate);
                     }
                 }
-                productUpdate.setImages(listImage);
-
-                sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-                String token = sharedPreferences.getString("token", "");
-                apiProductService = RetrofitPrivate.getRetrofit(token).create(APIProductService.class);
-                apiProductService.putProduct(product.getId(),productUpdate).enqueue(new Callback<Product>() {
-                    @Override
-                    public void onResponse(Call<Product> call, Response<Product> response) {
-                        if(response.isSuccessful()){
-                            Toast.makeText(context, "Update Success", Toast.LENGTH_SHORT).show();
-                            // Cập nhật lại list product trước khi finish
-
-                            FragmentManager fragmentManager = getSupportFragmentManager();
-                            FrameLayout frameLayout = findViewById(R.id.frameLayoutManage);
-                            frameLayout.removeAllViews();
-                            fragmentManager.beginTransaction().replace(R.id.frameLayoutManage, new ManageProductActivity()).commit();
-                            finish();
-                        }
-                        else{
-                            Toast.makeText(context, "Update Failed", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<Product> call, Throwable t) {
-                        Toast.makeText(context, "Update Failed", Toast.LENGTH_SHORT).show();
-                    }
-                });
             }
         });
 
+
     }
+    private void checkAndUpdateProduct(List<String> listImage, int[] uploadCounter, int totalImages, Product productUpdate) {
+        uploadCounter[0]++;
+        if (uploadCounter[0] == totalImages) {
+            productUpdate.setImages(listImage);
+
+            sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+            String token = sharedPreferences.getString("token", "");
+            apiProductService = RetrofitPrivate.getRetrofit(token).create(APIProductService.class);
+            apiProductService.putProduct(product.getId(), productUpdate).enqueue(new Callback<Product>() {
+                @Override
+                public void onResponse(Call<Product> call, Response<Product> response) {
+                    if (response.isSuccessful()) {
+                        Toast.makeText(context, "Update Success", Toast.LENGTH_SHORT).show();
+                        FragmentManager fragmentManager = getSupportFragmentManager();
+                        FrameLayout frameLayout = findViewById(R.id.frameLayoutManage);
+                        frameLayout.removeAllViews();
+                        fragmentManager.beginTransaction().replace(R.id.frameLayoutManage, new ManageProductActivity()).commit();
+                        finish();
+                    } else {
+                        Toast.makeText(context, "Update Failed", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Product> call, Throwable t) {
+                    Toast.makeText(context, "Update Failed", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
     private void setInfoProduct() {
         edtNameUpdateProduct.setText(product.getName());
         edtPriceUpdateProduct.setText(String.valueOf(product.getPrice()));

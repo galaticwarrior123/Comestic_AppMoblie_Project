@@ -104,6 +104,7 @@ public class ProfileActivity extends AppCompatActivity {
                             ProfileUsername.setText(user.getUsername());
                             ProfilePhone.setText(user.getPhone());
                             ProfileAddress.setText(user.getAddress());
+                            ProfileGender.setSelection(listGender.indexOf(user.getGender()));
 
                             // Load avatar with Glide
                             Glide.with(ProfileActivity.this)

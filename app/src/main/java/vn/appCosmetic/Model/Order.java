@@ -3,6 +3,7 @@ package vn.appCosmetic.Model;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 public class Order implements Serializable {
 
@@ -11,6 +12,9 @@ public class Order implements Serializable {
 
     @SerializedName("address")
     private String address;
+
+    @SerializedName("orderDate")
+    private String orderDate;
 
     @SerializedName("status")
     private boolean status;
@@ -27,9 +31,10 @@ public class Order implements Serializable {
     public Order() {
     }
 
-    public Order(int id, String address, boolean status, Long total, String phone, Cart cart) {
+    public Order(int id, String address, String orderDate, boolean status, Long total, String phone, Cart cart) {
         this.id = id;
         this.address = address;
+        this.orderDate = orderDate;
         this.status = status;
         this.total = total;
         this.phone = phone;
@@ -82,5 +87,13 @@ public class Order implements Serializable {
 
     public void setCart(Cart cart) {
         this.cart = cart;
+    }
+
+    public String getOrderDate() {
+        return orderDate;
+    }
+
+    public void setOrderDate(String orderDate) {
+        this.orderDate = orderDate;
     }
 }

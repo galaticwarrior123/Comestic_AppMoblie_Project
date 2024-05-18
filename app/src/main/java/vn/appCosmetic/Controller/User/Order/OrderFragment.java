@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -61,7 +62,7 @@ public class OrderFragment extends Fragment {
 
     private SharedPreferences sharedPreferences;
 
-    private CartItemAdapter cartItemAdapter;
+    private OrderCartProductItemAdapter orderCartProductItemAdapter;
 
     private List<CartProduct> cartProductList;
 
@@ -99,14 +100,18 @@ public class OrderFragment extends Fragment {
         apiCartService = RetrofitPrivate.getRetrofit(token).create(APICartService.class);
         apiOrderService = RetrofitPrivate.getRetrofit(token).create(APIOrderService.class);
 
+        // Lấy danh sách cart của user
         apiCartService.getCarts(idUser).enqueue(new Callback<List<Cart>>() {
             @Override
             public void onResponse(Call<List<Cart>> call, Response<List<Cart>> response) {
                 if (response.isSuccessful()) {
                     List<Cart> carts = response.body();
                     for (Cart cart : carts) {
-                        if (!cart.getStatus()) {
+                        // Kiểm tra cart ở trang thái chưa thanh toán
+                        if (!cart.getStatus() && !cart.isPaid()) {
                             int cartId = cart.getId();
+
+                            // Lấy danh sách sản phẩm trong cart
                             apiCartProductService.getCartProductByCartId(cartId).enqueue(new Callback<List<CartProduct>>() {
                                 @Override
                                 public void onResponse(Call<List<CartProduct>> call, Response<List<CartProduct>> response) {
@@ -116,16 +121,16 @@ public class OrderFragment extends Fragment {
                                             for (CartProduct cartProduct : cartProducts) {
                                                 totalPrice += cartProduct.getProduct().getPrice() * cartProduct.getQuantity();
                                                 cartProductList.add(cartProduct);
-                                                cartItemAdapter = new CartItemAdapter(getContext(), cartProductList);
+                                                orderCartProductItemAdapter = new OrderCartProductItemAdapter(getContext(), cartProductList);
                                                 recyclerOrder.setLayoutManager(new LinearLayoutManager(getContext()));
-                                                recyclerOrder.setAdapter(cartItemAdapter);
+                                                recyclerOrder.setAdapter(orderCartProductItemAdapter);
 
                                             }
                                         }
 
                                         txtTotalPrice.setText(String.format("%d VND", totalPrice));
                                         txtQuantityProduct.setText(String.format("%d", cartProductList.size())+" sản phẩm");
-                                        cartItemAdapter.notifyDataSetChanged();
+                                        orderCartProductItemAdapter.notifyDataSetChanged();
 
                                         btnOrder.setOnClickListener(new View.OnClickListener() {
                                             @Override
@@ -140,20 +145,36 @@ public class OrderFragment extends Fragment {
                                                 order.setAddress(address);
                                                 order.setPhone(phone);
 
+                                                // Tạo order
                                                 apiOrderService.createOrder(order).enqueue(new Callback<Order>() {
                                                     @Override
                                                     public void onResponse(Call<Order> call, Response<Order> response) {
                                                         if (response.isSuccessful()) {
-                                                            sharedPreferences.edit().putLong("totalPrice", totalPrice).apply();
-                                                            sharedPreferences.edit().putInt("orderId", response.body().getId()).apply();
-                                                            Intent intent = new Intent(getContext(), BankActivity.class);
-                                                            startActivity(intent);
+                                                            int orderId = response.body().getId();
+
+                                                            // Thêm cart mới cho user   đồng thời chuyển qua màn hình BankActivity
+                                                            apiCartService.createCart(idUser).enqueue(new Callback<Cart>() {
+                                                                @Override
+                                                                public void onResponse(Call<Cart> call, Response<Cart> response) {
+                                                                    if (response.isSuccessful()) {
+                                                                        sharedPreferences.edit().putLong("totalPrice", totalPrice).apply();
+                                                                        sharedPreferences.edit().putInt("orderId", orderId).apply();
+                                                                        Intent intent = new Intent(getContext(), BankActivity.class);
+                                                                        startActivity(intent);
+                                                                    }
+                                                                }
+
+                                                                @Override
+                                                                public void onFailure(Call<Cart> call, Throwable t) {
+                                                                    Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
+                                                                }
+                                                            });
                                                         }
                                                     }
 
                                                     @Override
                                                     public void onFailure(Call<Order> call, Throwable t) {
-
+                                                        Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
                                                     }
                                                 });
 

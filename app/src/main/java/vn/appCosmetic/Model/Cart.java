@@ -20,6 +20,9 @@ public class Cart implements Serializable {
     @SerializedName("status")
     private boolean status;
 
+    @SerializedName("paid")
+    private boolean paid;
+
     @SerializedName("user")
     private Users user;
 
@@ -27,12 +30,13 @@ public class Cart implements Serializable {
     public Cart() {
     }
 
-    public Cart(int id, List<Product> product, int quantity, float total, boolean status, Users user) {
+    public Cart(int id, List<Product> product, int quantity, float total, boolean status, boolean paid, Users user) {
         this.id = id;
         this.product = product;
         this.quantity = quantity;
         this.total = total;
         this.status = status;
+        this.paid = paid;
         this.user = user;
     }
 
@@ -82,5 +86,13 @@ public class Cart implements Serializable {
 
     public void setTotal(float total) {
         this.total = total;
+    }
+
+    public boolean isPaid() {
+        return paid;
+    }
+
+    public void setPaid(boolean paid) {
+        this.paid = paid;
     }
 }
