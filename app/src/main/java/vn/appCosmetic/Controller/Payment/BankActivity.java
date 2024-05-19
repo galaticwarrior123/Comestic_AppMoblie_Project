@@ -16,6 +16,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import vn.appCosmetic.Controller.User.Home.HomeFragment;
 import vn.appCosmetic.Model.Bank;
 import vn.appCosmetic.Model.ResponseBank;
 import vn.appCosmetic.R;
@@ -64,7 +65,8 @@ public class BankActivity extends AppCompatActivity {
 
         btnBack = findViewById(R.id.imageButtonBack);
         btnBack.setOnClickListener(v -> {
-            finish();
+            Intent intent = new Intent(BankActivity.this, HomeFragment.class);
+            startActivity(intent);
         });
 
     }

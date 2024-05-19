@@ -23,6 +23,9 @@ https://github.com/galaticwarrior123/Comestic_AppMoblie_Project.git
 4. Cài đặt SDK và Plugin nếu project yêu cầu
 5. Build và Run Project
 
+## Tính năng 
+
+1. Xem danh sách sản phẩm 
 
 
 
