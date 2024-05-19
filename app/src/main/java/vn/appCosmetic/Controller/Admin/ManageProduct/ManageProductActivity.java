@@ -376,6 +376,7 @@ public class ManageProductActivity extends Fragment{
     }
 
     private void onClickRequestPermission(){
+        //với máy ảo pixel 7 pro thì không cần cấp quyền
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
             if(checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
                 String[] permissions = {Manifest.permission.READ_EXTERNAL_STORAGE};
@@ -407,94 +408,4 @@ public class ManageProductActivity extends Fragment{
         }
     });
 
-
-    public void updateListProduct() {
-        apiProductService = RetrofitClient.getRetrofit().create(APIProductService.class);
-        apiProductService.getAllProduct().enqueue(new retrofit2.Callback<List<Product>>() {
-            @Override
-            public void onResponse(retrofit2.Call<List<Product>> call, retrofit2.Response<List<Product>> response) {
-                if(response.isSuccessful()){
-                    productModelList.clear();
-                    productModelList.addAll(response.body());
-                    productAdapter.notifyDataSetChanged();
-                }
-                else{
-                    Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(retrofit2.Call<List<Product>> call, Throwable t) {
-                Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        apiCategoryService = RetrofitClient.getRetrofit().create(APICategoryService.class);
-        apiCategoryService.getCategory().enqueue(new retrofit2.Callback<List<Category>>() {
-            @Override
-            public void onResponse(Call<List<Category>> call, Response<List<Category>> response) {
-                if(response.isSuccessful()){
-                    categoryList.addAll(response.body());
-                    List<String> list = new ArrayList<>();
-                    for (Category category : categoryList){
-                        list.add(category.getNameCategory());
-                    }
-                    ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, list);
-                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    spnCate.setAdapter(adapter);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Category>> call, Throwable t) {
-                Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        apiCategoryService = RetrofitClient.getRetrofit().create(APICategoryService.class);
-        apiCategoryService.getCategory().enqueue(new retrofit2.Callback<List<Category>>() {
-            @Override
-            public void onResponse(retrofit2.Call<List<Category>> call, retrofit2.Response<List<Category>> response) {
-                if(response.isSuccessful()){
-                    categoryList.clear();
-                    categoryList.addAll(response.body());
-                    List<String> list = new ArrayList<>();
-                    for (Category category : categoryList){
-                        list.add(category.getNameCategory());
-                    }
-                    ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, list);
-                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    spinnerCategory.setAdapter(adapter);
-                }
-            }
-
-            @Override
-            public void onFailure(retrofit2.Call<List<Category>> call, Throwable t) {
-                Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        apiBrandService = RetrofitClient.getRetrofit().create(APIBrandService.class);
-        apiBrandService.getAllBrand().enqueue(new Callback<List<Brand>>() {
-            @Override
-            public void onResponse(Call<List<Brand>> call, Response<List<Brand>> response) {
-                if(response.isSuccessful()){
-                    List<Brand> brandList = response.body();
-                    List<String> list = new ArrayList<>();
-                    for (Brand brand : brandList){
-                        list.add(brand.getNameBrand());
-                    }
-                    ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, list);
-                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    spinnerBrand.setAdapter(adapter);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Brand>> call, Throwable t) {
-
-            }
-        });
-
-    }
 }
