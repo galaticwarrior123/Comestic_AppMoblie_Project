@@ -39,6 +39,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
     public void onBindViewHolder(@NonNull OrderViewHolder holder, int position) {
         Order order = orderList.get(position);
         holder.txtOrderId.setText("Order ID: " + order.getId());
+        holder.txtCartName.setText("Cart Name: " + order.getCart().getName());
 
         String localDateTime = order.getOrderDate().toString();
         // định dạng lại ngày tháng năm
@@ -73,12 +74,13 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
     }
 
     public class OrderViewHolder extends RecyclerView.ViewHolder {
-        TextView txtOrderId, txtOrderDate, txtOrderStatus, txtViewSeeDetail;
+        TextView txtOrderId,txtCartName, txtOrderDate, txtOrderStatus, txtViewSeeDetail;
         public OrderViewHolder(@NonNull View itemView) {
             super(itemView);
             txtOrderId = itemView.findViewById(R.id.txtOrderID);
             txtOrderDate = itemView.findViewById(R.id.txtViewOrderDate);
             txtOrderStatus = itemView.findViewById(R.id.txtOrderStatus);
+            txtCartName = itemView.findViewById(R.id.textViewNameCart);
             txtViewSeeDetail = itemView.findViewById(R.id.txtViewLinkSeeDetails);
         }
     }
