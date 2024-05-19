@@ -68,31 +68,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder>{
             }
         });
 
-        holder.btnDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sharedPreferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
-                String token = sharedPreferences.getString("token", "");
-                apiUsersService = RetrofitPrivate.getRetrofit(token).create(APIUsersService.class);
-                apiUsersService.putStatusUser(user.getId()).enqueue(new Callback<Users>() {
-                    @Override
-                    public void onResponse(Call<Users> call, Response<Users> response) {
-                        if(response.isSuccessful()){
-                            Toast.makeText(context, "Block user success", Toast.LENGTH_SHORT).show();
-                            notifyDataSetChanged();
-                        }
-                        else{
-                            Toast.makeText(context, "Error block user", Toast.LENGTH_SHORT).show();
-                        }
-                    }
 
-                    @Override
-                    public void onFailure(Call<Users> call, Throwable t) {
-                        Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-        });
 
     }
 

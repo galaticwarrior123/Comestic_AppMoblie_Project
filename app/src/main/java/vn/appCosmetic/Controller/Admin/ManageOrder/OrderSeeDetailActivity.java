@@ -44,13 +44,15 @@ public class OrderSeeDetailActivity extends AppCompatActivity {
         sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
         String token = sharedPreferences.getString("token", "");
         recyclerView = findViewById(R.id.rc_detail_order);
-        int orderId = getIntent().getIntExtra("orderId", 0);
+        int orderId = getIntent().getIntExtra("orderID", 0);
         apiCartProductService = RetrofitPrivate.getRetrofit(token).create(APICartProductService.class);
         apiOrderService = RetrofitPrivate.getRetrofit(token).create(APIOrderService.class);
+
         apiOrderService.getOrderById(orderId).enqueue(new Callback<Order>() {
             @Override
             public void onResponse(Call<Order> call, Response<Order> response) {
                 Order order = response.body();
+
                 apiCartProductService.getCartProductByCartId(order.getCart().getId()).enqueue(new Callback<List<CartProduct>>() {
                     @Override
                     public void onResponse(Call<List<CartProduct>> call, Response<List<CartProduct>> response) {
