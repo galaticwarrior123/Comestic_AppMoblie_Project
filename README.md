@@ -24,8 +24,12 @@ https://github.com/galaticwarrior123/Comestic_AppMoblie_Project.git
 5. Build và Run Project
 
 ## Tính năng 
+1. Xem sản phẩm, thêm, sản phẩm vào giỏ hàng
+2. Tìm kiếm và lọc sản phẩm theo tên, danh mục
+3. Điều chỉnh giỏ hàng nếu cần thiết
+4. Xác nhận hóa đơn, thanh toán 
 
-1. Xem danh sách sản phẩm 
+
 
 
 
