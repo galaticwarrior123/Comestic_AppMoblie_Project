@@ -20,6 +20,9 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".Controller.Admin.ManageOrder.OrderSeeDetailActivity"
+            android:exported="false" />
+        <activity
             android:name=".Controller.Admin.ManageOrder.ManageOrderActivity"
             android:exported="false" />
         <activity
@@ -66,7 +69,7 @@
             android:exported="false" />
         <activity
             android:name=".MainActivity"
-            android:exported="false"></activity>
+            android:exported="false" />
     </application>
 
 </manifest>

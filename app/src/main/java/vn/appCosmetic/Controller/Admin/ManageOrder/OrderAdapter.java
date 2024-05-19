@@ -1,6 +1,7 @@
 package vn.appCosmetic.Controller.Admin.ManageOrder;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,7 +60,9 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
         holder.txtViewSeeDetail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // do something
+                Intent intent = new Intent(context, OrderSeeDetailActivity.class);
+                intent.putExtra("orderID", order.getId());
+                context.startActivity(intent);
             }
         });
     }

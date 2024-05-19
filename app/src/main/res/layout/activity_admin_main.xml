@@ -135,7 +135,7 @@
                     android:layout_marginBottom="5dp"
                     android:background="@drawable/border_button"
                     android:drawableLeft="@drawable/user"
-                    android:text="Quản lý khách hàng" />
+                    android:text="Quản lý tài khoản khách hàng" />
 
                 <Button
                     android:id="@+id/buttonManageOrder"

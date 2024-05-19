@@ -110,7 +110,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder>{
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            btnDelete = itemView.findViewById(R.id.imageButtonDeleteUser);
             btnEdit = itemView.findViewById(R.id.imageButtonEditUser);
             txtName = itemView.findViewById(R.id.textViewUserName);
             imgUser = itemView.findViewById(R.id.imageViewUser);
