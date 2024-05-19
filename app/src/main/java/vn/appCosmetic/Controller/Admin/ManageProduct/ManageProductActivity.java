@@ -151,7 +151,6 @@ public class ManageProductActivity extends Fragment{
                             if(response.isSuccessful()){
                                 productModelList.clear();
                                 productModelList.addAll(response.body());
-                                productAdapter.notifyDataSetChanged();
                             }
                             else{
                                 Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();

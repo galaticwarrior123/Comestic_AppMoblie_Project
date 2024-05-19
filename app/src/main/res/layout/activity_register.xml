@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="#FFFFFF"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -26,7 +27,7 @@
                 android:layout_marginBottom="16dp"
                 android:text="Sign up with your Email Address"
                 android:textAlignment="center"
-                android:textColor="#A7A4A4"
+                android:textColor="#353333"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -68,9 +69,10 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="12dp"
+                android:backgroundTint="#A9E87527"
                 android:text="Sign Up"
                 android:textAllCaps="false"
-                android:textColor="#ffffff"
+                android:textColor="#302E2E"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -114,6 +116,7 @@
                         android:paddingTop="16dp"
                         android:paddingBottom="16dp"
                         android:text=" Sign in now"
+                        android:textColor="#0000FF"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 

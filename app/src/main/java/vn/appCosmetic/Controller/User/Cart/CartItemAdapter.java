@@ -106,7 +106,7 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.CartIt
     }
 
     public static class CartItemViewHolder extends RecyclerView.ViewHolder {
-        TextView txtCartProductName, txtCartProductQuantity, txtCartProductTotalPrice;
+        TextView txtCartProductName, txtCartProductQuantity,txtPriceProduct, txtCartProductTotalPrice;
         ImageView imgCartProduct;
         ImageButton imgCartProductEdit, imgCartProductDelete;
 

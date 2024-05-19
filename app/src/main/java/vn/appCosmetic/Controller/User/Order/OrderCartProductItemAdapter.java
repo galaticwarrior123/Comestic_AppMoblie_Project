@@ -39,7 +39,8 @@ public class OrderCartProductItemAdapter extends RecyclerView.Adapter<OrderCartP
         CartProduct cartProduct = cartProductList.get(position);
         holder.txtOrderProductName.setText("Tên sản phẩm: "+cartProduct.getProduct().getName());
         holder.txtOrderProductQuantity.setText("Số lượng: "+ String.valueOf(cartProduct.getQuantity()));
-        holder.txtOrderProductTotalPrice.setText("Giá tiền: "+String.valueOf(cartProduct.getQuantity() * cartProduct.getProduct().getPrice())+ " VND");
+        holder.txtProductPrice.setText("Giá: "+String.valueOf(cartProduct.getProduct().getPrice())+ " VND");
+        holder.txtOrderProductTotalPrice.setText("Tổng cộng: "+String.valueOf(cartProduct.getQuantity() * cartProduct.getProduct().getPrice())+ " VND");
         if(cartProduct.getProduct().getImages().size() > 0) {
             Glide.with(context).load(cartProduct.getProduct().getImages().get(0)).into(holder.imgOrderProduct);
         }
@@ -52,13 +53,14 @@ public class OrderCartProductItemAdapter extends RecyclerView.Adapter<OrderCartP
 
     public static class OrderItemViewHolder extends RecyclerView.ViewHolder {
         ImageView imgOrderProduct;
-        TextView txtOrderProductName, txtOrderProductQuantity, txtOrderProductTotalPrice;
+        TextView txtOrderProductName, txtOrderProductQuantity,txtProductPrice, txtOrderProductTotalPrice;
 
         public OrderItemViewHolder(@NonNull View itemView) {
             super(itemView);
             imgOrderProduct = itemView.findViewById(R.id.imgCartProductOrder);
             txtOrderProductName = itemView.findViewById(R.id.txtNameCartProductOrder);
             txtOrderProductQuantity = itemView.findViewById(R.id.txtQuantityCartProductOrder);
+            txtProductPrice= itemView.findViewById(R.id.txtPriceProduct);
             txtOrderProductTotalPrice = itemView.findViewById(R.id.txtTotalPriceCartProductOrder);
         }
     }

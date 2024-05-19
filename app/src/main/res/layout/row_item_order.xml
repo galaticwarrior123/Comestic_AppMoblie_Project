@@ -16,6 +16,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="58dp"
         android:text="TextView"
+        android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/txtOrderDate"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -42,6 +43,7 @@
         android:layout_marginTop="23dp"
         android:layout_marginEnd="73dp"
         android:layout_marginBottom="16dp"
+        android:textColor="#0000FF"
         android:text="Xem chi tiết"
         android:textStyle="bold"
         android:textAlignment="center"
@@ -56,6 +58,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="27dp"
         android:text="TextView"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
