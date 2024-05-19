@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -15,6 +16,7 @@ import android.widget.LinearLayout;
 
 import android.widget.ImageButton;
 
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,6 +48,16 @@ public class SeeDetailOrderMainActivity extends AppCompatActivity {
     private LinearLayout layoutInfoOrder;
     private Button btnUpdateOrder, btnConfirmOrder;
 
+    private Spinner spinnerPaymentMethod;
+
+    private List<String> paymentList = new ArrayList<String>(){
+        {
+            add("Chọn phương thức thanh toán");
+            add("Thanh toán khi nhận hàng");
+            add("Chuyển khoản ngân hàng");
+        }
+    };
+
     private EditText edtAddress, edtPhone, edtName;
 
     private List<CartProduct> cartProductList=new ArrayList<>();
@@ -73,6 +85,13 @@ public class SeeDetailOrderMainActivity extends AppCompatActivity {
 
         btnUpdateOrder = findViewById(R.id.btn_order_seeDetail);
         btnConfirmOrder= findViewById(R.id.btn_confirm_seeDetail);
+
+        spinnerPaymentMethod = findViewById(R.id.spn_payment_seeDetail);
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, paymentList);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerPaymentMethod.setAdapter(adapter);
+
 
         ImageButton btnBack = findViewById(R.id.btn_detail_order_back);
         btnBack.setOnClickListener(new View.OnClickListener() {

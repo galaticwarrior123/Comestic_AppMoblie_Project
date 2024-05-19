@@ -97,6 +97,7 @@
         android:backgroundTint="#4AF84A"
         android:fontFamily="sans-serif-medium"
         android:text="Thêm"
+        android:textColor="#333"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

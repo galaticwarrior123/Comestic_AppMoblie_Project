@@ -243,7 +243,7 @@
         android:backgroundTint="#4CAF50"
         android:fontFamily="sans-serif-medium"
         android:text="Cập nhật"
-        android:textColor="#FFFFFF"
+        android:textColor="#333"
         android:textSize="18dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/nestedScrollView" />

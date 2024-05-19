@@ -262,15 +262,15 @@ public class EditProductActivity extends AppCompatActivity {
     }
 
     private void onClickRequestPermission() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-            openGallery();
-            return;
-        }
-        if (context.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-            openGallery();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
+                String[] permissions = {Manifest.permission.READ_EXTERNAL_STORAGE};
+                requestPermissions(permissions, 1001);
+            } else {
+                openGallery();
+            }
         } else {
-            String[] permission = {Manifest.permission.READ_EXTERNAL_STORAGE};
-            ((Activity) context).requestPermissions(permission, 1);
+            openGallery();
         }
     }
 

@@ -140,6 +140,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Đặt hàng"
+                android:backgroundTint="#FF8A65"
                 android:textSize="30sp"
                 android:id="@+id/btn_order"
                 android:layout_marginTop="10dp"

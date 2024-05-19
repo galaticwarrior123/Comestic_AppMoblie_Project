@@ -196,7 +196,7 @@
         android:layout_height="56dp"
         android:layout_marginTop="144dp"
         android:layout_marginEnd="24dp"
-        android:backgroundTint="#64EF1A"
+        android:backgroundTint="#72DF38"
         android:text="Khóa tài khoản"
         android:textColor="#333"
         app:layout_constraintEnd_toEndOf="parent"
