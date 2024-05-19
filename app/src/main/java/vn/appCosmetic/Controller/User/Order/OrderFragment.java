@@ -130,7 +130,7 @@ public class OrderFragment extends Fragment {
 
                                         txtTotalPrice.setText(String.format("%d VND", totalPrice));
                                         txtQuantityProduct.setText(String.format("%d", cartProductList.size())+" sản phẩm");
-                                        orderCartProductItemAdapter.notifyDataSetChanged();
+
 
                                         btnOrder.setOnClickListener(new View.OnClickListener() {
                                             @Override
