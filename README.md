@@ -1,4 +1,4 @@
-# Xây dựng app bán mỹ phẩm Ori Shop
+# Xây dựng app mobile bán mỹ phẩm Ori Shop
 
 ## Mô tả
 
