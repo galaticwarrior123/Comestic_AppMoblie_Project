@@ -204,7 +204,8 @@
                     android:id="@+id/buttonUpdateChooseImage"
                     android:layout_width="150dp"
                     android:layout_height="45dp"
-                    android:background="@drawable/border_button"
+                    android:backgroundTint="#D37E44"
+                    android:textColor="#333"
                     android:drawableLeft="@drawable/add"
                     android:text="Thêm ảnh" />
             </LinearLayout>

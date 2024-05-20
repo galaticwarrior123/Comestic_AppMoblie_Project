@@ -220,7 +220,7 @@ public class ProductDetailActivity extends AppCompatActivity {
                     if (product != null) {
                         productName.setText(product.getName());
                         productDescription.setText(product.getDescription());
-                        productPrice.setText(String.format("%d VND", product.getPrice()));
+                        productPrice.setText("Giá: "+String.format("%d VND", product.getPrice()));
                         if (product.getStock() > 0) {
                             productStock.setText(String.format("Stock: %d", product.getStock()));
                         } else {
