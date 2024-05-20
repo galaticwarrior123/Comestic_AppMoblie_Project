@@ -84,7 +84,6 @@ public class EditProductActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 int categoryId = categoryList.get(position).getId();
-                productUpdate.setIdCategory(categoryId);
             }
 
             @Override
@@ -96,7 +95,6 @@ public class EditProductActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 int brandId = brandList.get(position).getId();
-                productUpdate.setIdBrand(brandId);
             }
 
             @Override
@@ -117,6 +115,8 @@ public class EditProductActivity extends AppCompatActivity {
                 productUpdate.setDescription(descriptionUpdate);
                 productUpdate.setPrice(priceUpdate);
                 productUpdate.setStock(quantityUpdate);
+                productUpdate.setIdCategory(categoryList.get(spnCategoryUpdateProduct.getSelectedItemPosition()).getId());
+                productUpdate.setIdBrand(brandList.get(spnBrandUpdateProduct.getSelectedItemPosition()).getId());
 
                 List<String> listImage = new ArrayList<>();
                 StorageReference storageReference = FirebaseStorage.getInstance().getReference();
@@ -200,6 +200,14 @@ public class EditProductActivity extends AppCompatActivity {
                     ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, listStringCategory);
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     spnCategoryUpdateProduct.setAdapter(adapter);
+                    // gán giá name category của product vào spinner
+                    System.out.println(product.getIdCategory());
+                    for(int i=0; i<categoryList.size(); i++) {
+                        if (categoryList.get(i).getId() == product.getCategory().getId()) {
+                            spnCategoryUpdateProduct.setSelection(i);
+                            break;
+                        }
+                    }
 
                 }
             }
@@ -222,6 +230,13 @@ public class EditProductActivity extends AppCompatActivity {
                     ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, listStringBrand);
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     spnBrandUpdateProduct.setAdapter(adapter);
+                    // gán giá name brand của product vào spinner
+                    for(int i=0; i<brandList.size(); i++) {
+                        if (brandList.get(i).getId() == product.getBrand().getId()) {
+                            spnBrandUpdateProduct.setSelection(i);
+                            break;
+                        }
+                    }
 
                 }
             }
@@ -291,6 +306,7 @@ public class EditProductActivity extends AppCompatActivity {
             }
         }
     });
+
 
 
 }

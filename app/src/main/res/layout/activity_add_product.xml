@@ -228,7 +228,7 @@
         android:layout_height="60dp"
         android:layout_marginStart="50dp"
         android:layout_marginTop="48dp"
-        android:layout_marginEnd="65dp"
+        android:layout_marginEnd="77dp"
         android:layout_marginBottom="52dp"
         android:backgroundTint="#F64141"
         android:fontFamily="sans-serif-medium"
@@ -245,8 +245,8 @@
         android:id="@+id/buttonAddProduct"
         android:layout_width="125dp"
         android:layout_height="60dp"
-        android:layout_marginTop="70dp"
-        android:layout_marginEnd="36dp"
+        android:layout_marginTop="48dp"
+        android:layout_marginEnd="24dp"
         android:layout_marginBottom="52dp"
         android:backgroundTint="#4AF84A"
         android:fontFamily="sans-serif-medium"
@@ -255,6 +255,5 @@
         android:textSize="18dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nestedScrollView"
-        app:layout_constraintVertical_bias="0.578" />
+        app:layout_constraintTop_toBottomOf="@+id/nestedScrollView" />
 </androidx.constraintlayout.widget.ConstraintLayout>
