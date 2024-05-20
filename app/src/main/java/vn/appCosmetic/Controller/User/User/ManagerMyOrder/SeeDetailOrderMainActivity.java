@@ -163,10 +163,12 @@ public class SeeDetailOrderMainActivity extends AppCompatActivity {
                                                             public void onResponse(Call<Order> call, Response<Order> response) {
                                                                 if(response.isSuccessful()){
                                                                     Toast.makeText(SeeDetailOrderMainActivity.this, "Update success", Toast.LENGTH_SHORT).show();
-                                                                    sharedPreferences.edit().putLong("total", order.getTotal()).apply();
+                                                                    sharedPreferences.edit().putLong("totalPrice", order.getTotal()).apply();
                                                                     sharedPreferences.edit().putInt("orderId", order.getId()).apply();
                                                                     Intent intent = new Intent(SeeDetailOrderMainActivity.this, BankActivity.class);
                                                                     startActivity(intent);
+
+
                                                                 }
                                                                 else{
                                                                     Toast.makeText(SeeDetailOrderMainActivity.this, "Error", Toast.LENGTH_SHORT).show();

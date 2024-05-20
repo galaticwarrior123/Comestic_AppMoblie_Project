@@ -142,6 +142,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"
+                    android:inputType="number"
                     android:hint="Số điện thoại"
                     android:textSize="20sp" />
 

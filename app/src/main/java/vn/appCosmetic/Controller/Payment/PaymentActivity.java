@@ -50,6 +50,7 @@ public class PaymentActivity extends AppCompatActivity {
 
         sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
         Long totalPrice = sharedPreferences.getLong("totalPrice", 0);
+        System.out.println("totalPrice: " + totalPrice);
         String token = sharedPreferences.getString("token", "");
         Payment payment = new Payment("Payment", totalPrice);
 
