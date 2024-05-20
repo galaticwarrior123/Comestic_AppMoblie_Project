@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 
 import java.util.List;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -56,7 +57,9 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.CartIt
         Product product = cartProduct.getProduct();
         holder.txtCartProductName.setText(product.getName());
         holder.txtCartProductQuantity.setText(String.valueOf(cartProduct.getQuantity()));
-        holder.txtCartProductTotalPrice.setText(String.valueOf(cartProduct.getQuantity() * product.getPrice()));
+
+        String price = String.format(Locale.getDefault(), "%,d", cartProduct.getQuantity() * product.getPrice());
+        holder.txtCartProductTotalPrice.setText("Total: " + price + " VND");
 
         if (product.getImages().size() > 0) {
             Glide.with(context).load(product.getImages().get(0)).into(holder.imgCartProduct);

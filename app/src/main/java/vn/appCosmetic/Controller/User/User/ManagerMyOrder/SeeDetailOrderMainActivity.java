@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -128,7 +129,8 @@ public class SeeDetailOrderMainActivity extends AppCompatActivity {
                                 for (CartProduct cartProduct : cartProductList) {
                                     total += cartProduct.getQuantity() * cartProduct.getProduct().getPrice();
                                 }
-                                txtOrderTotalPrice.setText(String.valueOf(total));
+                                String totalPrice = String.format(Locale.getDefault(), "%,d", total);
+                                txtOrderTotalPrice.setText(totalPrice + " VND");
                                 txtOrderTotalQuantity.setText(String.valueOf(cartProductList.size()));
                                 if(!order.isStatus()){
                                     btnUpdateOrder.setVisibility(View.VISIBLE);

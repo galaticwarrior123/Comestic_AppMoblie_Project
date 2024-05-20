@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 
 import java.util.List;
+import java.util.Locale;
 
 import vn.appCosmetic.Model.CartProduct;
 import vn.appCosmetic.R;
@@ -39,8 +40,10 @@ public class OrderCartProductItemAdapter extends RecyclerView.Adapter<OrderCartP
         CartProduct cartProduct = cartProductList.get(position);
         holder.txtOrderProductName.setText("Tên sản phẩm: "+cartProduct.getProduct().getName());
         holder.txtOrderProductQuantity.setText("Số lượng: "+ String.valueOf(cartProduct.getQuantity()));
-        holder.txtProductPrice.setText("Giá: "+String.valueOf(cartProduct.getProduct().getPrice())+ " VND");
-        holder.txtOrderProductTotalPrice.setText("Tổng cộng: "+String.valueOf(cartProduct.getQuantity() * cartProduct.getProduct().getPrice())+ " VND");
+        String price = String.format(Locale.getDefault(), "%,d", cartProduct.getProduct().getPrice());
+        holder.txtProductPrice.setText("Giá: "+price+ " VND");
+        String totalPrice = String.format(Locale.getDefault(), "%,d", cartProduct.getQuantity() * cartProduct.getProduct().getPrice());
+        holder.txtOrderProductTotalPrice.setText("Tổng cộng: "+totalPrice+ " VND");
         if(cartProduct.getProduct().getImages().size() > 0) {
             Glide.with(context).load(cartProduct.getProduct().getImages().get(0)).into(holder.imgOrderProduct);
         }

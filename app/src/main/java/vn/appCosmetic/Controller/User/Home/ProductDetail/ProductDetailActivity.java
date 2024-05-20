@@ -20,6 +20,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.viewpager.widget.ViewPager;
 
 import java.util.List;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -220,7 +221,8 @@ public class ProductDetailActivity extends AppCompatActivity {
                     if (product != null) {
                         productName.setText(product.getName());
                         productDescription.setText(product.getDescription());
-                        productPrice.setText("Giá: "+String.format("%d VND", product.getPrice()));
+                        String price = String.format(Locale.getDefault(), "%,d", product.getPrice());
+                        productPrice.setText("Giá: "+ price + " VND");
                         if (product.getStock() > 0) {
                             productStock.setText(String.format("Stock: %d", product.getStock()));
                         } else {
