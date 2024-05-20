@@ -5,16 +5,17 @@
     android:background="@drawable/img_item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
+
     <TextView
         android:id="@+id/textView2"
-        android:layout_width="241dp"
+        android:layout_width="wrap_content"
         android:layout_height="37dp"
         android:layout_marginStart="86dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="84dp"
         android:fontFamily="sans-serif-medium"
         android:gravity="center"
-        android:text="Thêm nhãn hiệu"
+        android:text="Cập nhật nhãn hiệu"
         android:textSize="30sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
