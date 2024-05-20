@@ -151,6 +151,7 @@ public class ManageProductActivity extends Fragment{
                             if(response.isSuccessful()){
                                 productModelList.clear();
                                 productModelList.addAll(response.body());
+                                productAdapter.notifyDataSetChanged();
                             }
                             else{
                                 Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
@@ -394,7 +395,8 @@ public class ManageProductActivity extends Fragment{
     private void openGallery(){
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
-        mActivityResultLauncher.launch(intent);
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        mActivityResultLauncher.launch(Intent.createChooser(intent, "Select Picture"));
     }
 
     ActivityResultLauncher<Intent> mActivityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {

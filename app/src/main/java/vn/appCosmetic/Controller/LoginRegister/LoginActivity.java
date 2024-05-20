@@ -89,7 +89,7 @@ public class LoginActivity extends AppCompatActivity {
 
                        @Override
                        public void onFailure(Call<AuthLogin> call, Throwable t) {
-                           Toast.makeText(LoginActivity.this, "Login fail, Element is null ", Toast.LENGTH_SHORT).show();
+                           Toast.makeText(LoginActivity.this, "Login fail, Email or Password is incorrect ", Toast.LENGTH_SHORT).show();
                        }
                    });
 
