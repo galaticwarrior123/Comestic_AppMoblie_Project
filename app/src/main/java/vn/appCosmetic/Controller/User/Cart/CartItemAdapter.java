@@ -59,7 +59,7 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.CartIt
         holder.txtCartProductQuantity.setText(String.valueOf(cartProduct.getQuantity()));
 
         String price = String.format(Locale.getDefault(), "%,d", cartProduct.getQuantity() * product.getPrice());
-        holder.txtCartProductTotalPrice.setText("Total: " + price + " VND");
+        holder.txtCartProductTotalPrice.setText(price + " VND");
 
         if (product.getImages().size() > 0) {
             Glide.with(context).load(product.getImages().get(0)).into(holder.imgCartProduct);

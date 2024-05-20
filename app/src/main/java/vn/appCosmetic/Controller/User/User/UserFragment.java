@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import com.bumptech.glide.Glide;
 import retrofit2.Call;
@@ -25,12 +26,13 @@ import vn.appCosmetic.ServiceAPI.RetrofitPrivate;
 import vn.appCosmetic.ServiceAPI.Users.APIUsersService;
 
 public class UserFragment extends Fragment {
-    private Button btnProfile,btnChangePassword , btnLogout, btnMyOrders;
+    private Button btnProfile, btnChangePassword, btnLogout, btnMyOrders;
     private TextView txtUserFragmentName;
     private ImageView imgUserFragment;
 
+    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_user, container, false);
 
         txtUserFragmentName = view.findViewById(R.id.txtUserFragmentName);
@@ -40,75 +42,63 @@ public class UserFragment extends Fragment {
 
         Integer idUser = sharedPreferences.getInt("idUser", 0);
         String token = sharedPreferences.getString("token", "");
-        if (idUser!=0) {
+        if (idUser != 0) {
             APIUsersService apiService = RetrofitPrivate.getRetrofit(token).create(APIUsersService.class);
             Call<Users> call = apiService.getUserById(idUser);
             call.enqueue(new Callback<Users>() {
                 @Override
                 public void onResponse(@NonNull Call<Users> call, @NonNull Response<Users> response) {
-                    if (response.isSuccessful() && response.body() != null) {
+                    if (response.isSuccessful() && response.body() != null && isAdded()) {
                         Users user = response.body();
                         txtUserFragmentName.setText(user.getUsername());
                         Glide.with(requireContext()).load(user.getAvatar()).into(imgUserFragment);
-                    } else {
-                        Toast.makeText(getContext(), "Failed to retrieve user data", Toast.LENGTH_SHORT).show();
+                    } else if (isAdded()) {
+                        Toast.makeText(requireContext(), "Failed to retrieve user data", Toast.LENGTH_SHORT).show();
                     }
                 }
+
                 @Override
                 public void onFailure(@NonNull Call<Users> call, @NonNull Throwable t) {
-                    Toast.makeText(getContext(), "An error occurred: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    if (isAdded()) {
+                        Toast.makeText(requireContext(), "An error occurred: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
         }
 
         btnProfile = view.findViewById(R.id.btnUserFragmentUpdateProfile);
-        btnProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), ProfileActivity.class);
-                startActivity(intent);
-            }
+        btnProfile.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), ProfileActivity.class);
+            startActivity(intent);
         });
 
         btnMyOrders = view.findViewById(R.id.btnUserFragmentOrder);
-        btnMyOrders.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), MyOrdersActivity.class);
-                startActivity(intent);
-            }
+        btnMyOrders.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), MyOrdersActivity.class);
+            startActivity(intent);
         });
 
         btnChangePassword = view.findViewById(R.id.btnUserFragmentChangePassword);
-        btnChangePassword.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), ChangePasswordActivity.class);
-                startActivity(intent);
-
-            }
+        btnChangePassword.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), ChangePasswordActivity.class);
+            startActivity(intent);
         });
-        // Trong UserFragment.java
+
         btnLogout = view.findViewById(R.id.btnUserFragmentLogOut);
-        btnLogout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Xóa các giá trị đã lưu trong SharedPreferences
-                SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.clear();
-                editor.apply();
+        btnLogout.setOnClickListener(v -> {
+            SharedPreferences sharedPreferences1 = requireActivity().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences1.edit();
+            editor.clear();
+            editor.apply();
 
-                // Hiển thị thông báo và đưa người dùng về màn hình đăng nhập
-                Toast.makeText(getContext(), "Logged out successfully", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(getActivity(), LoginActivity.class);
-                startActivity(intent);
-                requireActivity().finish();
-            }
+            Toast.makeText(getContext(), "Logged out successfully", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(getActivity(), LoginActivity.class);
+            startActivity(intent);
+            requireActivity().finish();
         });
+
         return view;
     }
-
 
     @Override
     public void onResume() {
@@ -127,18 +117,20 @@ public class UserFragment extends Fragment {
             call.enqueue(new Callback<Users>() {
                 @Override
                 public void onResponse(@NonNull Call<Users> call, @NonNull Response<Users> response) {
-                    if (response.isSuccessful() && response.body() != null) {
+                    if (response.isSuccessful() && response.body() != null && isAdded()) {
                         Users user = response.body();
                         txtUserFragmentName.setText(user.getUsername());
                         Glide.with(requireContext()).load(user.getAvatar()).into(imgUserFragment);
-                    } else {
-                        Toast.makeText(getContext(), "Failed to retrieve user data", Toast.LENGTH_SHORT).show();
+                    } else if (isAdded()) {
+                        Toast.makeText(requireContext(), "Failed to retrieve user data", Toast.LENGTH_SHORT).show();
                     }
                 }
 
                 @Override
                 public void onFailure(@NonNull Call<Users> call, @NonNull Throwable t) {
-                    Toast.makeText(getContext(), "An error occurred: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    if (isAdded()) {
+                        Toast.makeText(requireContext(), "An error occurred: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
         }

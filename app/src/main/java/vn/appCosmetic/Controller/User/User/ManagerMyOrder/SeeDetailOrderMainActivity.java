@@ -131,7 +131,7 @@ public class SeeDetailOrderMainActivity extends AppCompatActivity {
                                 }
                                 String totalPrice = String.format(Locale.getDefault(), "%,d", total);
                                 txtOrderTotalPrice.setText(totalPrice + " VND");
-                                txtOrderTotalQuantity.setText(String.valueOf(cartProductList.size()));
+                                txtOrderTotalQuantity.setText(String.valueOf(cartProductList.size())+" sản phẩm");
                                 if(!order.isStatus()){
                                     btnUpdateOrder.setVisibility(View.VISIBLE);
 

@@ -166,6 +166,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Xác nhận"
+                android:backgroundTint="#FF8A65"
                 android:visibility="gone"
                 android:textSize="30sp"
                 android:id="@+id/btn_confirm_seeDetail"

@@ -38,7 +38,7 @@ public class HomeFragment extends Fragment {
     private UserProductAdapter productAdapter;
     private SearchView searchView;
     private Spinner categorySpinner;
-    private List<Category> categories = new ArrayList<>(); // List to store categories
+    private List<Category> categories = new ArrayList<>();
     private APICategoryService apiCategoryService;
 
     @Nullable
@@ -49,7 +49,7 @@ public class HomeFragment extends Fragment {
         searchView = view.findViewById(R.id.search_view);
         categorySpinner = view.findViewById(R.id.category_spinner);
         recyclerView = view.findViewById(R.id.recycler_view);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
         setupSearchView();
 
@@ -80,22 +80,26 @@ public class HomeFragment extends Fragment {
         apiCategoryService.getCategory().enqueue(new Callback<List<Category>>() {
             @Override
             public void onResponse(Call<List<Category>> call, Response<List<Category>> response) {
-                if (response.isSuccessful() && response.body() != null) {
+                if (response.isSuccessful() && response.body() != null && isAdded()) {
                     categories.clear();
-                    categories.add(new Category(0, "All")); // Add a category "All" with id 0
+                    categories.add(new Category(0, "All"));
                     categories.addAll(response.body());
-                    CategoryAdapter adapter = new CategoryAdapter(getContext(), android.R.layout.simple_spinner_item, categories);
+                    CategoryAdapter adapter = new CategoryAdapter(requireContext(), android.R.layout.simple_spinner_item, categories);
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     categorySpinner.setAdapter(adapter);
                     setupCategorySpinner();
                 } else {
-                    Toast.makeText(getContext(), "Failed to retrieve categories", Toast.LENGTH_SHORT).show();
+                    if (isAdded()) {
+                        Toast.makeText(requireContext(), "Failed to retrieve categories", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
 
             @Override
             public void onFailure(Call<List<Category>> call, Throwable t) {
-                Toast.makeText(getContext(), "An error occurred: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                if (isAdded()) {
+                    Toast.makeText(requireContext(), "An error occurred: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -124,36 +128,35 @@ public class HomeFragment extends Fragment {
         call.enqueue(new Callback<List<Product>>() {
             @Override
             public void onResponse(Call<List<Product>> call, Response<List<Product>> response) {
-                if (response.isSuccessful() && response.body() != null) {
+                if (response.isSuccessful() && response.body() != null && isAdded()) {
                     List<Product> filteredList = new ArrayList<>();
                     for (Product product : response.body()) {
-                        if(product.isStatus()){
+                        if (product.isStatus()) {
                             boolean matchesName = product.getName().toLowerCase(Locale.ROOT).contains(query.toLowerCase(Locale.ROOT));
                             if (matchesName) {
                                 filteredList.add(product);
                             }
                         }
-                        else{
-                            continue;
-                        }
-
                     }
-                    productAdapter = new UserProductAdapter(getContext(), filteredList);
+                    productAdapter = new UserProductAdapter(requireContext(), filteredList);
                     recyclerView.setAdapter(productAdapter);
                     productAdapter.notifyDataSetChanged();
                 } else {
-                    Toast.makeText(getContext(), "Failed to retrieve products", Toast.LENGTH_SHORT).show();
+                    if (isAdded()) {
+                        Toast.makeText(requireContext(), "Failed to retrieve products", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
 
             @Override
             public void onFailure(Call<List<Product>> call, Throwable t) {
-                Toast.makeText(getContext(), "An error occurred: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                if (isAdded()) {
+                    Toast.makeText(requireContext(), "An error occurred: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
 
-    // Custom Adapter to display category names
     private class CategoryAdapter extends ArrayAdapter<Category> {
         private LayoutInflater inflater;
         private List<Category> categories;
@@ -171,7 +174,6 @@ public class HomeFragment extends Fragment {
                 convertView = inflater.inflate(android.R.layout.simple_spinner_item, parent, false);
             }
 
-            // Set category name
             TextView textView = convertView.findViewById(android.R.id.text1);
             textView.setText(categories.get(position).getNameCategory());
 
@@ -184,13 +186,13 @@ public class HomeFragment extends Fragment {
                 convertView = inflater.inflate(android.R.layout.simple_spinner_dropdown_item, parent, false);
             }
 
-            // Set category name
             TextView textView = convertView.findViewById(android.R.id.text1);
             textView.setText(categories.get(position).getNameCategory());
 
             return convertView;
         }
     }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -201,6 +203,7 @@ public class HomeFragment extends Fragment {
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
+                // Do nothing or handle as necessary
             }
         });
     }

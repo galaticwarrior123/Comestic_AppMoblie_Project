@@ -23,6 +23,8 @@ import vn.appCosmetic.ServiceAPI.RetrofitClient;
 import vn.appCosmetic.ServiceAPI.RetrofitPrivate;
 import vn.appCosmetic.ServiceAPI.Users.APIUsersService;
 
+import java.util.Iterator;
+
 public class ManageUserActivity extends Fragment {
 
     private APIUsersService apiUsersService;
@@ -43,17 +45,22 @@ public class ManageUserActivity extends Fragment {
         apiUsersService.getUsers().enqueue(new Callback<List<Users>>() {
             @Override
             public void onResponse(Call<List<Users>> call, Response<List<Users>> response) {
-                if(response.isSuccessful()){
+                if (response.isSuccessful()) {
                     usersList = response.body();
-                    System.out.println(usersList.size());
+                    Iterator<Users> iterator = usersList.iterator();
+                    while (iterator.hasNext()) {
+                        Users user = iterator.next();
+                        if (user.isAdmin()) {
+                            iterator.remove();
+                        }
+                    }
                     userAdapter = new UserAdapter(getContext(), usersList);
                     rcViewUser.setHasFixedSize(true);
                     RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
                     rcViewUser.setLayoutManager(layoutManager);
                     rcViewUser.setAdapter(userAdapter);
                     userAdapter.notifyDataSetChanged();
-                }
-                else{
+                } else {
                     Toast.makeText(getContext(), "Error 1", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -62,7 +69,6 @@ public class ManageUserActivity extends Fragment {
             public void onFailure(Call<List<Users>> call, Throwable t) {
                 Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
             }
-
         });
         return view;
     }
