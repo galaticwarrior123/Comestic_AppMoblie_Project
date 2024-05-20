@@ -39,7 +39,7 @@ public class UserProductAdapter extends RecyclerView.Adapter<UserProductAdapter.
     public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {
         Product product = productList.get(position);
         holder.productName.setText(product.getName());
-        holder.productPrice.setText(String.format("%d VND", product.getPrice()));
+        holder.productPrice.setText("Giá: "+String.format("%d VND", product.getPrice()));
 
         if (product.getImages() != null && !product.getImages().isEmpty()) {
             Glide.with(context).load(product.getImages().get(0)).into(holder.productImage);
